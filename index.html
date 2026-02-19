@@ -424,7 +424,6 @@
     }
 
     function showBlessing(verse) {
-      document.getElementById('blessingText').textContent = "\"" + verse + "\"";
       fullBlessingOverlay.style.display = 'flex';
     }
 
@@ -486,6 +485,8 @@
 
       // 3. Save to database
       try {
+      // 3. Save to database
+      try {
         const params = new URLSearchParams();
         params.append('name', currentEntry.name);
         params.append('phone', currentEntry.phone);
@@ -493,9 +494,14 @@
         params.append('whatsapp', currentEntry.whatsapp || "");
         params.append('prayers', currentEntry.prayers.join(", "));
 
-        // Trigger WhatsApp BEFORE the await to keep it in the same user-click event loop
+        // OPEN WHATSAPP IMMEDIATELY (Highest priority for browsers)
         if (whatsappUrl) {
           window.open(whatsappUrl, "_blank");
+          // Add a backup link for the blessing screen
+          const blessingPara = document.getElementById('blessingText');
+          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+        } else {
+          document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
 
         const response = await fetch(REGISTER_API_URL, {
