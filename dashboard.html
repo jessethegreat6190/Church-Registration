@@ -83,7 +83,52 @@
       border-radius: 6px;
       font-weight: 600;
       display: flex;
+      gap: 10px;
       align-items: center;
+    }
+
+    .program-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .program-section h3 {
+      margin-top: 0;
+      color: var(--primary-blue);
+    }
+
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .program-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .program-item label {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .program-item input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #saveProgramsBtn {
+      background: var(--accent-green);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 600;
     }
 
     table {
@@ -162,6 +207,36 @@
       <div class="stats" id="totalCount">Total: 0</div>
     </div>
 
+    <div class="program-section">
+      <h3>Manage Church Program Schedule</h3>
+      <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+        Update the weekly schedule here. Changes will be reflected in the WhatsApp messages.
+      </p>
+      <div class="program-grid">
+        <div class="program-item">
+          <label>Sunday Services</label>
+          <input type="text" id="prog-sunday" value="8:00 AM">
+        </div>
+        <div class="program-item">
+          <label>Monday Kyoto Prayers</label>
+          <input type="text" id="prog-monday" value="7:00 AM - 9:00 AM">
+        </div>
+        <div class="program-item">
+          <label>Wednesday Evening Glory</label>
+          <input type="text" id="prog-wednesday" value="Evening Glory 5pm-7pm">
+        </div>
+        <div class="program-item">
+          <label>Tue & Thu Counseling</label>
+          <input type="text" id="prog-tue-thu" value="7:00 AM - 3:00 PM">
+        </div>
+        <div class="program-item">
+          <label>Friday Night Prayers</label>
+          <input type="text" id="prog-friday" value="3pm, 2am, 3am (Not overnight)">
+        </div>
+      </div>
+      <button id="saveProgramsBtn">Save Schedule</button>
+    </div>
+
     <table id="registrationsTable">
       <thead>
         <tr>
@@ -185,10 +260,12 @@
   <script>
     // In Netlify, we call our serverless function instead of Google directly
     const GET_DATA_API_URL = '/.netlify/functions/get-data';
+    const SAVE_DATA_API_URL = '/.netlify/functions/register';
 
     const tableBody = document.getElementById('tableBody');
     const searchBar = document.getElementById('searchBar');
     const totalCount = document.getElementById('totalCount');
+    const saveProgramsBtn = document.getElementById('saveProgramsBtn');
 
     let allRegistrations = [];
 
@@ -197,14 +274,65 @@
         const response = await fetch(GET_DATA_API_URL);
         if (!response.ok) throw new Error("HTTP " + response.status);
         const data = await response.json();
-        console.log("Fetched data:", data); // For debug
-        allRegistrations = Array.isArray(data) ? data : [];
+        
+        // Filter out system settings if any
+        allRegistrations = (Array.isArray(data) ? data : []).filter(reg => reg.name !== "SYSTEM_PROGRAMS");
+        
+        // Load programs if found
+        const programData = data.find(reg => reg.name === "SYSTEM_PROGRAMS");
+        if (programData && programData.location) {
+          try {
+            const progs = JSON.parse(programData.location);
+            document.getElementById('prog-sunday').value = progs.sunday;
+            document.getElementById('prog-monday').value = progs.monday;
+            document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
+            document.getElementById('prog-tue-thu').value = progs.tueThu;
+            document.getElementById('prog-friday').value = progs.friday;
+          } catch (e) { console.error("Error parsing programs", e); }
+        }
+
         renderTable(allRegistrations);
       } catch (error) {
         console.error("Error fetching registrations: ", error);
         tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:red;">Error loading data. ${error.message}</td></tr>`;
       }
     }
+
+    async function savePrograms() {
+      const progs = {
+        sunday: document.getElementById('prog-sunday').value,
+        monday: document.getElementById('prog-monday').value,
+        wednesday: document.getElementById('prog-wednesday').value,
+        tueThu: document.getElementById('prog-tue-thu').value,
+        friday: document.getElementById('prog-friday').value
+      };
+
+      saveProgramsBtn.disabled = true;
+      saveProgramsBtn.textContent = "Saving...";
+
+      try {
+        const params = new URLSearchParams();
+        params.append('name', "SYSTEM_PROGRAMS");
+        params.append('phone', "000");
+        params.append('location', JSON.stringify(progs));
+        params.append('whatsapp', "");
+        params.append('prayers', "");
+        params.append('timestamp', new Date().toISOString());
+
+        await fetch(SAVE_DATA_API_URL, {
+          method: 'POST',
+          body: params.toString()
+        });
+        alert("Schedule updated successfully!");
+      } catch (e) {
+        alert("Error saving schedule: " + e.message);
+      } finally {
+        saveProgramsBtn.disabled = false;
+        saveProgramsBtn.textContent = "Save Schedule";
+      }
+    }
+
+    saveProgramsBtn.addEventListener('click', savePrograms);
 
     function renderTable(data) {
       tableBody.innerHTML = "";

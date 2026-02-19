@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <title>Church Counseling Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2c3e50">
+  <link rel="apple-touch-icon" href="church logo/New Logo 2026.png">
   <style>
     :root {
       --primary-blue: #2c3e50;
       --secondary-blue: #3498db;
       --white: #ffffff;
       --light-gray: #f4f7f6;
+      --success-green: #27ae60;
     }
 
     body {
@@ -31,45 +35,53 @@
       width: 90%;
       max-width: 450px;
       margin: 20px;
+      transition: all 0.3s ease;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .logo {
-      max-width: 120px;
+      max-width: 100px;
       height: auto;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       background: var(--primary-blue);
-      padding: 10px;
+      padding: 8px;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
     h1 {
       color: var(--primary-blue);
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       margin: 0;
+    }
+
+    .slogan {
+      color: var(--secondary-blue);
+      font-size: 0.9rem;
+      margin-top: 5px;
+      font-weight: 500;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
 
     label {
       font-weight: 600;
       color: var(--primary-blue);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     input[type="text"],
@@ -84,18 +96,24 @@
     }
 
     textarea {
-      height: 80px;
+      height: 60px;
       resize: vertical;
     }
 
     .checkbox-group {
-      flex-direction: row;
+      display: flex;
+      flex-direction: row !important;
       align-items: center;
       gap: 10px;
+      margin-top: 5px;
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 6px;
     }
 
     .checkbox-group input {
-      width: auto;
+      width: 18px;
+      height: 18px;
     }
 
     button {
@@ -107,11 +125,12 @@
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s;
     }
 
     button:hover {
       background: #2980b9;
+      transform: translateY(-2px);
     }
 
     button:disabled {
@@ -147,52 +166,77 @@
       font-size: 0.9rem;
     }
 
-    #debug {
-      font-size: 0.7rem;
-      color: #777;
-      margin-top: 20px;
-      max-height: 100px;
-      overflow-y: auto;
-    }
-
-    #blessingModal {
+    /* Full-screen Blessing Overlay */
+    #fullBlessingOverlay {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      z-index: 1000;
+      background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--white) 100%);
+      z-index: 2000;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      max-width: 400px;
-      width: 90%;
       text-align: center;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      padding: 1rem;
+      box-sizing: border-box;
+      overflow-y: auto;
     }
 
-    .modal-content h2 {
-      color: #27ae60;
-      margin-top: 0;
+    .blessing-content {
+      max-width: 500px;
+      width: 95%;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 3rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      animation: zoomIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .modal-content p {
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .blessing-logo {
+      max-width: 150px;
+      margin-bottom: 2rem;
+    }
+
+    .thank-you-note {
+      color: var(--success-green);
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .blessing-text {
+      font-size: 1.4rem;
       font-style: italic;
-      color: #34495e;
+      color: var(--primary-blue);
       line-height: 1.6;
+      margin: 2rem 0;
+      padding: 0 1rem;
+    }
+
+    .slogan-footer {
+      color: var(--secondary-blue);
+      font-weight: 600;
+      margin-top: 2rem;
+      font-size: 1.1rem;
+    }
+
+    .done-btn {
+      margin-top: 3rem;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      background: var(--success-green);
     }
 
     @media (max-width: 480px) {
-      .container {
-        padding: 1.5rem;
-      }
-      h1 {
-        font-size: 1.25rem;
-      }
+      .container { padding: 1.5rem; }
+      h1 { font-size: 1.25rem; }
+      .thank-you-note { font-size: 1.5rem; }
+      .blessing-text { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -202,6 +246,7 @@
     <div class="header">
       <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
       <h1>Counseling Registration</h1>
+      <div class="slogan">An encounter with the Holy Spirit</div>
     </div>
 
     <form id="registrationForm">
@@ -231,48 +276,50 @@
                alt="WhatsApp Group QR Code" 
                style="width: 160px; height: 160px; border: 4px solid #f4f7f6; border-radius: 8px;">
           <p style="font-size: 0.7rem; color: #666; margin-top: 8px;">
-            Person being registered can scan this to join.
+            Scan this to join our official church group.
           </p>
         </div>
       </div>
 
       <div class="form-group checkbox-group">
-        <input type="checkbox" id="consent" required>
-        <label for="consent">I agree to be added to the Church WhatsApp group</label>
+        <input type="checkbox" id="consent" checked>
+        <label for="consent" style="cursor: pointer;">Agree to be added to WhatsApp & receive messages</label>
       </div>
 
       <div class="form-group">
-        <label for="prayers">Prayer Requests (One per line)</label>
+        <label for="prayers">Prayer Requests (Optional)</label>
         <textarea id="prayers" placeholder="Tell us how we can pray for you..."></textarea>
       </div>
 
-      <button type="submit" id="submitBtn">Review Registration</button>
+      <button type="submit" id="submitBtn">Done Registering</button>
     </form>
 
     <div id="confirmation">
       <div style="text-align: center;">
-        <h2 style="color: var(--primary-blue); margin-top: 0;">Review Your Details</h2>
-        <p>Please confirm that your information is correct before saving.</p>
+        <h2 style="color: var(--primary-blue); margin-top: 0;">Confirm Your Details</h2>
+        <p>Ensure your information is correct before saving.</p>
       </div>
       <div class="details-card">
         <ul id="detailsList"></ul>
       </div>
-      <button id="saveBtn" style="width: 100%; background: #27ae60; margin-bottom: 10px;">Save My Details</button>
+      <button id="saveBtn" style="width: 100%; background: var(--success-green); margin-bottom: 10px;">Save Registration</button>
       <button id="editBtn" style="width: 100%; background: var(--primary-blue);">Edit Details</button>
     </div>
   </div>
 
-  <div id="blessingModal">
-    <div class="modal-content">
-      <h2>A Blessing For You</h2>
-      <p id="blessingText"></p>
-      <button onclick="closeBlessing()" style="width: 100%; margin-top: 15px;">Amen</button>
+  <div id="fullBlessingOverlay">
+    <div class="blessing-content">
+      <img src="church logo/New Logo 2026.png" alt="Church Logo" class="blessing-logo">
+      <div class="thank-you-note">Thank You for Registering!</div>
+      <p id="blessingText" class="blessing-text"></p>
+      <div class="slogan-footer">An encounter with the Holy Spirit</div>
+      <button class="done-btn" onclick="closeBlessing()">Amen</button>
     </div>
   </div>
 
   <script>
-    // In Netlify, we call our serverless function instead of Google directly
     const REGISTER_API_URL = '/.netlify/functions/register';
+    const GET_DATA_API_URL = '/.netlify/functions/get-data';
     
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -280,8 +327,48 @@
     const detailsList = document.getElementById('detailsList');
     const saveBtn = document.getElementById('saveBtn');
     const editBtn = document.getElementById('editBtn');
+    const fullBlessingOverlay = document.getElementById('fullBlessingOverlay');
     
     let currentEntry = null;
+    let allRegistrations = [];
+    let churchPrograms = {
+      sunday: "8:00 AM",
+      monday: "7:00 AM - 9:00 AM",
+      wednesday: "Evening Glory 5pm-7pm",
+      tueThu: "7:00 AM - 3:00 PM",
+      friday: "3pm, 2am, 3am (Not overnight)"
+    };
+
+    // Pre-fetch registrations & programs
+    async function prefetchData() {
+      try {
+        const response = await fetch(GET_DATA_API_URL);
+        if (response.ok) {
+          const data = await response.json();
+          allRegistrations = data.filter(reg => reg.name !== "SYSTEM_PROGRAMS");
+          
+          const progData = data.find(reg => reg.name === "SYSTEM_PROGRAMS");
+          if (progData && progData.location) {
+            try {
+              churchPrograms = JSON.parse(progData.location);
+              // Ensure wednesday exists for old saved programs
+              if (!churchPrograms.wednesday) churchPrograms.wednesday = "Evening Glory 5pm-7pm";
+            } catch (e) { console.error("Error parsing programs", e); }
+          }
+        }
+      } catch (e) {
+        console.error("Could not fetch existing data", e);
+      }
+    }
+    prefetchData();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => console.log('SW registered'))
+          .catch(err => console.log('SW registration failed', err));
+      });
+    }
 
     function handleReview(e) {
       e.preventDefault();
@@ -289,8 +376,16 @@
       const prayerText = document.getElementById('prayers').value;
       const prayerList = prayerText.split('\n').filter(line => line.trim() !== "");
 
+      // Format name: First Letter Capital, others small for each word
+      const rawName = document.getElementById('name').value.trim();
+      const formattedName = rawName.toLowerCase()
+        .split(' ')
+        .filter(word => word.length > 0)
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
       currentEntry = {
-        name: document.getElementById('name').value.trim(),
+        name: formattedName,
         phone: document.getElementById('phone').value.trim(),
         location: document.getElementById('location').value.trim(),
         whatsapp: document.getElementById('whatsapp').value.trim() || null,
@@ -300,6 +395,12 @@
 
       showConfirmation(currentEntry);
     }
+
+    form.addEventListener('submit', handleReview);
+    editBtn.addEventListener('click', () => {
+      form.style.display = "flex";
+      confirmation.style.display = "none";
+    });
 
     const WEEKLY_VERSES = [
       "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you. (Numbers 6:24-25)",
@@ -324,11 +425,11 @@
 
     function showBlessing(verse) {
       document.getElementById('blessingText').textContent = "\"" + verse + "\"";
-      document.getElementById('blessingModal').style.display = 'flex';
+      fullBlessingOverlay.style.display = 'flex';
     }
 
     function closeBlessing() {
-      document.getElementById('blessingModal').style.display = 'none';
+      fullBlessingOverlay.style.display = 'none';
       resetForm();
     }
 
@@ -338,24 +439,50 @@
       saveBtn.disabled = true;
       saveBtn.textContent = "Saving...";
 
-      let rawNumber = (currentEntry.whatsapp || currentEntry.phone).replace(/\D/g, '');
-      if (rawNumber.startsWith('0')) {
-        rawNumber = '256' + rawNumber.substring(1);
-      } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
-        rawNumber = '256' + rawNumber;
-      }
-
       const blessing = getWeeklyVerse();
+      
+      // Check if user is returning (robust check using digits only)
+      const cleanInputPhone = currentEntry.phone.replace(/\D/g, '');
+      const cleanInputWhatsapp = (currentEntry.whatsapp || "").replace(/\D/g, '');
+      
+      const isReturning = allRegistrations.some(reg => {
+        const dbPhone = (reg.phone || "").toString().replace(/\D/g, '');
+        const dbWhatsapp = (reg.whatsapp || "").toString().replace(/\D/g, '');
+        
+        const phoneMatch = dbPhone && dbPhone.includes(cleanInputPhone) || (cleanInputPhone && cleanInputPhone.includes(dbPhone));
+        const whatsappMatch = cleanInputWhatsapp && (dbWhatsapp && dbWhatsapp.includes(cleanInputWhatsapp) || cleanInputWhatsapp.includes(dbWhatsapp));
+        
+        return phoneMatch || whatsappMatch;
+      });
 
-      const message = encodeURIComponent(
-        "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
-        "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
-        "Join our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h\n\n" +
-        "Subscribe to our YouTube: https://www.youtube.com/@encounter_GJMchanled"
-      );
-      const whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
+      // Only send WhatsApp if: 1. Consent is given, 2. Not a returning user (or if using different contact which is handled by the check above)
+      if (currentEntry.consent && !isReturning) {
+        let rawNumber = (currentEntry.whatsapp || currentEntry.phone).replace(/\D/g, '');
+        if (rawNumber.startsWith('0')) {
+          rawNumber = '256' + rawNumber.substring(1);
+        } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
+          rawNumber = '256' + rawNumber;
+        }
 
-      window.open(whatsappUrl, "_blank");
+        const programMessage = 
+          "Church Programs:\n" +
+          "• Sunday Services: " + churchPrograms.sunday + "\n" +
+          "• Monday Kyoto Prayers: " + churchPrograms.monday + "\n" +
+          "• Wednesday Evening Glory: " + churchPrograms.wednesday + "\n" +
+          "• Tue & Thu Counseling: " + churchPrograms.tueThu + "\n" +
+          "• Friday Night Prayers: " + churchPrograms.friday;
+
+        const message = encodeURIComponent(
+          "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
+          "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
+          programMessage + "\n\n" +
+          "Join our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h\n\n" +
+          "Subscribe to our YouTube: https://www.youtube.com/@encounter_GJMchanled\n\n" +
+          "*An encounter with the Holy Spirit*"
+        );
+        const whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
+        window.open(whatsappUrl, "_blank");
+      }
 
       try {
         const params = new URLSearchParams();
@@ -364,6 +491,7 @@
         params.append('location', currentEntry.location);
         params.append('whatsapp', currentEntry.whatsapp || "");
         params.append('prayers', currentEntry.prayers.join(", "));
+        params.append('timestamp', new Date().toISOString());
 
         await fetch(REGISTER_API_URL, {
           method: 'POST',
@@ -374,9 +502,11 @@
       } catch (error) {
         alert("❌ Error saving: " + error.message);
         saveBtn.disabled = false;
-        saveBtn.textContent = "Save My Details";
+        saveBtn.textContent = "Save Registration";
       }
     }
+
+    saveBtn.addEventListener('click', handleSave);
 
     function showConfirmation(data) {
       detailsList.innerHTML = `
@@ -384,7 +514,7 @@
         <li><strong>Phone:</strong> ${data.phone}</li>
         <li><strong>Location:</strong> ${data.location}</li>
         <li><strong>WhatsApp:</strong> ${data.whatsapp || "—"}</li>
-        <li><strong>WhatsApp Agreement:</strong> ${data.consent ? "Agreed" : "No"}</li>
+        <li><strong>Agreement:</strong> ${data.consent ? "Yes" : "No"}</li>
         <li><strong>Prayers:</strong> ${data.prayers.length > 0 ? data.prayers.join(", ") : "None"}</li>
       `;
       form.style.display = "none";
@@ -397,15 +527,9 @@
       form.style.display = "flex";
       confirmation.style.display = "none";
       saveBtn.disabled = false;
-      saveBtn.textContent = "Save My Details";
+      saveBtn.textContent = "Save Registration";
+      prefetchData(); // Refresh local list
     }
-
-    form.addEventListener('submit', handleReview);
-    saveBtn.addEventListener('click', handleSave);
-    editBtn.addEventListener('click', () => {
-      form.style.display = "flex";
-      confirmation.style.display = "none";
-    });
   </script>
 </body>
 </html>
