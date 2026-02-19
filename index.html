@@ -441,21 +441,22 @@
 
       const blessing = getWeeklyVerse();
       
-      // Check if user is returning (robust check using digits only)
-      const cleanInputPhone = currentEntry.phone.replace(/\D/g, '');
-      const cleanInputWhatsapp = (currentEntry.whatsapp || "").replace(/\D/g, '');
+      // 1. Determine if returning user
+      const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
+      const cleanInputWhatsapp = (currentEntry.whatsapp || "").replace(/\D/g, '').slice(-9);
       
-      const isReturning = allRegistrations.some(reg => {
-        const dbPhone = (reg.phone || "").toString().replace(/\D/g, '');
-        const dbWhatsapp = (reg.whatsapp || "").toString().replace(/\D/g, '');
-        
-        const phoneMatch = dbPhone && dbPhone.includes(cleanInputPhone) || (cleanInputPhone && cleanInputPhone.includes(dbPhone));
-        const whatsappMatch = cleanInputWhatsapp && (dbWhatsapp && dbWhatsapp.includes(cleanInputWhatsapp) || cleanInputWhatsapp.includes(dbWhatsapp));
-        
-        return phoneMatch || whatsappMatch;
-      });
+      let isReturning = false;
+      if (Array.isArray(allRegistrations)) {
+        isReturning = allRegistrations.some(reg => {
+          const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+          const dbWhatsapp = String(reg.whatsapp || "").replace(/\D/g, '').slice(-9);
+          return (cleanInputPhone && dbPhone === cleanInputPhone) || 
+                 (cleanInputWhatsapp && dbWhatsapp === cleanInputWhatsapp);
+        });
+      }
 
-      // Only send WhatsApp if: 1. Consent is given, 2. Not a returning user (or if using different contact which is handled by the check above)
+      // 2. Prepare WhatsApp URL if needed
+      let whatsappUrl = null;
       if (currentEntry.consent && !isReturning) {
         let rawNumber = (currentEntry.whatsapp || currentEntry.phone).replace(/\D/g, '');
         if (rawNumber.startsWith('0')) {
@@ -477,13 +478,13 @@
           "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
           programMessage + "\n\n" +
           "Join our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h\n\n" +
-          "Subscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
+          "Subscribe to our YouTube: https://www.youtube.com/@encounter_GJMchanled\n\n" +
           "*An encounter with the Holy Spirit*"
         );
-        const whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
-        window.open(whatsappUrl, "_blank");
+        whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
       }
 
+      // 3. Save to database
       try {
         const params = new URLSearchParams();
         params.append('name', currentEntry.name);
@@ -491,15 +492,32 @@
         params.append('location', currentEntry.location);
         params.append('whatsapp', currentEntry.whatsapp || "");
         params.append('prayers', currentEntry.prayers.join(", "));
-        params.append('timestamp', new Date().toISOString());
 
-        await fetch(REGISTER_API_URL, {
+        // Trigger WhatsApp BEFORE the await to keep it in the same user-click event loop
+        if (whatsappUrl) {
+          window.open(whatsappUrl, "_blank");
+        }
+
+        const response = await fetch(REGISTER_API_URL, {
           method: 'POST',
           body: params.toString()
         });
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = "Failed to save registration";
+          try {
+            const result = JSON.parse(errorText);
+            errorMessage = result.error || errorMessage;
+          } catch (e) {
+            errorMessage = errorText || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+
         showBlessing(blessing);
       } catch (error) {
+        console.error("Save error:", error);
         alert("❌ Error saving: " + error.message);
         saveBtn.disabled = false;
         saveBtn.textContent = "Save Registration";

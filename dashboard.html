@@ -317,12 +317,24 @@
         params.append('location', JSON.stringify(progs));
         params.append('whatsapp', "");
         params.append('prayers', "");
-        params.append('timestamp', new Date().toISOString());
 
-        await fetch(SAVE_DATA_API_URL, {
+        const response = await fetch(SAVE_DATA_API_URL, {
           method: 'POST',
           body: params.toString()
         });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = "Failed to update schedule";
+          try {
+            const result = JSON.parse(errorText);
+            errorMessage = result.error || errorMessage;
+          } catch (e) {
+            errorMessage = errorText || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+
         alert("Schedule updated successfully!");
       } catch (e) {
         alert("Error saving schedule: " + e.message);
