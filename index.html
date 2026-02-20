@@ -318,8 +318,17 @@
   </div>
 
   <script>
-    const REGISTER_API_URL = '/.netlify/functions/register';
-    const GET_DATA_API_URL = '/.netlify/functions/get-data';
+    // Use Netlify functions in production, or direct URL locally if Netlify is missing
+    const GOOGLE_SCRIPT_ID = "AKfycbys88q0lY516rM7xKx988n4X93u3y4z85q0r4z85q0"; // Replace with your actual Script ID
+    const DIRECT_GOOGLE_URL = `https://script.google.com/macros/s/${GOOGLE_SCRIPT_ID}/exec`;
+
+    const REGISTER_API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost' 
+      ? DIRECT_GOOGLE_URL 
+      : '/.netlify/functions/register';
+      
+    const GET_DATA_API_URL = window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost'
+      ? DIRECT_GOOGLE_URL
+      : '/.netlify/functions/get-data';
     
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -473,12 +482,12 @@
           "• Friday Night Prayers: " + churchPrograms.friday;
 
         const message = encodeURIComponent(
-          "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
-          "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
-          programMessage + "\n\n" +
-          "Join our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h\n\n" +
-          "Subscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
-          "*An encounter with the Holy Spirit*"
+          `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
+          `🕊 *A Blessing for you:* "${blessing}"\n\n` +
+          `${programMessage}\n\n` +
+          `Join our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h\n\n` +
+          `Subscribe to our YouTube: https://www.youtube.com/channel/UCnpZkCa1pQzr2ZEp5JBXZHQ\n\n` +
+          `*An encounter with the Holy Spirit*`
         );
         whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
       }
@@ -492,18 +501,10 @@
         params.append('whatsapp', currentEntry.whatsapp || "");
         params.append('prayers', currentEntry.prayers.join(", "));
 
-        // OPEN WHATSAPP IMMEDIATELY (Highest priority for browsers)
-        if (whatsappUrl) {
-          window.open(whatsappUrl, "_blank");
-          // Add a backup link for the blessing screen
-          const blessingPara = document.getElementById('blessingText');
-          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
-        } else {
-          document.getElementById('blessingText').textContent = `"${blessing}"`;
-        }
-
+        // 3. Save to database
         const response = await fetch(REGISTER_API_URL, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: params.toString()
         });
 
@@ -517,6 +518,16 @@
             errorMessage = errorText || errorMessage;
           }
           throw new Error(errorMessage);
+        }
+
+        // 4. OPEN WHATSAPP after successful save
+        if (whatsappUrl) {
+          window.open(whatsappUrl, "_blank");
+          // Add a backup link for the blessing screen
+          const blessingPara = document.getElementById('blessingText');
+          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+        } else {
+          document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
 
         showBlessing(blessing);
