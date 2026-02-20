@@ -441,6 +441,17 @@
       resetForm();
     }
 
+    function formatTo256(number) {
+      if (!number) return "";
+      let cleaned = number.replace(/\D/g, '');
+      if (cleaned.startsWith('0')) {
+        cleaned = '256' + cleaned.substring(1);
+      } else if (cleaned.length === 9 && (cleaned.startsWith('7') || cleaned.startsWith('3'))) {
+        cleaned = '256' + cleaned;
+      }
+      return cleaned;
+    }
+
     async function handleSave() {
       if (!currentEntry) return;
 
@@ -463,15 +474,10 @@
         });
       }
 
-      // 2. Prepare WhatsApp URL if needed
+      // 2. Prepare WhatsApp URL
       let whatsappUrl = null;
-      if (currentEntry.consent && !isReturning) {
-        let rawNumber = (currentEntry.whatsapp || currentEntry.phone).replace(/\D/g, '');
-        if (rawNumber.startsWith('0')) {
-          rawNumber = '256' + rawNumber.substring(1);
-        } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
-          rawNumber = '256' + rawNumber;
-        }
+      if (currentEntry.consent) {
+        let rawNumber = formatTo256(currentEntry.whatsapp || currentEntry.phone);
 
         const programMessage = 
           "Church Programs:\n" +
@@ -492,42 +498,38 @@
         whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
       }
 
-      // 3. Save to database
+      // 3. Save to database (ONLY if not returning)
       try {
-        const params = new URLSearchParams();
-        params.append('name', currentEntry.name);
-        params.append('phone', currentEntry.phone);
-        params.append('location', currentEntry.location);
-        params.append('whatsapp', currentEntry.whatsapp || "");
-        params.append('prayers', currentEntry.prayers.join(", "));
+        if (!isReturning) {
+          const params = new URLSearchParams();
+          params.append('name', currentEntry.name);
+          params.append('phone', formatTo256(currentEntry.phone));
+          params.append('location', currentEntry.location);
+          params.append('whatsapp', formatTo256(currentEntry.whatsapp));
+          params.append('prayers', currentEntry.prayers.join(", "));
 
-        // 3. Save to database
-        const response = await fetch(REGISTER_API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString()
-        });
+          const response = await fetch(REGISTER_API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+          });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          let errorMessage = "Failed to save registration";
-          try {
-            const result = JSON.parse(errorText);
-            errorMessage = result.error || errorMessage;
-          } catch (e) {
-            errorMessage = errorText || errorMessage;
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || "Failed to save registration");
           }
-          throw new Error(errorMessage);
         }
 
-        // 4. OPEN WHATSAPP after successful save
-        if (whatsappUrl) {
+        // 4. OPEN WHATSAPP and show blessing (always, for feedback)
+        if (whatsappUrl && !isReturning) {
           window.open(whatsappUrl, "_blank");
-          // Add a backup link for the blessing screen
-          const blessingPara = document.getElementById('blessingText');
-          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+        }
+        
+        const blessingPara = document.getElementById('blessingText');
+        if (whatsappUrl) {
+          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp!</a>`;
         } else {
-          document.getElementById('blessingText').textContent = `"${blessing}"`;
+          blessingPara.textContent = `"${blessing}"`;
         }
 
         showBlessing(blessing);
