@@ -1,0 +1,5 @@
+.zencoder/
+.zenflow/
+node_modules/
+temp_portfolio_*.html
+*.log

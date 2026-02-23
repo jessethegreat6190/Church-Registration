@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Church Registrations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --primary-blue: #2c3e50;
+      --secondary-blue: #3498db;
+      --accent-green: #27ae60;
+      --danger-red: #e74c3c;
+      --white: #ffffff;
+      --light-gray: #f4f6f9;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--light-gray);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      z-index: 2;
+    }
+
+    header > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .header-content {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .header-content::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .header-content::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      border-radius: 0 0 10px 10px;
+    }
+
+    .logo {
+      max-width: 80px;
+      height: auto;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: #fff;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    .controls {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    #searchBar {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .stats {
+      background: var(--secondary-blue);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .program-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .program-section h3 {
+      margin-top: 0;
+      color: var(--primary-blue);
+    }
+
+    .program-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .program-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .program-item label {
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .program-item input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #saveProgramsBtn {
+      background: var(--accent-green);
+      color: white;
+      padding: 10px 20px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      min-width: 800px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: var(--accent-green);
+      color: #fff;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:hover {
+      background: #f9f9f9;
+    }
+
+    .actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    .delete-btn {
+      background: var(--danger-red);
+      color: #fff;
+    }
+
+    .whatsapp-link {
+      color: #25D366;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .birthday-alerts {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .birthday-alerts h3 {
+      margin-top: 0;
+      color: #856404;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .birthday-alert-item {
+      background: #fff;
+      padding: 12px;
+      border-left: 4px solid #ffc107;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .birthday-alert-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .upcoming-birthday {
+      background-color: #fff3cd !important;
+    }
+
+    .birthday-tag {
+      display: inline-block;
+      background: #ffc107;
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1rem; }
+      header h2 { font-size: 0.8rem; }
+      main { margin: 10px; padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
+    <div class="header-content">
+      <h1>Grace of Jesus Christ Ministries – Kitintale</h1>
+      <h2>Admin Dashboard: Church Registrations</h2>
+    </div>
+  </header>
+
+  <main>
+    <div class="controls">
+      <input type="text" id="searchBar" placeholder="Search by name, phone, or location...">
+      <div class="stats" id="totalCount">Total: 0</div>
+    </div>
+
+    <div class="birthday-alerts" id="birthdayAlerts" style="display: none;">
+      <h3>🎂 Upcoming Birthdays (Next 7 Days)</h3>
+      <div id="birthdayList"></div>
+    </div>
+
+    <div class="program-section">
+      <h3>Manage Church Program Schedule</h3>
+      <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+        Update the weekly schedule here. Changes will be reflected in the WhatsApp messages.
+      </p>
+      <div class="program-grid">
+        <div class="program-item">
+          <label>Sunday Services</label>
+          <input type="text" id="prog-sunday" value="8:00 AM">
+        </div>
+        <div class="program-item">
+          <label>Monday Kyoto Prayers</label>
+          <input type="text" id="prog-monday" value="7:00 AM - 9:00 AM">
+        </div>
+        <div class="program-item">
+          <label>Wednesday Evening Glory</label>
+          <input type="text" id="prog-wednesday" value="Evening Glory 5pm-7pm">
+        </div>
+        <div class="program-item">
+          <label>Tue & Thu Counseling</label>
+          <input type="text" id="prog-tue-thu" value="7:00 AM - 3:00 PM">
+        </div>
+        <div class="program-item">
+          <label>Friday Night Prayers</label>
+          <input type="text" id="prog-friday" value="3pm, 2am, 3am (Not overnight)">
+        </div>
+        <div class="program-item">
+          <label>Additional Program (Optional)</label>
+          <input type="text" id="prog-custom" placeholder="e.g., Saturday Fellowship 10am">
+        </div>
+      </div>
+      <button id="saveProgramsBtn">Save Schedule</button>
+    </div>
+
+    <table id="registrationsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Location</th>
+          <th>Birthday</th>
+          <th>First Time</th>
+          <th>Volunteering</th>
+          <th>WhatsApp</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td colspan="7" style="text-align:center; padding: 40px; color: #777;">Loading registrations...</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
+    const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
+
+    const tableBody = document.getElementById('tableBody');
+    const searchBar = document.getElementById('searchBar');
+    const totalCount = document.getElementById('totalCount');
+    const saveProgramsBtn = document.getElementById('saveProgramsBtn');
+    const birthdayAlerts = document.getElementById('birthdayAlerts');
+    const birthdayList = document.getElementById('birthdayList');
+
+    let allRegistrations = [];
+
+    function isUpcomingBirthday(month, day) {
+      if (!month || !day) return false;
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const currentDay = today.getDate();
+      
+      let daysUntilBirthday;
+      if (month > currentMonth || (month === currentMonth && day > currentDay)) {
+        daysUntilBirthday = new Date(today.getFullYear(), month - 1, day) - today;
+      } else {
+        daysUntilBirthday = new Date(today.getFullYear() + 1, month - 1, day) - today;
+      }
+      
+      const daysDiff = Math.ceil(daysUntilBirthday / (1000 * 60 * 60 * 24));
+      return daysDiff <= 7 && daysDiff > 0;
+    }
+
+    function getDaysUntilBirthday(month, day) {
+      if (!month || !day) return null;
+      const today = new Date();
+      const currentMonth = today.getMonth() + 1;
+      const currentDay = today.getDate();
+      
+      let daysUntilBirthday;
+      if (month > currentMonth || (month === currentMonth && day > currentDay)) {
+        daysUntilBirthday = new Date(today.getFullYear(), month - 1, day) - today;
+      } else {
+        daysUntilBirthday = new Date(today.getFullYear() + 1, month - 1, day) - today;
+      }
+      
+      return Math.ceil(daysUntilBirthday / (1000 * 60 * 60 * 24));
+    }
+
+    function formatBirthday(month, day) {
+      if (!month || !day) return "—";
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      return `${monthNames[month - 1]} ${day}`;
+    }
+
+    async function fetchRegistrations() {
+      try {
+        const response = await fetch(GET_DATA_API_URL);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const data = await response.json();
+        
+        // Filter out system settings if any
+        allRegistrations = (Array.isArray(data) ? data : []).filter(reg => reg.name !== "SYSTEM_PROGRAMS");
+        
+        // Load programs if found
+        const programData = data.find(reg => reg.name === "SYSTEM_PROGRAMS");
+        if (programData && programData.location) {
+          try {
+            const progs = JSON.parse(programData.location);
+            document.getElementById('prog-sunday').value = progs.sunday;
+            document.getElementById('prog-monday').value = progs.monday;
+            document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
+            document.getElementById('prog-tue-thu').value = progs.tueThu;
+            document.getElementById('prog-friday').value = progs.friday;
+            document.getElementById('prog-custom').value = progs.custom || "";
+          } catch (e) { console.error("Error parsing programs", e); }
+        }
+
+        renderTable(allRegistrations);
+        displayBirthdayAlerts(allRegistrations);
+      } catch (error) {
+        console.error("Error fetching registrations: ", error);
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">Error loading data. ${error.message}</td></tr>`;
+      }
+    }
+
+    function displayBirthdayAlerts(data) {
+      const upcomingBirthdays = data
+        .filter(reg => isUpcomingBirthday(reg.birthMonth, reg.birthDay))
+        .sort((a, b) => {
+          const daysA = getDaysUntilBirthday(a.birthMonth, a.birthDay);
+          const daysB = getDaysUntilBirthday(b.birthMonth, b.birthDay);
+          return daysA - daysB;
+        });
+
+      if (upcomingBirthdays.length === 0) {
+        birthdayAlerts.style.display = 'none';
+        return;
+      }
+
+      birthdayAlerts.style.display = 'block';
+      birthdayList.innerHTML = upcomingBirthdays
+        .map(reg => {
+          const daysLeft = getDaysUntilBirthday(reg.birthMonth, reg.birthDay);
+          const dayText = daysLeft === 1 ? "Today!" : `in ${daysLeft} days`;
+          return `
+            <div class="birthday-alert-item">
+              <strong>${reg.name}</strong> - ${formatBirthday(reg.birthMonth, reg.birthDay)} (${dayText})
+              ${reg.whatsapp ? `<br><small style="color: #666;">📱 ${reg.whatsapp}</small>` : ''}
+            </div>
+          `;
+        })
+        .join('');
+    }
+
+    async function savePrograms() {
+      const customProg = document.getElementById('prog-custom').value.trim();
+      const progs = {
+        sunday: document.getElementById('prog-sunday').value,
+        monday: document.getElementById('prog-monday').value,
+        wednesday: document.getElementById('prog-wednesday').value,
+        tueThu: document.getElementById('prog-tue-thu').value,
+        friday: document.getElementById('prog-friday').value
+      };
+      
+      if (customProg) {
+        progs.custom = customProg;
+      }
+
+      saveProgramsBtn.disabled = true;
+      saveProgramsBtn.textContent = "Saving...";
+
+      try {
+        const params = new URLSearchParams();
+        params.append('name', "SYSTEM_PROGRAMS");
+        params.append('phone', "000");
+        params.append('location', JSON.stringify(progs));
+        params.append('whatsapp', "");
+        params.append('prayers', "");
+
+        const response = await fetch(SAVE_DATA_API_URL, {
+          method: 'POST',
+          body: params.toString()
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          let errorMessage = "Failed to update schedule";
+          try {
+            const result = JSON.parse(errorText);
+            errorMessage = result.error || errorMessage;
+          } catch (e) {
+            errorMessage = errorText || errorMessage;
+          }
+          throw new Error(errorMessage);
+        }
+
+        alert("Schedule updated successfully!");
+      } catch (e) {
+        alert("Error saving schedule: " + e.message);
+      } finally {
+        saveProgramsBtn.disabled = false;
+        saveProgramsBtn.textContent = "Save Schedule";
+      }
+    }
+
+    saveProgramsBtn.addEventListener('click', savePrograms);
+
+    function renderTable(data) {
+      tableBody.innerHTML = "";
+      totalCount.textContent = `Total: ${data.length}`;
+
+      if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 20px;">No records found. Check your Google Sheet.</td></tr>`;
+        return;
+      }
+
+      data.forEach(reg => {
+        const dateStr = reg.timestamp ? new Date(reg.timestamp).toLocaleDateString() : 'N/A';
+        const tr = document.createElement('tr');
+        const birthdayStr = formatBirthday(reg.birthMonth, reg.birthDay);
+        const isUpcoming = isUpcomingBirthday(reg.birthMonth, reg.birthDay);
+        
+        if (isUpcoming) {
+          tr.classList.add('upcoming-birthday');
+        }
+
+        const firstTime = reg.firstTime === 'yes' ? '✓ Yes' : '—';
+        const volStr = reg.volunteering && reg.volunteering.length > 0 ? reg.volunteering.substring(0, 20) + (reg.volunteering.length > 20 ? '...' : '') : '—';
+        
+        tr.innerHTML = `
+          <td>${dateStr}</td>
+          <td><strong>${reg.name || "Unknown"}</strong></td>
+          <td>${reg.phone || "—"}</td>
+          <td>${reg.location || "—"}</td>
+          <td>${birthdayStr}${isUpcoming ? '<span class="birthday-tag">Soon!</span>' : ''}</td>
+          <td>${firstTime}</td>
+          <td title="${reg.volunteering || ''}" style="font-size: 0.85rem;">${volStr}</td>
+          <td>
+            ${reg.whatsapp ? `<a href="https://wa.me/${reg.whatsapp.toString().replace(/\D/g,'')}" target="_blank" class="whatsapp-link">WhatsApp</a>` : '—'}
+          </td>
+          <td class="actions">
+            <span style="color: #777; font-size: 0.8rem;">View in Sheet</span>
+          </td>
+        `;
+
+        tableBody.appendChild(tr);
+      });
+    }
+
+    // Search logic
+    searchBar.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = allRegistrations.filter(reg => 
+        reg.name.toLowerCase().includes(term) || 
+        reg.phone.toLowerCase().includes(term) || 
+        reg.location.toLowerCase().includes(term)
+      );
+      renderTable(filtered);
+      displayBirthdayAlerts(allRegistrations);
+    });
+
+    // Initial fetch
+    fetchRegistrations();
+  </script>
+</body>
+</html>
