@@ -367,17 +367,17 @@
           <th>Date</th>
           <th>Name</th>
           <th>Phone</th>
-          <th>Location</th>
+          <th>Residence</th>
           <th>Birthday</th>
           <th>First Time</th>
           <th>Volunteering</th>
-          <th>WhatsApp</th>
+          <th>Heard From</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody id="tableBody">
         <tr>
-          <td colspan="7" style="text-align:center; padding: 40px; color: #777;">Loading registrations...</td>
+          <td colspan="9" style="text-align:center; padding: 40px; color: #777;">Loading registrations...</td>
         </tr>
       </tbody>
     </table>
@@ -558,31 +558,42 @@
       }
 
       data.forEach(reg => {
-        const dateStr = reg.timestamp ? new Date(reg.timestamp).toLocaleDateString() : 'N/A';
+        // Handle flexible key naming (lowercase or camelCase)
+        const name = reg.name || reg.Name || "Unknown";
+        const phone = reg.phone || reg.Phone || "—";
+        const location = reg.residence || reg.Residence || reg.location || reg.Location || "—";
+        const bMonth = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || null;
+        const bDay = reg.birthday || reg.birthDay || reg['Birth Day'] || null;
+        const firstTimeVal = reg.registered || reg.Registered || reg.firstTime || reg.firsttime || "";
+        const volunteering = reg.volunteering || reg.Volunteering || "";
+        const referredBy = reg.referredby || reg.referredBy || reg['Referred By'] || "—";
+        const whatsapp = reg.whatsapp || reg.Whatsapp || "";
+        const timestamp = reg.timestamp || reg.date || reg.DATE || reg.Timestamp;
+
+        const dateStr = timestamp ? new Date(timestamp).toLocaleDateString() : 'N/A';
         const tr = document.createElement('tr');
-        const birthdayStr = formatBirthday(reg.birthMonth, reg.birthDay);
-        const isUpcoming = isUpcomingBirthday(reg.birthMonth, reg.birthDay);
+        const birthdayStr = formatBirthday(bMonth, bDay);
+        const isUpcoming = isUpcomingBirthday(bMonth, bDay);
         
         if (isUpcoming) {
           tr.classList.add('upcoming-birthday');
         }
 
-        const firstTime = reg.firstTime === 'yes' ? '✓ Yes' : '—';
-        const volStr = reg.volunteering && reg.volunteering.length > 0 ? reg.volunteering.substring(0, 20) + (reg.volunteering.length > 20 ? '...' : '') : '—';
+        const isFirstTime = firstTimeVal.toString().toLowerCase() === 'yes' ? '✓ Yes' : '—';
+        const volStr = volunteering.length > 0 ? volunteering.substring(0, 30) + (volunteering.length > 30 ? '...' : '') : '—';
         
         tr.innerHTML = `
           <td>${dateStr}</td>
-          <td><strong>${reg.name || "Unknown"}</strong></td>
-          <td>${reg.phone || "—"}</td>
-          <td>${reg.location || "—"}</td>
+          <td><strong>${name}</strong></td>
+          <td>${phone}</td>
+          <td>${location}</td>
           <td>${birthdayStr}${isUpcoming ? '<span class="birthday-tag">Soon!</span>' : ''}</td>
-          <td>${firstTime}</td>
-          <td title="${reg.volunteering || ''}" style="font-size: 0.85rem;">${volStr}</td>
-          <td>
-            ${reg.whatsapp ? `<a href="https://wa.me/${reg.whatsapp.toString().replace(/\D/g,'')}" target="_blank" class="whatsapp-link">WhatsApp</a>` : '—'}
-          </td>
+          <td>${isFirstTime}</td>
+          <td title="${volunteering}" style="font-size: 0.85rem;">${volStr}</td>
+          <td>${referredBy}</td>
           <td class="actions">
-            <span style="color: #777; font-size: 0.8rem;">View in Sheet</span>
+            ${whatsapp ? `<a href="https://wa.me/${whatsapp.toString().replace(/\D/g,'')}" target="_blank" class="whatsapp-link" style="margin-right:8px;">WA</a>` : ''}
+            <span style="color: #777; font-size: 0.8rem;">View</span>
           </td>
         `;
 
