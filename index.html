@@ -707,7 +707,7 @@
           document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
 
-        // 3.2 Save to database (sendBeacon - works everywhere including Firebase)
+        // 3.2 Save to database (Fetch - works everywhere including Firebase)
         const params = new URLSearchParams();
         params.append('name', formData.name);
         params.append('phone', formData.phone);
@@ -720,9 +720,15 @@
         params.append('volunteering', formData.volunteering);
         params.append('prayers', formData.prayers);
 
-        // sendBeacon bypasses CORS - send a urlencoded Blob so Apps Script can parse it
-        const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
-        navigator.sendBeacon(REGISTER_API_URL, blob);
+        fetch(REGISTER_API_URL, {
+          method: 'POST',
+          body: params,
+          mode: 'no-cors' // Google Apps Script requires no-cors for simple POST
+        }).then(() => {
+          console.log("Save request sent successfully");
+        }).catch(err => {
+          console.error("Save error:", err);
+        });
 
         showBlessing(blessing);
       } catch (error) {
