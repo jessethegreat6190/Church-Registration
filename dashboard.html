@@ -384,8 +384,8 @@
   </main>
 
   <script>
-    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
-    const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
+    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzOLV4OFkLcZguQS8tUxLdQzEdA_eoFOeo7uRYx2PmM-lX_57qsOEjN9BORmnMz4JkAbg/exec';
+    const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzOLV4OFkLcZguQS8tUxLdQzEdA_eoFOeo7uRYx2PmM-lX_57qsOEjN9BORmnMz4JkAbg/exec';
 
     const tableBody = document.getElementById('tableBody');
     const searchBar = document.getElementById('searchBar');
@@ -432,7 +432,7 @@
     function formatBirthday(month, day) {
       if (!month || !day) return "—";
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      return `${monthNames[month - 1]} ${day}`;
+      return `${day} ${monthNames[month - 1]}`;
     }
 
     async function fetchRegistrations() {

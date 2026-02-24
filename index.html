@@ -364,66 +364,49 @@
       </div>
 
       <div class="form-group">
-        <label>Birthday (Month & Day)</label>
-        <div class="birthday-group">
-          <div>
-            <input type="number" id="birthMonth" placeholder="Month (1-12)" min="1" max="12">
-          </div>
-          <div>
-            <input type="number" id="birthDay" placeholder="Day (1-31)" min="1" max="31">
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="whatsapp">WhatsApp Number (Optional)</label>
-        <input type="tel" id="whatsapp" placeholder="e.g. 0700000000">
-      </div>
-
-      <div class="form-group">
-        <label>Is this your first time visiting?</label>
+        <label>Registered?</label>
         <div class="checkbox-group" style="gap: 20px;">
           <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="yes"> Yes, first time
+            <input type="radio" name="firstTime" value="yes"> First time registering online
           </label>
           <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="no" checked> No, returning
+            <input type="radio" name="firstTime" value="no" checked> I have registered before
           </label>
         </div>
       </div>
 
-      <div class="form-group" id="volunteerSection" style="display: none;">
-        <label>How can you serve? (Optional)</label>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-worship" value="Worship/Music"> Worship/Music
-          </label>
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-youth" value="Youth Ministry"> Youth Ministry
-          </label>
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-outreach" value="Outreach"> Outreach
-          </label>
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-counseling" value="Counseling"> Counseling
-          </label>
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-teaching" value="Teaching"> Teaching
-          </label>
-          <label style="cursor: pointer; display: flex; gap: 8px;">
-            <input type="checkbox" id="vol-other" value="Other"> Other
-          </label>
+      <div id="firstTimeFields" style="display: none;">
+        <div class="form-group" id="volunteerSection">
+          <label>How can you serve? (Optional)</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
+            <label style="cursor: pointer; display: flex; gap: 8px;">
+              <input type="checkbox" id="vol-ushering" value="Ushering"> Ushering
+            </label>
+            <label style="cursor: pointer; display: flex; gap: 8px;">
+              <input type="checkbox" id="vol-choir" value="Choir"> Choir
+            </label>
+            <label style="cursor: pointer; display: flex; gap: 8px; grid-column: span 2;">
+              <input type="checkbox" id="vol-instruments" value="Playing musical instruments"> Playing musical instruments:
+              <input type="text" id="instrument-type" placeholder="Which instrument?" style="padding: 4px; font-size: 0.8rem; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
+            </label>
+            <label style="cursor: pointer; display: flex; gap: 8px; grid-column: span 2;">
+              <input type="checkbox" id="vol-venue" value="Venue Management"> Venue Management
+            </label>
+            <label style="cursor: pointer; display: flex; gap: 8px;">
+              <input type="checkbox" id="vol-other" value="Other"> Other
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group checkbox-group">
-        <input type="checkbox" id="consent" checked>
-        <label for="consent" style="cursor: pointer;">Agree to be added to WhatsApp & receive messages</label>
-      </div>
+        <div class="form-group checkbox-group" id="consentGroup">
+          <input type="checkbox" id="consent" checked>
+          <label for="consent" style="cursor: pointer;">Would you like to be added to the WhatsApp group?</label>
+        </div>
 
-      <div class="form-group">
-        <label for="prayers">Prayer Requests (Optional)</label>
-        <textarea id="prayers" placeholder="Tell us how we can pray for you..."></textarea>
+        <div class="form-group" style="margin-top:8px;">
+          <label for="referredBy">How did you hear about us? (Optional)</label>
+          <input type="text" id="referredBy" placeholder="Friend, social media, flyer..." style="padding:8px; margin-top:6px; border:1px solid #ddd; border-radius:6px; width:100%;">
+        </div>
       </div>
 
       <button type="submit" id="submitBtn">Done Registering</button>
@@ -453,8 +436,8 @@
   </div>
 
   <script>
-    const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
-    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzKAdobj59rI5uvPI5PK73fNmswL1_bzYC2zUBUtw7Tj5nAXLhqa4uzByTfwClnxI3AxQ/exec';
+    const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbzOLV4OFkLcZguQS8tUxLdQzEdA_eoFOeo7uRYx2PmM-lX_57qsOEjN9BORmnMz4JkAbg/exec';
+    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbzOLV4OFkLcZguQS8tUxLdQzEdA_eoFOeo7uRYx2PmM-lX_57qsOEjN9BORmnMz4JkAbg/exec';
     
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -508,9 +491,6 @@
     function handleReview(e) {
       e.preventDefault();
       
-      const prayerText = document.getElementById('prayers').value;
-      const prayerList = prayerText.split('\n').filter(line => line.trim() !== "");
-
       // Format name: First Letter Capital, others small for each word
       const rawName = document.getElementById('name').value.trim();
       const formattedName = rawName.toLowerCase()
@@ -519,29 +499,28 @@
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 
-      const birthMonth = document.getElementById('birthMonth').value.trim();
-      const birthDay = document.getElementById('birthDay').value.trim();
+      const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "no";
 
       // Get volunteer interests
       const volunteering = [];
-      const volCheckboxes = document.querySelectorAll('input[id^="vol-"]:checked');
+      const volCheckboxes = document.querySelectorAll('#volunteerSection input[type="checkbox"]:checked');
       volCheckboxes.forEach(cb => {
-        if (cb.value) volunteering.push(cb.value);
+        if (cb.value === "Playing musical instruments") {
+          const instrument = document.getElementById('instrument-type').value.trim();
+          volunteering.push(`Instruments: ${instrument || "General"}`);
+        } else if (cb.value) {
+          volunteering.push(cb.value);
+        }
       });
-
-      const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "no";
 
       currentEntry = {
         name: formattedName,
         phone: document.getElementById('phone').value.trim(),
         location: document.getElementById('location').value.trim(),
-        birthMonth: birthMonth || null,
-        birthDay: birthDay || null,
-        whatsapp: document.getElementById('whatsapp').value.trim() || null,
         firstTime: firstTimeValue,
+        referredBy: document.getElementById('referredBy')?.value.trim() || null,
         volunteering: volunteering,
-        consent: document.getElementById('consent').checked,
-        prayers: prayerList
+        consent: document.getElementById('consent').checked
       };
 
       showConfirmation(currentEntry);
@@ -570,17 +549,34 @@
       confirmation.style.display = "none";
     });
 
+    // firstTime radio behaviour: show volunteer section and birthday only for first-time visitors.
+    function updateFirstTimeUI(value) {
+      const firstTimeFields = document.getElementById('firstTimeFields');
+
+      if (value === 'yes') {
+        firstTimeFields.style.display = 'block';
+      } else {
+        // For returning visitors show only name, phone and location (residence)
+        firstTimeFields.style.display = 'none';
+        
+        // Clear hidden fields
+        document.querySelectorAll('#firstTimeFields input[type="checkbox"]').forEach(cb => cb.checked = false);
+        const instr = document.getElementById('instrument-type');
+        const ref = document.getElementById('referredBy');
+        if (instr) instr.value = '';
+        if (ref) ref.value = '';
+      }
+    }
+
     document.querySelectorAll('input[name="firstTime"]').forEach(radio => {
       radio.addEventListener('change', (e) => {
-        const volunteerSection = document.getElementById('volunteerSection');
-        if (e.target.value === 'yes') {
-          volunteerSection.style.display = 'block';
-        } else {
-          volunteerSection.style.display = 'none';
-          document.querySelectorAll('#volunteerSection input[type="checkbox"]').forEach(cb => cb.checked = false);
-        }
+        updateFirstTimeUI(e.target.value);
       });
     });
+
+    // Initialize UI based on default selection
+    const initialFirst = document.querySelector('input[name="firstTime"]:checked')?.value || 'no';
+    updateFirstTimeUI(initialFirst);
 
     const WEEKLY_VERSES = [
       "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you. (Numbers 6:24-25)",
@@ -622,22 +618,21 @@
       
       // 1. Determine if returning user
       const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
-      const cleanInputWhatsapp = (currentEntry.whatsapp || "").replace(/\D/g, '').slice(-9);
       
       let isReturning = false;
       if (Array.isArray(allRegistrations)) {
         isReturning = allRegistrations.some(reg => {
           const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-          const dbWhatsapp = String(reg.whatsapp || "").replace(/\D/g, '').slice(-9);
-          return (cleanInputPhone && dbPhone === cleanInputPhone) || 
-                 (cleanInputWhatsapp && dbWhatsapp === cleanInputWhatsapp);
+          return cleanInputPhone && dbPhone === cleanInputPhone;
         });
       }
+
+      // Do not block returning users here. Let the server update existing rows.
 
       // 2. Prepare WhatsApp URL if needed
       let whatsappUrl = null;
       if (!isReturning) {
-        let rawNumber = (currentEntry.whatsapp || currentEntry.phone).replace(/\D/g, '');
+        let rawNumber = currentEntry.phone.replace(/\D/g, '');
         if (rawNumber.startsWith('0')) {
           rawNumber = '256' + rawNumber.substring(1);
         } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
@@ -667,53 +662,67 @@
         messageText += "\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
           "*An encounter with the Holy Spirit*";
 
-        if (isUpcomingBirthday(currentEntry.birthMonth, currentEntry.birthDay)) {
-          messageText = "🎂 *Happy Birthday Month!* 🎉\n\n" + messageText;
-        }
-
         const message = encodeURIComponent(messageText);
         whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
       }
 
       // 3. Save to database
       try {
-        const params = new URLSearchParams();
-        params.append('name', currentEntry.name);
-        params.append('phone', currentEntry.phone);
-        params.append('location', currentEntry.location);
-        params.append('birthMonth', currentEntry.birthMonth || "");
-        params.append('birthDay', currentEntry.birthDay || "");
-        params.append('whatsapp', currentEntry.whatsapp || "");
-        params.append('firstTime', currentEntry.firstTime || "");
-        params.append('volunteering', currentEntry.volunteering.join(", ") || "");
-        params.append('prayers', currentEntry.prayers.join(", "));
+        // If returning, send minimal fields so the server can merge/update existing record.
+        let formData;
+        if (isReturning) {
+          formData = {
+            name: currentEntry.name,
+            phone: currentEntry.phone,
+            location: currentEntry.location,
+            firstTime: "no",
+            birthDay: "",
+            birthMonth: "",
+            whatsapp: "",
+            referredBy: "",
+            volunteering: "",
+            prayers: ""
+          };
+        } else {
+          formData = {
+            name: currentEntry.name,
+            phone: currentEntry.phone,
+            location: currentEntry.location,
+            birthDay: "",
+            birthMonth: "",
+            firstTime: "yes",
+            whatsapp: "—",
+            referredBy: currentEntry.referredBy || "",
+            volunteering: currentEntry.volunteering.join(", ") || "",
+            prayers: "None"
+          };
+        }
 
-        // OPEN WHATSAPP IMMEDIATELY (Highest priority for browsers)
+        // 3.1 OPEN WHATSAPP IMMEDIATELY (Highest priority for browsers)
         if (whatsappUrl) {
           window.open(whatsappUrl, "_blank");
-          // Add a backup link for the blessing screen
           const blessingPara = document.getElementById('blessingText');
           blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
         } else {
           document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
 
-        const response = await fetch(REGISTER_API_URL, {
-          method: 'POST',
-          body: params.toString()
-        });
+        // 3.2 Save to database (sendBeacon - works everywhere including Firebase)
+        const params = new URLSearchParams();
+        params.append('name', formData.name);
+        params.append('phone', formData.phone);
+        params.append('location', formData.location);
+        params.append('birthDay', formData.birthDay);
+        params.append('birthMonth', formData.birthMonth);
+        params.append('firstTime', formData.firstTime);
+        params.append('whatsapp', formData.whatsapp);
+        params.append('referredBy', formData.referredBy);
+        params.append('volunteering', formData.volunteering);
+        params.append('prayers', formData.prayers);
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          let errorMessage = "Failed to save registration";
-          try {
-            const result = JSON.parse(errorText);
-            errorMessage = result.error || errorMessage;
-          } catch (e) {
-            errorMessage = errorText || errorMessage;
-          }
-          throw new Error(errorMessage);
-        }
+        // sendBeacon bypasses CORS - send a urlencoded Blob so Apps Script can parse it
+        const blob = new Blob([params.toString()], { type: 'application/x-www-form-urlencoded;charset=UTF-8' });
+        navigator.sendBeacon(REGISTER_API_URL, blob);
 
         showBlessing(blessing);
       } catch (error) {
@@ -727,21 +736,24 @@
     saveBtn.addEventListener('click', handleSave);
 
     function showConfirmation(data) {
-      const birthStr = (data.birthMonth && data.birthDay) ? 
-        `${data.birthMonth}/${data.birthDay}` : "—";
-      const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
-      
-      detailsList.innerHTML = `
-        <li><strong>Name:</strong> ${data.name}</li>
-        <li><strong>Phone:</strong> ${data.phone}</li>
-        <li><strong>Location:</strong> ${data.location}</li>
-        <li><strong>Birthday:</strong> ${birthStr}</li>
-        <li><strong>WhatsApp:</strong> ${data.whatsapp || "—"}</li>
-        <li><strong>First Time Visitor:</strong> ${data.firstTime === 'yes' ? 'Yes' : 'No'}</li>
-        <li><strong>Volunteer Interests:</strong> ${volStr}</li>
-        <li><strong>Agreement:</strong> ${data.consent ? "Yes" : "No"}</li>
-        <li><strong>Prayers:</strong> ${data.prayers.length > 0 ? data.prayers.join(", ") : "None"}</li>
-      `;
+      if (data.firstTime === 'no') {
+        detailsList.innerHTML = `
+          <li><strong>Name:</strong> ${data.name}</li>
+          <li><strong>Phone:</strong> ${data.phone}</li>
+          <li><strong>Residence:</strong> ${data.location}</li>
+          <li><strong>Registration:</strong> Returning</li>
+        `;
+      } else {
+        const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
+        detailsList.innerHTML = `
+          <li><strong>Name:</strong> ${data.name}</li>
+          <li><strong>Phone:</strong> ${data.phone}</li>
+          <li><strong>Residence:</strong> ${data.location}</li>
+          <li><strong>Registration:</strong> First-time online</li>
+          <li><strong>Volunteer Interests:</strong> ${volStr}</li>
+          <li><strong>WhatsApp Group Invite:</strong> ${data.consent ? "Yes" : "No"}</li>
+        `;
+      }
       form.style.display = "none";
       confirmation.style.display = "block";
     }
