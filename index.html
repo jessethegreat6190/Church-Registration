@@ -359,7 +359,7 @@
       </div>
 
       <div class="form-group">
-        <label for="location">Location</label>
+        <label for="location">Residence</label>
         <input type="text" id="location" placeholder="Where do you live?" required>
       </div>
 
@@ -376,6 +376,28 @@
       </div>
 
       <div id="firstTimeFields" style="display: none;">
+        <div class="form-group">
+          <label>Your Birthday (Optional)</label>
+          <div class="birthday-group">
+            <input type="number" id="birthDay" placeholder="Day (e.g. 24)" min="1" max="31">
+            <select id="birthMonth">
+              <option value="">Month</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+        </div>
+
         <div class="form-group" id="volunteerSection">
           <label>How can you serve? (Optional)</label>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
@@ -518,6 +540,8 @@
         phone: document.getElementById('phone').value.trim(),
         location: document.getElementById('location').value.trim(),
         firstTime: firstTimeValue,
+        birthDay: document.getElementById('birthDay')?.value || "",
+        birthMonth: document.getElementById('birthMonth')?.value || "",
         referredBy: document.getElementById('referredBy')?.value.trim() || null,
         volunteering: volunteering,
         consent: document.getElementById('consent').checked
@@ -529,18 +553,16 @@
     function isUpcomingBirthday(month, day) {
       if (!month || !day) return false;
       const today = new Date();
-      const currentMonth = today.getMonth() + 1;
-      const currentDay = today.getDate();
+      today.setHours(0, 0, 0, 0);
       
-      let daysUntilBirthday;
-      if (month > currentMonth || (month === currentMonth && day > currentDay)) {
-        daysUntilBirthday = new Date(today.getFullYear(), month - 1, day) - today;
-      } else {
-        daysUntilBirthday = new Date(today.getFullYear() + 1, month - 1, day) - today;
+      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
+      if (bdayThisYear < today) {
+        bdayThisYear.setFullYear(today.getFullYear() + 1);
       }
       
-      const daysDiff = Math.ceil(daysUntilBirthday / (1000 * 60 * 60 * 24));
-      return daysDiff <= 7 && daysDiff > 0;
+      const diffTime = bdayThisYear - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= 7 && diffDays >= 0;
     }
 
     form.addEventListener('submit', handleReview);
@@ -563,8 +585,12 @@
         document.querySelectorAll('#firstTimeFields input[type="checkbox"]').forEach(cb => cb.checked = false);
         const instr = document.getElementById('instrument-type');
         const ref = document.getElementById('referredBy');
+        const bDay = document.getElementById('birthDay');
+        const bMonth = document.getElementById('birthMonth');
         if (instr) instr.value = '';
         if (ref) ref.value = '';
+        if (bDay) bDay.value = '';
+        if (bMonth) bMonth.value = '';
       }
     }
 
@@ -688,10 +714,10 @@
             name: currentEntry.name,
             phone: currentEntry.phone,
             location: currentEntry.location,
-            birthDay: "",
-            birthMonth: "",
+            birthDay: currentEntry.birthDay,
+            birthMonth: currentEntry.birthMonth,
             firstTime: "yes",
-            whatsapp: "—",
+            whatsapp: currentEntry.consent ? currentEntry.phone : "—",
             referredBy: currentEntry.referredBy || "",
             volunteering: currentEntry.volunteering.join(", ") || "",
             prayers: "None"
@@ -751,10 +777,14 @@
         `;
       } else {
         const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
+        const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const birthdayStr = (data.birthDay && data.birthMonth) ? `${data.birthDay} ${monthNames[data.birthMonth]}` : "—";
+        
         detailsList.innerHTML = `
           <li><strong>Name:</strong> ${data.name}</li>
           <li><strong>Phone:</strong> ${data.phone}</li>
           <li><strong>Residence:</strong> ${data.location}</li>
+          <li><strong>Birthday:</strong> ${birthdayStr}</li>
           <li><strong>Registration:</strong> First-time online</li>
           <li><strong>Volunteer Interests:</strong> ${volStr}</li>
           <li><strong>WhatsApp Group Invite:</strong> ${data.consent ? "Yes" : "No"}</li>

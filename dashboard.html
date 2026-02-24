@@ -399,34 +399,30 @@
     function isUpcomingBirthday(month, day) {
       if (!month || !day) return false;
       const today = new Date();
-      const currentMonth = today.getMonth() + 1;
-      const currentDay = today.getDate();
+      today.setHours(0, 0, 0, 0);
       
-      let daysUntilBirthday;
-      if (month > currentMonth || (month === currentMonth && day > currentDay)) {
-        daysUntilBirthday = new Date(today.getFullYear(), month - 1, day) - today;
-      } else {
-        daysUntilBirthday = new Date(today.getFullYear() + 1, month - 1, day) - today;
+      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
+      if (bdayThisYear < today) {
+        bdayThisYear.setFullYear(today.getFullYear() + 1);
       }
       
-      const daysDiff = Math.ceil(daysUntilBirthday / (1000 * 60 * 60 * 24));
-      return daysDiff <= 7 && daysDiff > 0;
+      const diffTime = bdayThisYear - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= 7 && diffDays >= 0;
     }
 
     function getDaysUntilBirthday(month, day) {
       if (!month || !day) return null;
       const today = new Date();
-      const currentMonth = today.getMonth() + 1;
-      const currentDay = today.getDate();
+      today.setHours(0, 0, 0, 0);
       
-      let daysUntilBirthday;
-      if (month > currentMonth || (month === currentMonth && day > currentDay)) {
-        daysUntilBirthday = new Date(today.getFullYear(), month - 1, day) - today;
-      } else {
-        daysUntilBirthday = new Date(today.getFullYear() + 1, month - 1, day) - today;
+      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
+      if (bdayThisYear < today) {
+        bdayThisYear.setFullYear(today.getFullYear() + 1);
       }
       
-      return Math.ceil(daysUntilBirthday / (1000 * 60 * 60 * 24));
+      const diffTime = bdayThisYear - today;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
 
     function formatBirthday(month, day) {
@@ -468,10 +464,18 @@
 
     function displayBirthdayAlerts(data) {
       const upcomingBirthdays = data
-        .filter(reg => isUpcomingBirthday(reg.birthMonth, reg.birthDay))
+        .filter(reg => {
+          const m = reg.birthmonth || reg.birthMonth || reg['Birth Month'];
+          const d = reg.birthday || reg.birthDay || reg['Birth Day'];
+          return isUpcomingBirthday(m, d);
+        })
         .sort((a, b) => {
-          const daysA = getDaysUntilBirthday(a.birthMonth, a.birthDay);
-          const daysB = getDaysUntilBirthday(b.birthMonth, b.birthDay);
+          const mA = a.birthmonth || a.birthMonth || a['Birth Month'];
+          const dA = a.birthday || a.birthDay || a['Birth Day'];
+          const mB = b.birthmonth || b.birthMonth || b['Birth Month'];
+          const dB = b.birthday || b.birthDay || b['Birth Day'];
+          const daysA = getDaysUntilBirthday(mA, dA);
+          const daysB = getDaysUntilBirthday(mB, dB);
           return daysA - daysB;
         });
 
@@ -483,12 +487,14 @@
       birthdayAlerts.style.display = 'block';
       birthdayList.innerHTML = upcomingBirthdays
         .map(reg => {
-          const daysLeft = getDaysUntilBirthday(reg.birthMonth, reg.birthDay);
-          const dayText = daysLeft === 1 ? "Today!" : `in ${daysLeft} days`;
+          const m = reg.birthmonth || reg.birthMonth || reg['Birth Month'];
+          const d = reg.birthday || reg.birthDay || reg['Birth Day'];
+          const daysLeft = getDaysUntilBirthday(m, d);
+          const dayText = daysLeft === 0 ? "Today!" : `in ${daysLeft} days`;
           return `
             <div class="birthday-alert-item">
-              <strong>${reg.name}</strong> - ${formatBirthday(reg.birthMonth, reg.birthDay)} (${dayText})
-              ${reg.whatsapp ? `<br><small style="color: #666;">📱 ${reg.whatsapp}</small>` : ''}
+              <strong>${reg.name || reg.Name}</strong> - ${formatBirthday(m, d)} (${dayText})
+              ${(reg.whatsapp || reg.Whatsapp) ? `<br><small style="color: #666;">📱 ${reg.whatsapp || reg.Whatsapp}</small>` : ''}
             </div>
           `;
         })
