@@ -701,11 +701,16 @@
             name: currentEntry.name,
             phone: currentEntry.phone,
             location: currentEntry.location,
+            residence: currentEntry.location,
             firstTime: "no",
+            registered: "no",
             birthDay: "",
             birthMonth: "",
+            "Birth Day": "",
+            "Birth Month": "",
             whatsapp: "",
             referredBy: "",
+            "Referred By": "",
             volunteering: "",
             prayers: ""
           };
@@ -714,17 +719,34 @@
             name: currentEntry.name,
             phone: currentEntry.phone,
             location: currentEntry.location,
+            residence: currentEntry.location,
             birthDay: currentEntry.birthDay,
             birthMonth: currentEntry.birthMonth,
+            "Birth Day": currentEntry.birthDay,
+            "Birth Month": currentEntry.birthMonth,
             firstTime: "yes",
+            registered: "yes",
             whatsapp: currentEntry.consent ? currentEntry.phone : "—",
             referredBy: currentEntry.referredBy || "",
+            "Referred By": currentEntry.referredBy || "",
             volunteering: currentEntry.volunteering.join(", ") || "",
             prayers: "None"
           };
         }
 
-        // 3.1 OPEN WHATSAPP IMMEDIATELY (Highest priority for browsers)
+        // 3.2 Save to database (Using URLSearchParams with toString() for GAS)
+        const params = new URLSearchParams();
+        Object.keys(formData).forEach(key => params.append(key, formData[key]));
+        
+        // Fetch BEFORE opening WhatsApp to prevent focus issues
+        fetch(REGISTER_API_URL, {
+          method: 'POST',
+          body: params.toString(),
+          mode: 'no-cors'
+        }).then(() => console.log("Save success"))
+          .catch(err => console.error("Save err:", err));
+
+        // 3.1 OPEN WHATSAPP (Must be last to avoid interrupting the fetch)
         if (whatsappUrl) {
           window.open(whatsappUrl, "_blank");
           const blessingPara = document.getElementById('blessingText');
@@ -732,30 +754,6 @@
         } else {
           document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
-
-        // 3.2 Save to database (Using FormData for better GAS compatibility)
-        const payload = new FormData();
-        payload.append('name', formData.name);
-        payload.append('phone', formData.phone);
-        payload.append('location', formData.location);
-        payload.append('residence', formData.location);
-        payload.append('birthDay', formData.birthDay);
-        payload.append('birthMonth', formData.birthMonth);
-        payload.append('firstTime', formData.firstTime);
-        payload.append('whatsapp', formData.whatsapp);
-        payload.append('referredBy', formData.referredBy);
-        payload.append('volunteering', formData.volunteering);
-        payload.append('prayers', formData.prayers);
-
-        fetch(REGISTER_API_URL, {
-          method: 'POST',
-          body: payload,
-          mode: 'no-cors'
-        }).then(() => {
-          console.log("Save request sent successfully");
-        }).catch(err => {
-          console.error("Save error:", err);
-        });
 
         showBlessing(blessing);
       } catch (error) {
