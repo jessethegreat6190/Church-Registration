@@ -694,53 +694,31 @@
 
       // 3. Save to database
       try {
-        // If returning, send minimal fields so the server can merge/update existing record.
-        let formData;
-        if (isReturning) {
-          formData = {
-            name: currentEntry.name,
-            phone: currentEntry.phone,
-            location: currentEntry.location,
-            residence: currentEntry.location,
-            firstTime: "no",
-            registered: "no",
-            birthDay: "",
-            birthMonth: "",
-            "Birth Day": "",
-            "Birth Month": "",
-            whatsapp: "",
-            referredBy: "",
-            "Referred By": "",
-            volunteering: "",
-            prayers: ""
-          };
-        } else {
-          formData = {
-            name: currentEntry.name,
-            phone: currentEntry.phone,
-            location: currentEntry.location,
-            residence: currentEntry.location,
-            birthDay: currentEntry.birthDay,
-            birthMonth: currentEntry.birthMonth,
-            "Birth Day": currentEntry.birthDay,
-            "Birth Month": currentEntry.birthMonth,
-            firstTime: "yes",
-            registered: "yes",
-            whatsapp: currentEntry.consent ? currentEntry.phone : "—",
-            referredBy: currentEntry.referredBy || "",
-            "Referred By": currentEntry.referredBy || "",
-            volunteering: currentEntry.volunteering.join(", ") || "",
-            prayers: "None"
-          };
-        }
+        // 3. Prepare data for Google Sheets
+        const formData = {
+          name: currentEntry.name,
+          phone: currentEntry.phone,
+          residence: currentEntry.location,
+          birthMonth: currentEntry.birthMonth || "",
+          birthDay: currentEntry.birthDay || "",
+          registered: currentEntry.firstTime,
+          whatsapp: currentEntry.consent ? currentEntry.phone : "—",
+          volunteering: currentEntry.volunteering.join(", "),
+          referredBy: currentEntry.referredBy || ""
+        };
 
-        // 3.2 Save to database (Using JSON for maximum reliability)
+        // 3.2 Save to database (Using URLSearchParams for best GAS compatibility)
+        const params = new URLSearchParams();
+        for (const key in formData) {
+          params.append(key, formData[key]);
+        }
+        
         fetch(REGISTER_API_URL, {
           method: 'POST',
-          body: JSON.stringify(formData),
-          mode: 'no-cors'
-        }).then(() => console.log("Save success"))
-          .catch(err => console.error("Save err:", err));
+          body: params.toString(),
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
 
         // 3.1 OPEN WHATSAPP (Must be last to avoid interrupting the fetch)
         if (whatsappUrl) {
