@@ -642,9 +642,21 @@
 
       const blessing = getWeeklyVerse();
       
-      // 1. Determine if returning user
+      // 1. Prepare data for Google Sheets
+      const formData = {
+        name: currentEntry.name,
+        phone: currentEntry.phone,
+        location: currentEntry.location,
+        birthMonth: currentEntry.birthMonth || "",
+        birthDay: currentEntry.birthDay || "",
+        registered: currentEntry.firstTime,
+        whatsapp: currentEntry.consent ? currentEntry.phone : "—",
+        volunteering: currentEntry.volunteering.join(", "),
+        referredBy: currentEntry.referredBy || ""
+      };
+
+      // 2. Determine if returning user
       const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
-      
       let isReturning = false;
       if (Array.isArray(allRegistrations)) {
         isReturning = allRegistrations.some(reg => {
@@ -653,88 +665,91 @@
         });
       }
 
-      // Do not block returning users here. Let the server update existing rows.
-
-      // 2. Prepare WhatsApp URL if needed
-      let whatsappUrl = null;
-      if (!isReturning) {
-        let rawNumber = currentEntry.phone.replace(/\D/g, '');
-        if (rawNumber.startsWith('0')) {
-          rawNumber = '256' + rawNumber.substring(1);
-        } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
-          rawNumber = '256' + rawNumber;
-        }
-
-        let programMessage = 
-          "Church Programs:\n" +
-          "• Sunday Services: " + churchPrograms.sunday + "\n" +
-          "• Monday Kyoto Prayers: " + churchPrograms.monday + "\n" +
-          "• Wednesday Evening Glory: " + churchPrograms.wednesday + "\n" +
-          "• Tue & Thu Counseling: " + churchPrograms.tueThu + "\n" +
-          "• Friday Night Prayers: " + churchPrograms.friday;
-        
-        if (churchPrograms.custom && churchPrograms.custom.trim()) {
-          programMessage += "\n• " + churchPrograms.custom;
-        }
-
-        let messageText = "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
-          "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
-          programMessage;
-
-        if (currentEntry.consent) {
-          messageText += "\n\nJoin our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h";
-        }
-
-        messageText += "\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
-          "*An encounter with the Holy Spirit*";
-
-        const message = encodeURIComponent(messageText);
-        whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
-      }
-
-      // 3. Save to database
+      // 3. Save to database using a hidden form (The most reliable method)
       try {
-        // 3. Prepare data for Google Sheets
-        const formData = {
-          name: currentEntry.name,
-          phone: currentEntry.phone,
-          location: currentEntry.location,
-          residence: currentEntry.location,
-          birthMonth: currentEntry.birthMonth || "",
-          birthDay: currentEntry.birthDay || "",
-          registered: currentEntry.firstTime,
-          firstTime: currentEntry.firstTime,
-          whatsapp: currentEntry.consent ? currentEntry.phone : "—",
-          volunteering: currentEntry.volunteering.join(", "),
-          referredBy: currentEntry.referredBy || ""
-        };
+        const formId = 'temp_gas_form';
+        let tempForm = document.getElementById(formId);
+        if (!tempForm) {
+          tempForm = document.createElement('form');
+          tempForm.id = formId;
+          tempForm.style.display = 'none';
+          tempForm.method = 'POST';
+          tempForm.action = REGISTER_API_URL;
+          tempForm.target = 'hidden_iframe';
+          
+          if (!document.getElementById('hidden_iframe')) {
+            const iframe = document.createElement('iframe');
+            iframe.id = 'hidden_iframe';
+            iframe.name = 'hidden_iframe';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+          }
+          document.body.appendChild(tempForm);
+        }
 
-        // 3.2 Save to database (Using URLSearchParams for best GAS compatibility)
-        const params = new URLSearchParams();
+        tempForm.innerHTML = '';
         for (const key in formData) {
-          params.append(key, formData[key]);
-        }
-        
-        fetch(REGISTER_API_URL, {
-          method: 'POST',
-          body: params.toString(),
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-
-        // 3.1 OPEN WHATSAPP (Must be last to avoid interrupting the fetch)
-        if (whatsappUrl) {
-          window.open(whatsappUrl, "_blank");
-          const blessingPara = document.getElementById('blessingText');
-          blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
-        } else {
-          document.getElementById('blessingText').textContent = `"${blessing}"`;
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = formData[key];
+          tempForm.appendChild(input);
         }
 
-        showBlessing(blessing);
+        tempForm.submit();
+
+        // 4. Prepare WhatsApp URL if needed
+        let whatsappUrl = null;
+        if (!isReturning) {
+          let rawNumber = currentEntry.phone.replace(/\D/g, '');
+          if (rawNumber.startsWith('0')) {
+            rawNumber = '256' + rawNumber.substring(1);
+          } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
+            rawNumber = '256' + rawNumber;
+          }
+
+          let programMessage = 
+            "Church Programs:\n" +
+            "• Sunday Services: " + churchPrograms.sunday + "\n" +
+            "• Monday Kyoto Prayers: " + churchPrograms.monday + "\n" +
+            "• Wednesday Evening Glory: " + churchPrograms.wednesday + "\n" +
+            "• Tue & Thu Counseling: " + churchPrograms.tueThu + "\n" +
+            "• Friday Night Prayers: " + churchPrograms.friday;
+          
+          if (churchPrograms.custom && churchPrograms.custom.trim()) {
+            programMessage += "\n• " + churchPrograms.custom;
+          }
+
+          let messageText = "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
+            "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
+            programMessage;
+
+          if (currentEntry.consent) {
+            messageText += "\n\nJoin our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h";
+          }
+
+          messageText += "\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
+            "*An encounter with the Holy Spirit*";
+
+          const message = encodeURIComponent(messageText);
+          whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
+        }
+
+        // 5. Show blessing and open WhatsApp
+        setTimeout(() => {
+          if (whatsappUrl) {
+            window.open(whatsappUrl, "_blank");
+            const blessingPara = document.getElementById('blessingText');
+            blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+          } else {
+            document.getElementById('blessingText').textContent = `"${blessing}"`;
+          }
+          showBlessing(blessing);
+        }, 800);
+
       } catch (error) {
         console.error("Save error:", error);
-        alert("❌ Error saving: " + error.message);
+        alert("❌ Error saving registration. Please try again.");
         saveBtn.disabled = false;
         saveBtn.textContent = "Save Registration";
       }
