@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <title>Admin Dashboard - Church Registrations</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Firebase SDK (Compat versions for ease of use) -->
+  <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
+  <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
   <style>
     :root {
       --primary-blue: #2c3e50;
@@ -319,6 +325,7 @@
   <main>
     <div class="controls">
       <input type="text" id="searchBar" placeholder="Search by name, phone, or location...">
+      <button id="exportBtn" style="background: var(--secondary-blue); color: white; padding: 10px 20px; font-weight: 600;">Export to Excel (CSV)</button>
       <div class="stats" id="totalCount">Total: 0</div>
     </div>
 
@@ -389,12 +396,26 @@
 
     const tableBody = document.getElementById('tableBody');
     const searchBar = document.getElementById('searchBar');
+    const exportBtn = document.getElementById('exportBtn');
     const totalCount = document.getElementById('totalCount');
     const saveProgramsBtn = document.getElementById('saveProgramsBtn');
     const birthdayAlerts = document.getElementById('birthdayAlerts');
     const birthdayList = document.getElementById('birthdayList');
 
     let allRegistrations = [];
+    let db = null;
+
+    // Initialize Firestore after script load
+    window.addEventListener('load', () => {
+      if (typeof firebase !== 'undefined') {
+        db = firebase.firestore();
+        console.log("Firestore Initialized");
+        // Wait a bit for firebase to be fully ready
+        setTimeout(fetchRegistrations, 1000);
+      } else {
+        fetchRegistrations();
+      }
+    });
 
     function isUpcomingBirthday(month, day) {
       if (!month || !day) return false;
@@ -433,32 +454,62 @@
 
     async function fetchRegistrations() {
       try {
-        const response = await fetch(GET_DATA_API_URL);
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const data = await response.json();
-        
-        // Filter out system settings if any
-        allRegistrations = (Array.isArray(data) ? data : []).filter(reg => reg.name !== "SYSTEM_PROGRAMS");
-        
-        // Load programs if found
-        const programData = data.find(reg => reg.name === "SYSTEM_PROGRAMS");
-        if (programData && programData.location) {
-          try {
-            const progs = JSON.parse(programData.location);
+        let fireData = [];
+        if (db) {
+          const snapshot = await db.collection('registrations').orderBy('timestamp', 'desc').get();
+          fireData = snapshot.docs.map(doc => {
+            const d = doc.data();
+            // Convert Firestore Timestamp to Date object for consistency
+            if (d.timestamp && d.timestamp.toDate) {
+              d.timestamp = d.timestamp.toDate();
+            }
+            return d;
+          });
+          
+          // Fetch programs
+          const progDoc = await db.collection('settings').doc('programs').get();
+          if (progDoc.exists) {
+            const progs = progDoc.data();
             document.getElementById('prog-sunday').value = progs.sunday;
             document.getElementById('prog-monday').value = progs.monday;
             document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
             document.getElementById('prog-tue-thu').value = progs.tueThu;
             document.getElementById('prog-friday').value = progs.friday;
             document.getElementById('prog-custom').value = progs.custom || "";
-          } catch (e) { console.error("Error parsing programs", e); }
+          }
         }
+
+        const response = await fetch(GET_DATA_API_URL);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const sheetData = await response.json();
+        
+        // Merge data, avoiding duplicates by phone number
+        allRegistrations = [...fireData];
+        
+        sheetData.forEach(reg => {
+          if (reg.name !== "SYSTEM_PROGRAMS") {
+            const phone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+            if (!allRegistrations.some(r => String(r.phone || "").replace(/\D/g, '').slice(-9) === phone)) {
+               allRegistrations.push(reg);
+            }
+          } else if (allRegistrations.length === fireData.length) { // Only if firestore settings were missing
+            try {
+              const progs = JSON.parse(reg.location);
+              document.getElementById('prog-sunday').value = progs.sunday;
+              document.getElementById('prog-monday').value = progs.monday;
+              document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
+              document.getElementById('prog-tue-thu').value = progs.tueThu;
+              document.getElementById('prog-friday').value = progs.friday;
+              document.getElementById('prog-custom').value = progs.custom || "";
+            } catch(e){}
+          }
+        });
 
         renderTable(allRegistrations);
         displayBirthdayAlerts(allRegistrations);
       } catch (error) {
         console.error("Error fetching registrations: ", error);
-        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:red;">Error loading data. ${error.message}</td></tr>`;
+        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:red;">Error loading data. ${error.message}</td></tr>`;
       }
     }
 
@@ -519,6 +570,13 @@
       saveProgramsBtn.textContent = "Saving...";
 
       try {
+        // A. FIREBASE SAVE (Direct and reliable)
+        if (db) {
+          await db.collection('settings').doc('programs').set(progs);
+          console.log("Programs saved to Firestore");
+        }
+
+        // B. GOOGLE SHEETS SAVE (Backup)
         const params = new URLSearchParams();
         params.append('name', "SYSTEM_PROGRAMS");
         params.append('phone', "000");
@@ -554,6 +612,46 @@
 
     saveProgramsBtn.addEventListener('click', savePrograms);
 
+    function exportToCSV() {
+      if (allRegistrations.length === 0) {
+        alert("No data to export");
+        return;
+      }
+
+      const headers = ["Date", "Name", "Phone", "Residence", "Birth Month", "Birth Day", "Registered?", "WhatsApp", "Volunteering", "Referred By"];
+      const rows = allRegistrations.map(reg => {
+        const bMonth = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || "";
+        const bDay = reg.birthday || reg.birthDay || reg['Birth Day'] || "";
+        const timestamp = reg.timestamp || reg.date || reg.DATE || reg.Timestamp;
+        const dateStr = timestamp ? new Date(timestamp).toLocaleDateString() : 'N/A';
+        
+        return [
+          dateStr,
+          reg.name || reg.Name || "Unknown",
+          reg.phone || reg.Phone || "—",
+          reg.residence || reg.Residence || reg.location || reg.Location || "—",
+          bMonth,
+          bDay,
+          reg.registered || reg.Registered || reg.firstTime || reg.firsttime || "",
+          reg.whatsapp || reg.Whatsapp || "",
+          reg.volunteering || reg.Volunteering || "",
+          reg.referredby || reg.referredBy || reg['Referred By'] || "—"
+        ].map(val => `"${String(val).replace(/"/g, '""')}"`); // Escape CSV
+      });
+
+      const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Church_Registrations_${new Date().toLocaleDateString()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    exportBtn.addEventListener('click', exportToCSV);
+
     function renderTable(data) {
       tableBody.innerHTML = "";
       totalCount.textContent = `Total: ${data.length}`;
@@ -576,7 +674,14 @@
         const whatsapp = reg.whatsapp || reg.Whatsapp || "";
         const timestamp = reg.timestamp || reg.date || reg.DATE || reg.Timestamp;
 
-        const dateStr = timestamp ? new Date(timestamp).toLocaleDateString() : 'N/A';
+        let dateStr = 'N/A';
+        if (timestamp) {
+           const d = new Date(timestamp);
+           if (!isNaN(d.getTime())) {
+             dateStr = d.toLocaleDateString();
+           }
+        }
+        
         const tr = document.createElement('tr');
         const birthdayStr = formatBirthday(bMonth, bDay);
         const isUpcoming = isUpcomingBirthday(bMonth, bDay);

@@ -7,6 +7,12 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c3e50">
   <link rel="apple-touch-icon" href="church logo/New Logo 2026.png">
+
+  <!-- Firebase SDK (Compat versions for ease of use) -->
+  <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
+  <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
   <style>
     :root {
       --primary-blue: #2c3e50;
@@ -471,6 +477,16 @@
     
     let currentEntry = null;
     let allRegistrations = [];
+    let db = null;
+    
+    // Initialize Firestore after script load
+    window.addEventListener('load', () => {
+      if (typeof firebase !== 'undefined') {
+        db = firebase.firestore();
+        console.log("Firestore Initialized");
+      }
+    });
+
     let churchPrograms = {
       sunday: "8:00 AM",
       monday: "7:00 AM - 9:00 AM",
@@ -482,25 +498,46 @@
     // Pre-fetch registrations & programs
     async function prefetchData() {
       try {
+        // First try Firestore (More reliable)
+        if (typeof firebase !== 'undefined' && db) {
+          const snapshot = await db.collection('registrations').get();
+          allRegistrations = snapshot.docs.map(doc => doc.data());
+          console.log("Fetched from Firestore");
+          
+          // Fetch programs from special doc
+          const progDoc = await db.collection('settings').doc('programs').get();
+          if (progDoc.exists) {
+            churchPrograms = progDoc.data();
+          }
+        }
+
+        // Secondary fallback: Google Sheets
         const response = await fetch(GET_DATA_API_URL);
         if (response.ok) {
           const data = await response.json();
-          allRegistrations = data.filter(reg => reg.name !== "SYSTEM_PROGRAMS");
-          
-          const progData = data.find(reg => reg.name === "SYSTEM_PROGRAMS");
-          if (progData && progData.location) {
-            try {
-              churchPrograms = JSON.parse(progData.location);
-              // Ensure wednesday exists for old saved programs
-              if (!churchPrograms.wednesday) churchPrograms.wednesday = "Evening Glory 5pm-7pm";
-            } catch (e) { console.error("Error parsing programs", e); }
-          }
+          // Merge with allRegistrations (avoiding duplicates by phone)
+          data.forEach(reg => {
+            if (reg.name !== "SYSTEM_PROGRAMS") {
+              const phone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+              if (!allRegistrations.some(r => String(r.phone || "").replace(/\D/g, '').slice(-9) === phone)) {
+                allRegistrations.push(reg);
+              }
+            } else if (!churchPrograms.custom) { // only if firestore was empty
+               try {
+                 churchPrograms = JSON.parse(reg.location);
+               } catch(e){}
+            }
+          });
         }
       } catch (e) {
         console.error("Could not fetch existing data", e);
       }
     }
-    prefetchData();
+    
+    // Wait for Firestore to be ready before pre-fetching
+    window.addEventListener('load', () => {
+       setTimeout(prefetchData, 1000);
+    });
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -667,6 +704,16 @@
 
       // 3. Save to database using a hidden form (The most reliable method)
       try {
+        // A. FIREBASE SAVE (Direct and reliable)
+        if (db) {
+          await db.collection('registrations').add({
+            ...formData,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          console.log("Saved to Firestore");
+        }
+
+        // B. GOOGLE SHEETS SAVE (Backup)
         const formId = 'temp_gas_form';
         let tempForm = document.getElementById(formId);
         if (!tempForm) {
