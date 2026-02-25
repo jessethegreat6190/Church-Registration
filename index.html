@@ -734,14 +734,10 @@
           };
         }
 
-        // 3.2 Save to database (Using URLSearchParams with toString() for GAS)
-        const params = new URLSearchParams();
-        Object.keys(formData).forEach(key => params.append(key, formData[key]));
-        
-        // Fetch BEFORE opening WhatsApp to prevent focus issues
+        // 3.2 Save to database (Using JSON for maximum reliability)
         fetch(REGISTER_API_URL, {
           method: 'POST',
-          body: params.toString(),
+          body: JSON.stringify(formData),
           mode: 'no-cors'
         }).then(() => console.log("Save success"))
           .catch(err => console.error("Save err:", err));
