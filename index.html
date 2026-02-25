@@ -733,28 +733,23 @@
           document.getElementById('blessingText').textContent = `"${blessing}"`;
         }
 
-        // 3.2 Save to database (Fetch - works everywhere including Firebase)
-        const params = new URLSearchParams();
-        params.append('name', formData.name);
-        params.append('phone', formData.phone);
-        params.append('location', formData.location);
-        params.append('residence', formData.location);
-        params.append('birthDay', formData.birthDay);
-        params.append('birthMonth', formData.birthMonth);
-        params.append('Birth Day', formData.birthDay);
-        params.append('Birth Month', formData.birthMonth);
-        params.append('firstTime', formData.firstTime);
-        params.append('registered', formData.firstTime);
-        params.append('whatsapp', formData.whatsapp);
-        params.append('referredBy', formData.referredBy);
-        params.append('referredby', formData.referredBy);
-        params.append('Referred By', formData.referredBy);
-        params.append('volunteering', formData.volunteering);
-        params.append('prayers', formData.prayers);
+        // 3.2 Save to database (Using FormData for better GAS compatibility)
+        const payload = new FormData();
+        payload.append('name', formData.name);
+        payload.append('phone', formData.phone);
+        payload.append('location', formData.location);
+        payload.append('residence', formData.location);
+        payload.append('birthDay', formData.birthDay);
+        payload.append('birthMonth', formData.birthMonth);
+        payload.append('firstTime', formData.firstTime);
+        payload.append('whatsapp', formData.whatsapp);
+        payload.append('referredBy', formData.referredBy);
+        payload.append('volunteering', formData.volunteering);
+        payload.append('prayers', formData.prayers);
 
         fetch(REGISTER_API_URL, {
           method: 'POST',
-          body: params.toString(),
+          body: payload,
           mode: 'no-cors'
         }).then(() => {
           console.log("Save request sent successfully");
