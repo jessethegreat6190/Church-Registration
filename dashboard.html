@@ -260,6 +260,61 @@
       font-weight: 600;
     }
 
+    /* Modal Styles */
+    #editModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+      color: var(--primary-blue);
+    }
+
+    .modal-group {
+      margin-bottom: 1rem;
+    }
+
+    .modal-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .modal-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+
+    .btn-save { background: var(--accent-green); color: white; flex: 1; }
+    .btn-cancel { background: #777; color: white; flex: 1; }
+
     .birthday-alerts {
       background: #fff3cd;
       border: 2px solid #ffc107;
@@ -390,6 +445,34 @@
     </table>
   </main>
 
+  <div id="editModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Edit Member Details</h3>
+      </div>
+      <div class="modal-group">
+        <label>Name</label>
+        <input type="text" id="edit-name">
+      </div>
+      <div class="modal-group">
+        <label>Phone Number</label>
+        <input type="tel" id="edit-phone">
+      </div>
+      <div class="modal-group">
+        <label>Residence</label>
+        <input type="text" id="edit-residence">
+      </div>
+      <div class="modal-group">
+        <label>Consent (Yes/No)</label>
+        <input type="text" id="edit-consent" placeholder="Yes or —">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-save" id="saveEditBtn">Save Changes</button>
+        <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
     const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
@@ -401,9 +484,13 @@
     const saveProgramsBtn = document.getElementById('saveProgramsBtn');
     const birthdayAlerts = document.getElementById('birthdayAlerts');
     const birthdayList = document.getElementById('birthdayList');
+    const editModal = document.getElementById('editModal');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
 
     let allRegistrations = [];
     let db = null;
+    let editingId = null;
 
     // Initialize Firestore after script load
     window.addEventListener('load', () => {
@@ -414,6 +501,42 @@
         setTimeout(fetchRegistrations, 1000);
       } else {
         fetchRegistrations();
+      }
+    });
+
+    cancelEditBtn.addEventListener('click', () => {
+      editModal.style.display = 'none';
+      editingId = null;
+    });
+
+    saveEditBtn.addEventListener('click', async () => {
+      if (!editingId || !db) return;
+      
+      const newName = document.getElementById('edit-name').value.trim();
+      const newPhone = document.getElementById('edit-phone').value.trim();
+      const newResidence = document.getElementById('edit-residence').value.trim();
+      const newConsent = document.getElementById('edit-consent').value.trim();
+      
+      saveEditBtn.disabled = true;
+      saveEditBtn.textContent = "Saving...";
+      
+      try {
+        await db.collection('registrations').doc(editingId).update({
+          name: newName,
+          phone: newPhone,
+          location: newResidence,
+          residence: newResidence,
+          whatsapp: newConsent
+        });
+        
+        editModal.style.display = 'none';
+        alert("Member updated successfully!");
+        fetchRegistrations();
+      } catch (e) {
+        alert("Error updating member: " + e.message);
+      } finally {
+        saveEditBtn.disabled = false;
+        saveEditBtn.textContent = "Save Changes";
       }
     });
 
@@ -459,6 +582,7 @@
           const snapshot = await db.collection('registrations').orderBy('timestamp', 'desc').get();
           fireData = snapshot.docs.map(doc => {
             const d = doc.data();
+            d.id = doc.id; // Store Firestore document ID
             // Convert Firestore Timestamp to Date object for consistency
             if (d.timestamp && d.timestamp.toDate) {
               d.timestamp = d.timestamp.toDate();
@@ -693,6 +817,8 @@
         const isFirstTime = firstTimeVal.toString().toLowerCase() === 'yes' ? '✓ Yes' : '—';
         const volStr = volunteering.length > 0 ? volunteering.substring(0, 30) + (volunteering.length > 30 ? '...' : '') : '—';
         
+        const isFirestore = reg.id ? true : false;
+
         tr.innerHTML = `
           <td>${dateStr}</td>
           <td><strong>${name}</strong></td>
@@ -704,7 +830,10 @@
           <td>${referredBy}</td>
           <td class="actions">
             ${whatsapp ? `<a href="https://wa.me/${whatsapp.toString().replace(/\D/g,'')}" target="_blank" class="whatsapp-link" style="margin-right:8px;">WA</a>` : ''}
-            <span style="color: #777; font-size: 0.8rem;">View</span>
+            ${isFirestore ? `
+              <button onclick="editMember('${reg.id}')" style="background:#f1c40f; color:white; padding:4px 8px; font-size:0.7rem;">Edit</button>
+              <button onclick="deleteMember('${reg.id}')" class="delete-btn" style="padding:4px 8px; font-size:0.7rem;">Del</button>
+            ` : '<span style="color: #777; font-size: 0.8rem;">Sheet</span>'}
           </td>
         `;
 
@@ -712,14 +841,42 @@
       });
     }
 
+    window.editMember = function(id) {
+      const reg = allRegistrations.find(r => r.id === id);
+      if (!reg) return;
+      
+      editingId = id;
+      document.getElementById('edit-name').value = reg.name || "";
+      document.getElementById('edit-phone').value = reg.phone || "";
+      document.getElementById('edit-residence').value = reg.residence || reg.location || "";
+      document.getElementById('edit-consent').value = reg.whatsapp || "";
+      
+      editModal.style.display = 'flex';
+    };
+
+    window.deleteMember = async function(id) {
+      if (!db) return;
+      if (!confirm("Are you sure you want to delete this registration?")) return;
+      
+      try {
+        await db.collection('registrations').doc(id).delete();
+        alert("Member deleted successfully!");
+        fetchRegistrations();
+      } catch (e) {
+        alert("Error deleting member: " + e.message);
+      }
+    };
+
     // Search logic
     searchBar.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase();
-      const filtered = allRegistrations.filter(reg => 
-        reg.name.toLowerCase().includes(term) || 
-        reg.phone.toLowerCase().includes(term) || 
-        reg.location.toLowerCase().includes(term)
-      );
+      const filtered = allRegistrations.filter(reg => {
+        const name = (reg.name || reg.Name || "").toLowerCase();
+        const phone = (reg.phone || reg.Phone || "").toLowerCase();
+        const residence = (reg.residence || reg.Residence || reg.location || reg.Location || "").toLowerCase();
+        
+        return name.includes(term) || phone.includes(term) || residence.includes(term);
+      });
       renderTable(filtered);
       displayBirthdayAlerts(allRegistrations);
     });
