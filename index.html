@@ -458,8 +458,8 @@
   </div>
 
   <script>
-    const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbx90STtrQs89rlGjbOB6v2zD7SVcbl4vek-pNuYudtTCTHIeSpJz0zbGadR5Tu1vlh1Gw/exec';
-    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbx90STtrQs89rlGjbOB6v2zD7SVcbl4vek-pNuYudtTCTHIeSpJz0zbGadR5Tu1vlh1Gw/exec';
+    const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbxii3sHbEnIB-b1CBqKltEZM4IxectOHBDfBhPMn7Kr-EqvgBeoTwILSkTMtw5_iF1axw/exec';
+    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxii3sHbEnIB-b1CBqKltEZM4IxectOHBDfBhPMn7Kr-EqvgBeoTwILSkTMtw5_iF1axw/exec';
     
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -698,10 +698,12 @@
         const formData = {
           name: currentEntry.name,
           phone: currentEntry.phone,
+          location: currentEntry.location,
           residence: currentEntry.location,
           birthMonth: currentEntry.birthMonth || "",
           birthDay: currentEntry.birthDay || "",
           registered: currentEntry.firstTime,
+          firstTime: currentEntry.firstTime,
           whatsapp: currentEntry.consent ? currentEntry.phone : "—",
           volunteering: currentEntry.volunteering.join(", "),
           referredBy: currentEntry.referredBy || ""
