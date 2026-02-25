@@ -466,6 +466,42 @@
         <label>Consent (Yes/No)</label>
         <input type="text" id="edit-consent" placeholder="Yes or —">
       </div>
+      <div class="modal-group">
+        <label>Birthday</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="number" id="edit-bday" placeholder="Day" min="1" max="31">
+          <select id="edit-bmonth" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+            <option value="">Month</option>
+            <option value="1">Jan</option>
+            <option value="2">Feb</option>
+            <option value="3">Mar</option>
+            <option value="4">Apr</option>
+            <option value="5">May</option>
+            <option value="6">Jun</option>
+            <option value="7">Jul</option>
+            <option value="8">Aug</option>
+            <option value="9">Sep</option>
+            <option value="10">Oct</option>
+            <option value="11">Nov</option>
+            <option value="12">Dec</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-group">
+        <label>Registered?</label>
+        <select id="edit-registered" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+          <option value="yes">Yes (First Time)</option>
+          <option value="no">No (Returning)</option>
+        </select>
+      </div>
+      <div class="modal-group">
+        <label>Volunteering</label>
+        <input type="text" id="edit-volunteering" placeholder="e.g., Ushering, Choir">
+      </div>
+      <div class="modal-group">
+        <label>Referred By</label>
+        <input type="text" id="edit-referred">
+      </div>
       <div class="modal-actions">
         <button class="btn-save" id="saveEditBtn">Save Changes</button>
         <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
@@ -517,6 +553,13 @@
       const newResidence = document.getElementById('edit-residence').value.trim();
       const newConsent = document.getElementById('edit-consent').value.trim();
       
+      // New fields
+      const newBDay = document.getElementById('edit-bday').value;
+      const newBMonth = document.getElementById('edit-bmonth').value;
+      const newRegistered = document.getElementById('edit-registered').value;
+      const newVolunteering = document.getElementById('edit-volunteering').value.trim();
+      const newReferred = document.getElementById('edit-referred').value.trim();
+      
       saveEditBtn.disabled = true;
       saveEditBtn.textContent = "Saving...";
       
@@ -526,7 +569,12 @@
           phone: newPhone,
           location: newResidence,
           residence: newResidence,
-          whatsapp: newConsent
+          whatsapp: newConsent,
+          birthDay: newBDay,
+          birthMonth: newBMonth,
+          registered: newRegistered,
+          volunteering: newVolunteering,
+          referredBy: newReferred
         });
         
         editModal.style.display = 'none';
@@ -846,10 +894,17 @@
       if (!reg) return;
       
       editingId = id;
-      document.getElementById('edit-name').value = reg.name || "";
-      document.getElementById('edit-phone').value = reg.phone || "";
-      document.getElementById('edit-residence').value = reg.residence || reg.location || "";
-      document.getElementById('edit-consent').value = reg.whatsapp || "";
+      document.getElementById('edit-name').value = reg.name || reg.Name || "";
+      document.getElementById('edit-phone').value = reg.phone || reg.Phone || "";
+      document.getElementById('edit-residence').value = reg.residence || reg.Residence || reg.location || reg.Location || "";
+      document.getElementById('edit-consent').value = reg.whatsapp || reg.Whatsapp || "";
+      
+      // New fields
+      document.getElementById('edit-bday').value = reg.birthday || reg.birthDay || reg['Birth Day'] || "";
+      document.getElementById('edit-bmonth').value = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || "";
+      document.getElementById('edit-registered').value = (reg.registered || reg.Registered || reg.firstTime || "no").toLowerCase();
+      document.getElementById('edit-volunteering').value = reg.volunteering || reg.Volunteering || "";
+      document.getElementById('edit-referred').value = reg.referredby || reg.referredBy || reg['Referred By'] || "";
       
       editModal.style.display = 'flex';
     };
