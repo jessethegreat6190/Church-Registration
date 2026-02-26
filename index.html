@@ -698,52 +698,57 @@
       if (Array.isArray(allRegistrations)) {
         isReturning = allRegistrations.some(reg => {
           const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-          return cleanInputPhone && dbPhone === cleanInputPhone;
+          const dbName = (reg.name || "").trim();
+          return cleanInputPhone && dbPhone === cleanInputPhone && dbName === currentEntry.name;
         });
       }
 
       // 3. Save to database using a hidden form (The most reliable method)
       try {
-        // A. FIREBASE SAVE (Direct and reliable)
-        if (db) {
-          await db.collection('registrations').add({
-            ...formData,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          console.log("Saved to Firestore");
-        }
-
-        // B. GOOGLE SHEETS SAVE (Backup)
-        const formId = 'temp_gas_form';
-        let tempForm = document.getElementById(formId);
-        if (!tempForm) {
-          tempForm = document.createElement('form');
-          tempForm.id = formId;
-          tempForm.style.display = 'none';
-          tempForm.method = 'POST';
-          tempForm.action = REGISTER_API_URL;
-          tempForm.target = 'hidden_iframe';
-          
-          if (!document.getElementById('hidden_iframe')) {
-            const iframe = document.createElement('iframe');
-            iframe.id = 'hidden_iframe';
-            iframe.name = 'hidden_iframe';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
+        if (isReturning) {
+          console.log("User already registered, skipping save.");
+        } else {
+          // A. FIREBASE SAVE (Direct and reliable)
+          if (db) {
+            await db.collection('registrations').add({
+              ...formData,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            console.log("Saved to Firestore");
           }
-          document.body.appendChild(tempForm);
-        }
 
-        tempForm.innerHTML = '';
-        for (const key in formData) {
-          const input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = key;
-          input.value = formData[key];
-          tempForm.appendChild(input);
-        }
+          // B. GOOGLE SHEETS SAVE (Backup)
+          const formId = 'temp_gas_form';
+          let tempForm = document.getElementById(formId);
+          if (!tempForm) {
+            tempForm = document.createElement('form');
+            tempForm.id = formId;
+            tempForm.style.display = 'none';
+            tempForm.method = 'POST';
+            tempForm.action = REGISTER_API_URL;
+            tempForm.target = 'hidden_iframe';
+            
+            if (!document.getElementById('hidden_iframe')) {
+              const iframe = document.createElement('iframe');
+              iframe.id = 'hidden_iframe';
+              iframe.name = 'hidden_iframe';
+              iframe.style.display = 'none';
+              document.body.appendChild(iframe);
+            }
+            document.body.appendChild(tempForm);
+          }
 
-        tempForm.submit();
+          tempForm.innerHTML = '';
+          for (const key in formData) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = key;
+            input.value = formData[key];
+            tempForm.appendChild(input);
+          }
+
+          tempForm.submit();
+        }
 
         // 4. Prepare WhatsApp URL if needed
         let whatsappUrl = null;
@@ -784,12 +789,20 @@
 
         // 5. Show blessing and open WhatsApp
         setTimeout(() => {
-          if (whatsappUrl) {
-            window.open(whatsappUrl, "_blank");
-            const blessingPara = document.getElementById('blessingText');
-            blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+          const thankYouNote = document.querySelector('.thank-you-note');
+          const blessingPara = document.getElementById('blessingText');
+
+          if (isReturning) {
+            if (thankYouNote) thankYouNote.textContent = "Welcome Back!";
+            blessingPara.textContent = `You are already registered! "${blessing}"`;
           } else {
-            document.getElementById('blessingText').textContent = `"${blessing}"`;
+            if (thankYouNote) thankYouNote.textContent = "Thank You for Registering!";
+            if (whatsappUrl) {
+              window.open(whatsappUrl, "_blank");
+              blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+            } else {
+              blessingPara.textContent = `"${blessing}"`;
+            }
           }
           showBlessing(blessing);
         }, 800);
