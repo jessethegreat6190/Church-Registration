@@ -463,7 +463,16 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { 
+      formatName, 
+      isUpcomingBirthday, 
+      formatBirthday, 
+      getWeeklyVerse, 
+      WEEKLY_VERSES, 
+      DEFAULT_CHURCH_PROGRAMS 
+    } from './js/utils.js';
+
     const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
     const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
     
@@ -487,13 +496,7 @@
       }
     });
 
-    let churchPrograms = {
-      sunday: "8:00 AM",
-      monday: "7:00 AM - 9:00 AM",
-      wednesday: "Evening Glory 5pm-7pm",
-      tueThu: "7:00 AM - 3:00 PM",
-      friday: "3pm, 2am, 3am (Not overnight)"
-    };
+    let churchPrograms = { ...DEFAULT_CHURCH_PROGRAMS };
 
     // Pre-fetch registrations & programs
     async function prefetchData() {
@@ -550,13 +553,8 @@
     function handleReview(e) {
       e.preventDefault();
       
-      // Format name: First Letter Capital, others small for each word
       const rawName = document.getElementById('name').value.trim();
-      const formattedName = rawName.toLowerCase()
-        .split(' ')
-        .filter(word => word.length > 0)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+      const formattedName = formatName(rawName);
 
       const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "no";
 
@@ -585,21 +583,6 @@
       };
 
       showConfirmation(currentEntry);
-    }
-
-    function isUpcomingBirthday(month, day) {
-      if (!month || !day) return false;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
-      if (bdayThisYear < today) {
-        bdayThisYear.setFullYear(today.getFullYear() + 1);
-      }
-      
-      const diffTime = bdayThisYear - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays <= 7 && diffDays >= 0;
     }
 
     form.addEventListener('submit', handleReview);
@@ -641,28 +624,8 @@
     const initialFirst = document.querySelector('input[name="firstTime"]:checked')?.value || 'no';
     updateFirstTimeUI(initialFirst);
 
-    const WEEKLY_VERSES = [
-      "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you. (Numbers 6:24-25)",
-      "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you. (Jeremiah 29:11)",
-      "The Lord is my shepherd; I shall not want. He makes me lie down in green pastures. (Psalm 23:1-2)",
-      "Trust in the Lord with all your heart and lean not on your own understanding. (Proverbs 3:5)",
-      "But those who hope in the Lord will renew their strength. They will soar on wings like eagles. (Isaiah 40:31)",
-      "The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you. (Zephaniah 3:17)",
-      "I can do all this through him who gives me strength. (Philippians 4:13)",
-      "And my God will meet all your needs according to the riches of his glory in Christ Jesus. (Philippians 4:19)"
-    ];
-
-    function getWeeklyVerse() {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), 0, 0);
-      const diff = now - start;
-      const oneDay = 1000 * 60 * 60 * 24;
-      const dayOfYear = Math.floor(diff / oneDay);
-      const weekIndex = Math.floor(dayOfYear / 7) % WEEKLY_VERSES.length;
-      return WEEKLY_VERSES[weekIndex];
-    }
-
     function showBlessing(verse) {
+      document.getElementById('blessingText').textContent = verse;
       fullBlessingOverlay.style.display = 'flex';
     }
 
@@ -670,6 +633,8 @@
       fullBlessingOverlay.style.display = 'none';
       resetForm();
     }
+    // Expose closeBlessing to window for onclick handler
+    window.closeBlessing = closeBlessing;
 
     async function handleSave() {
       if (!currentEntry) return;
@@ -677,7 +642,7 @@
       saveBtn.disabled = true;
       saveBtn.textContent = "Saving...";
 
-      const blessing = getWeeklyVerse();
+      const blessing = getWeeklyVerse(WEEKLY_VERSES);
       
       // 1. Prepare data for Google Sheets
       const formData = {

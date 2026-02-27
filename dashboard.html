@@ -465,7 +465,7 @@
     <div class="auth-card">
       <img src="church logo/New Logo 2026.png" alt="Church Logo" style="max-width: 100px; margin-bottom: 1rem;">
       <h2>Admin Login</h2>
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email">
+      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email (e.g. admin@church.com)">
       <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
       <button id="loginBtn" class="auth-btn">Access Dashboard</button>
       <p id="loginError" style="color: var(--danger-red); margin-top: 10px; font-size: 0.85rem; display: none;"></p>
@@ -631,7 +631,13 @@
     </div>
   </div>
 
-  <script>
+  <script type="module">
+    import { 
+      isUpcomingBirthday, 
+      getDaysUntilBirthday, 
+      formatBirthday 
+    } from './js/utils.js';
+
     const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
     const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
 
@@ -754,41 +760,6 @@
         saveEditBtn.textContent = "Save Changes";
       }
     });
-
-    function isUpcomingBirthday(month, day) {
-      if (!month || !day) return false;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
-      if (bdayThisYear < today) {
-        bdayThisYear.setFullYear(today.getFullYear() + 1);
-      }
-      
-      const diffTime = bdayThisYear - today;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays <= 7 && diffDays >= 0;
-    }
-
-    function getDaysUntilBirthday(month, day) {
-      if (!month || !day) return null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const bdayThisYear = new Date(today.getFullYear(), month - 1, day);
-      if (bdayThisYear < today) {
-        bdayThisYear.setFullYear(today.getFullYear() + 1);
-      }
-      
-      const diffTime = bdayThisYear - today;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    function formatBirthday(month, day) {
-      if (!month || !day) return "—";
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      return `${day} ${monthNames[month - 1]}`;
-    }
 
     // --- Analytics Charts ---
     function updateCharts(data) {
