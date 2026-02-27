@@ -692,14 +692,14 @@
         referredBy: currentEntry.referredBy || ""
       };
 
-      // 2. Determine if returning user
+      // 2. Determine if returning user (Check if phone already exists)
       const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
       let isReturning = false;
       if (Array.isArray(allRegistrations)) {
         isReturning = allRegistrations.some(reg => {
           const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-          const dbName = (reg.name || "").trim();
-          return cleanInputPhone && dbPhone === cleanInputPhone && dbName === currentEntry.name;
+          // Block if phone matches (even if name is slightly different)
+          return cleanInputPhone && dbPhone === cleanInputPhone;
         });
       }
 
