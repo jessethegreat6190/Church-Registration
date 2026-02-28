@@ -58,23 +58,18 @@
     }
 
     .admin-link {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      color: rgba(255,255,255,0.7);
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #777;
       text-decoration: none;
-      font-size: 0.75rem;
-      z-index: 10;
-      background: rgba(0,0,0,0.1);
-      padding: 4px 8px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: all 0.3s;
+      font-size: 0.8rem;
+      transition: color 0.3s;
     }
 
     .admin-link:hover {
-      color: #fff;
-      background: rgba(0,0,0,0.2);
+      color: var(--primary-blue);
+      text-decoration: underline;
     }
 
     .header::before {
@@ -370,7 +365,6 @@
 
   <div class="container">
     <div class="header">
-      <a href="dashboard.html" class="admin-link">Admin Login</a>
       <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
       <div class="header-text">
         <h1>Grace of Jesus Christ Ministries</h1>
@@ -476,6 +470,8 @@
       <button id="saveBtn" style="width: 100%; background: var(--success-green); margin-bottom: 10px;">Save Registration</button>
       <button id="editBtn" style="width: 100%; background: var(--primary-blue);">Edit Details</button>
     </div>
+    
+    <a href="dashboard.html" class="admin-link">Admin Login</a>
   </div>
 
   <div id="fullBlessingOverlay">
