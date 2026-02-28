@@ -822,30 +822,39 @@
     saveBtn.addEventListener('click', handleSave);
 
     function showConfirmation(data) {
-      if (data.firstTime === 'no') {
-        detailsList.innerHTML = `
-          <li><strong>Name:</strong> ${data.name}</li>
-          <li><strong>Phone:</strong> ${data.phone}</li>
-          <li><strong>Residence:</strong> ${data.location}</li>
-          <li><strong>Registration:</strong> Returning</li>
-        `;
-      } else {
-        const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
-        const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const birthdayStr = (data.birthDay && data.birthMonth) ? `${data.birthDay} ${monthNames[data.birthMonth]}` : "—";
-        
-        detailsList.innerHTML = `
-          <li><strong>Name:</strong> ${data.name}</li>
-          <li><strong>Phone:</strong> ${data.phone}</li>
-          <li><strong>Residence:</strong> ${data.location}</li>
-          <li><strong>Birthday:</strong> ${birthdayStr}</li>
-          <li><strong>Registration:</strong> First-time online</li>
-          <li><strong>Volunteer Interests:</strong> ${volStr}</li>
-          <li><strong>WhatsApp Group Invite:</strong> ${data.consent ? "Yes" : "No"}</li>
-        `;
-      }
-      form.style.display = "none";
-      confirmation.style.display = "block";
+      // Add a smooth transition effect
+      const container = document.querySelector('.container');
+      container.style.opacity = '0';
+      container.style.transform = 'scale(0.98)';
+      
+      setTimeout(() => {
+        if (data.firstTime === 'no') {
+          detailsList.innerHTML = `
+            <li><strong>Name:</strong> ${data.name}</li>
+            <li><strong>Phone:</strong> ${data.phone}</li>
+            <li><strong>Residence:</strong> ${data.location}</li>
+            <li><strong>Registration:</strong> Returning</li>
+          `;
+        } else {
+          const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
+          const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+          const birthdayStr = (data.birthDay && data.birthMonth) ? `${data.birthDay} ${monthNames[data.birthMonth]}` : "—";
+          
+          detailsList.innerHTML = `
+            <li><strong>Name:</strong> ${data.name}</li>
+            <li><strong>Phone:</strong> ${data.phone}</li>
+            <li><strong>Residence:</strong> ${data.location}</li>
+            <li><strong>Birthday:</strong> ${birthdayStr}</li>
+            <li><strong>Registration:</strong> First-time online</li>
+            <li><strong>Volunteer Interests:</strong> ${volStr}</li>
+            <li><strong>WhatsApp Group Invite:</strong> ${data.consent ? "Yes" : "No"}</li>
+          `;
+        }
+        form.style.display = "none";
+        confirmation.style.display = "block";
+        container.style.opacity = '1';
+        container.style.transform = 'scale(1)';
+      }, 300);
     }
 
     function resetForm() {

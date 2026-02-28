@@ -43,6 +43,12 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      animation: headerSlide 0.8s ease-out;
+    }
+
+    @keyframes headerSlide {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(0); }
     }
 
     header::before {
@@ -110,6 +116,11 @@
       max-width: 80px;
       height: auto;
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.1) rotate(-5deg);
     }
 
     header h1 {
@@ -136,6 +147,12 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       overflow-x: auto;
+      animation: mainFade 1s ease-out;
+    }
+
+    @keyframes mainFade {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .controls {
@@ -284,6 +301,32 @@
       width: 90%;
       max-width: 400px;
       text-align: center;
+      animation: authPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes authPop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .auth-input:focus, #searchBar:focus {
+      outline: none;
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+      transform: translateY(-1px);
+      transition: all 0.2s ease;
+    }
+
+    tr {
+      transition: background 0.2s ease;
+    }
+
+    tr:hover {
+      background: #f0fdf4 !important;
+    }
+
+    button:active {
+      transform: scale(0.95);
     }
 
     .auth-card h2 { color: var(--primary-blue); margin-bottom: 1.5rem; }
