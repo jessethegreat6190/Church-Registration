@@ -462,14 +462,18 @@
 <body>
 
   <div id="authOverlay">
-    <div class="auth-card">
+    <form class="auth-card" id="loginForm">
       <img src="church logo/New Logo 2026.png" alt="Church Logo" style="max-width: 100px; margin-bottom: 1rem;">
       <h2>Admin Login</h2>
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email">
-      <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
-      <button id="loginBtn" class="auth-btn">Access Dashboard</button>
+      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email" required autocomplete="email">
+      <input type="password" id="loginPassword" class="auth-input" placeholder="Password" required autocomplete="current-password">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; font-size: 0.85rem; color: var(--primary-blue);">
+        <input type="checkbox" id="rememberMe" style="width: auto; height: auto;">
+        <label for="rememberMe" style="cursor: pointer;">Remember Email</label>
+      </div>
+      <button type="submit" id="loginBtn" class="auth-btn">Access Dashboard</button>
       <p id="loginError" style="color: var(--danger-red); margin-top: 10px; font-size: 0.85rem; display: none;"></p>
-    </div>
+    </form>
   </div>
 
   <header>
@@ -657,9 +661,11 @@
 
     // Auth Controls
     const authOverlay = document.getElementById('authOverlay');
+    const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const loginError = document.getElementById('loginError');
+    const rememberMe = document.getElementById('rememberMe');
 
     let allRegistrations = [];
     let db = null;
@@ -667,6 +673,15 @@
     let currentFilter = 'all';
     let regChart = null;
     let ministryChart = null;
+
+    // Load remembered email
+    window.addEventListener('load', () => {
+      const savedEmail = localStorage.getItem('church_admin_email');
+      if (savedEmail) {
+        document.getElementById('loginEmail').value = savedEmail;
+        rememberMe.checked = true;
+      }
+    });
 
     // --- Authentication Logic ---
     function initAuth() {
@@ -685,7 +700,9 @@
       });
     }
 
-    loginBtn.addEventListener('click', async () => {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
       loginError.style.display = 'none';
@@ -696,11 +713,23 @@
         return;
       }
 
+      // Handle remember me
+      if (rememberMe.checked) {
+        localStorage.setItem('church_admin_email', email);
+      } else {
+        localStorage.removeItem('church_admin_email');
+      }
+
       try {
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Logging in...";
         await firebase.auth().signInWithEmailAndPassword(email, pass);
       } catch (e) {
         loginError.textContent = "Invalid login credentials";
         loginError.style.display = 'block';
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Access Dashboard";
       }
     });
 
