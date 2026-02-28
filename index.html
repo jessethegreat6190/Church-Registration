@@ -57,6 +57,26 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
 
+    .admin-link {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      font-size: 0.75rem;
+      z-index: 10;
+      background: rgba(0,0,0,0.1);
+      padding: 4px 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s;
+    }
+
+    .admin-link:hover {
+      color: #fff;
+      background: rgba(0,0,0,0.2);
+    }
+
     .header::before {
       content: '';
       position: absolute;
@@ -350,6 +370,7 @@
 
   <div class="container">
     <div class="header">
+      <a href="dashboard.html" class="admin-link">Admin Login</a>
       <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
       <div class="header-text">
         <h1>Grace of Jesus Christ Ministries</h1>
@@ -664,12 +685,30 @@
       // 2. Determine if returning user (Check if phone already exists)
       const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
       let isReturning = false;
-      if (Array.isArray(allRegistrations)) {
-        isReturning = allRegistrations.some(reg => {
-          const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-          // Block if phone matches (even if name is slightly different)
-          return cleanInputPhone && dbPhone === cleanInputPhone;
-        });
+      
+      try {
+        if (db) {
+          // Check Firestore directly for more reliability
+          const snapshot = await db.collection('registrations').get();
+          const fireRegistrations = snapshot.docs.map(doc => doc.data());
+          isReturning = fireRegistrations.some(reg => {
+            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+            return cleanInputPhone && dbPhone === cleanInputPhone;
+          });
+        } else if (Array.isArray(allRegistrations)) {
+          isReturning = allRegistrations.some(reg => {
+            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+            return cleanInputPhone && dbPhone === cleanInputPhone;
+          });
+        }
+      } catch (e) {
+        console.warn("Direct DB check failed, falling back to local list", e);
+        if (Array.isArray(allRegistrations)) {
+          isReturning = allRegistrations.some(reg => {
+            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+            return cleanInputPhone && dbPhone === cleanInputPhone;
+          });
+        }
       }
 
       // 3. Save to database using a hidden form (The most reliable method)
