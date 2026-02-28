@@ -684,13 +684,29 @@
       
       try {
         if (db) {
-          // Check Firestore directly for more reliability
-          const snapshot = await db.collection('registrations').get();
-          const fireRegistrations = snapshot.docs.map(doc => doc.data());
-          isReturning = fireRegistrations.some(reg => {
-            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-            return cleanInputPhone && dbPhone === cleanInputPhone;
-          });
+          // Optimized check: 
+          // 1. Check if a document with this clean phone ID already exists
+          const docRef = db.collection('registrations').doc(cleanInputPhone);
+          const docSnap = await docRef.get();
+          
+          if (docSnap.exists) {
+            isReturning = true;
+          } else {
+            // 2. Fallback: Search for existing phone number in other fields (for older records)
+            const snapshot = await db.collection('registrations')
+              .where('phone', '==', currentEntry.phone)
+              .get();
+            
+            if (!snapshot.empty) {
+              isReturning = true;
+            } else {
+              // 3. Last fallback: Check locally prefetched data
+              isReturning = allRegistrations.some(reg => {
+                const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
+                return cleanInputPhone && dbPhone === cleanInputPhone;
+              });
+            }
+          }
         } else if (Array.isArray(allRegistrations)) {
           isReturning = allRegistrations.some(reg => {
             const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
@@ -714,11 +730,13 @@
         } else {
           // A. FIREBASE SAVE (Direct and reliable)
           if (db) {
-            await db.collection('registrations').add({
+            // Using cleanInputPhone as document ID to naturally prevent duplicates
+            await db.collection('registrations').doc(cleanInputPhone).set({
               ...formData,
+              cleanPhone: cleanInputPhone,
               timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-            console.log("Saved to Firestore");
+            console.log("Saved to Firestore with ID:", cleanInputPhone);
           }
 
           // B. GOOGLE SHEETS SAVE (Backup)
