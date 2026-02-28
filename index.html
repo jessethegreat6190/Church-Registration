@@ -57,7 +57,27 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     }
 
-    .admin-link {
+    .header .admin-link {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.75rem;
+      text-decoration: none;
+      z-index: 10;
+      padding: 5px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .header .admin-link:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .admin-link-footer {
       display: block;
       text-align: center;
       margin-top: 1.5rem;
@@ -67,7 +87,7 @@
       transition: color 0.3s;
     }
 
-    .admin-link:hover {
+    .admin-link-footer:hover {
       color: var(--primary-blue);
       text-decoration: underline;
     }
@@ -365,6 +385,7 @@
 
   <div class="container">
     <div class="header">
+      <a href="dashboard.html" class="admin-link">Admin Access</a>
       <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
       <div class="header-text">
         <h1>Grace of Jesus Christ Ministries</h1>
@@ -471,7 +492,7 @@
       <button id="editBtn" style="width: 100%; background: var(--primary-blue);">Edit Details</button>
     </div>
     
-    <a href="dashboard.html" class="admin-link">Admin Login</a>
+    <a href="dashboard.html" class="admin-link-footer">Admin Login</a>
   </div>
 
   <div id="fullBlessingOverlay">
