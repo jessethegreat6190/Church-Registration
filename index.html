@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Church Registration</title>
+  <title>Church Counseling Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c3e50">
@@ -11,6 +11,8 @@
   <!-- Firebase SDK (Compat versions for ease of use) -->
   <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
+  <script defer src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
+  <script defer src="/__/firebase/9.6.1/firebase-storage-compat.js"></script>
   <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
   <style>
@@ -340,6 +342,8 @@
       .thank-you-note { font-size: 1.5rem; }
       .blessing-text { font-size: 1.1rem; }
     }
+
+    /* Blessing Overlay Styles */
   </style>
 </head>
 <body>
@@ -348,7 +352,7 @@
     <div class="header">
       <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
       <div class="header-text">
-        <h1>Church Registration</h1>
+        <h1>Grace of Jesus Christ Ministries</h1>
         <div class="slogan">An encounter with the Holy Spirit</div>
       </div>
     </div>

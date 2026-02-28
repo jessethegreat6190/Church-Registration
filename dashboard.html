@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard - Church Registrations</title>
+  <title>Admin Dashboard - Grace of Jesus Christ Ministries</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
   <!-- Firebase SDK (Compat versions for ease of use) -->
@@ -461,23 +461,14 @@
 </head>
 <body>
 
-  <div id="authOverlay">
-    <div class="auth-card">
-      <img src="church logo/New Logo 2026.png" alt="Church Logo" style="max-width: 100px; margin-bottom: 1rem;">
-      <h2>Admin Login</h2>
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email (e.g. admin@church.com)">
-      <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
-      <button id="loginBtn" class="auth-btn">Access Dashboard</button>
-      <p id="loginError" style="color: var(--danger-red); margin-top: 10px; font-size: 0.85rem; display: none;"></p>
-    </div>
-  </div>
-
   <header>
     <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
     <div class="header-content">
       <h1>Grace of Jesus Christ Ministries – Kitintale</h1>
-      <h2>Admin Dashboard: Church Registrations</h2>
-      <button id="logoutBtn">Admin Logout</button>
+      <h2>Admin Dashboard: Registrations</h2>
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+        <button onclick="window.location.href='index.html'" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;">Go to Registration</button>
+      </div>
     </div>
   </header>
 
@@ -652,13 +643,6 @@
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
 
-    // New Controls
-    const authOverlay = document.getElementById('authOverlay');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const viewTabs = document.getElementById('viewTabs');
-    const loginError = document.getElementById('loginError');
-
     let allRegistrations = [];
     let db = null;
     let editingId = null;
@@ -666,50 +650,11 @@
     let regChart = null;
     let ministryChart = null;
 
-    // --- Authentication Logic ---
-    function initAuth() {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          authOverlay.style.display = 'none';
-          console.log("Authenticated as:", user.email);
-          if (!db) {
-            db = firebase.firestore();
-            fetchRegistrations();
-          }
-        } else {
-          authOverlay.style.display = 'flex';
-          console.log("Not authenticated");
-        }
-      });
-    }
-
-    loginBtn.addEventListener('click', async () => {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-      loginError.style.display = 'none';
-
-      if (!email || !pass) {
-        loginError.textContent = "Please enter email and password";
-        loginError.style.display = 'block';
-        return;
-      }
-
-      try {
-        await firebase.auth().signInWithEmailAndPassword(email, pass);
-      } catch (e) {
-        loginError.textContent = "Invalid login credentials";
-        loginError.style.display = 'block';
-      }
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      firebase.auth().signOut();
-    });
-
-    // Initialize after script load
+    // Initialize Firestore directly
     window.addEventListener('load', () => {
       if (typeof firebase !== 'undefined') {
-        initAuth();
+        db = firebase.firestore();
+        fetchRegistrations();
       }
     });
 
