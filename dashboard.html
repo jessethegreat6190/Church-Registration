@@ -728,17 +728,25 @@
 
     // --- Authentication Logic ---
     function initAuth() {
+      // Ensure overlay is shown by default if not determined yet
+      authOverlay.style.display = 'flex';
+      
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           authOverlay.style.display = 'none';
           console.log("Authenticated as:", user.email);
-          if (!db) {
+          if (db) {
+            fetchRegistrations();
+          } else {
             db = firebase.firestore();
             fetchRegistrations();
           }
         } else {
           authOverlay.style.display = 'flex';
           console.log("Not authenticated");
+          // Clear any potentially cached data in UI
+          allRegistrations = [];
+          renderTable([]);
         }
       });
     }
@@ -1281,8 +1289,8 @@
       displayBirthdayAlerts(allRegistrations);
     });
 
-    // Initial fetch
-    fetchRegistrations();
+    // Initial fetch removed - we only fetch when auth state is confirmed as logged in
+    // fetchRegistrations();
   </script>
 </body>
 </html>
