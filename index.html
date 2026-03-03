@@ -2,431 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Church Counseling Registration</title>
+  <title>Church Counseling Registration – Grace of Jesus Christ Ministries</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Register with Grace of Jesus Christ Ministries – Kitintale. An encounter with the Holy Spirit.">
+  <meta property="og:title" content="Grace of Jesus Christ Ministries – Registration">
+  <meta property="og:description" content="An encounter with the Holy Spirit. Register online today.">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#2c3e50">
   <link rel="apple-touch-icon" href="church logo/New Logo 2026.png">
 
-  <!-- Firebase SDK (Compat versions for ease of use) -->
-  <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
-  <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
-  <script defer src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
-  <script defer src="/__/firebase/9.6.1/firebase-storage-compat.js"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDK from CDN (works on any host, not just Firebase Hosting) -->
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+  <!-- Auto-initialises Firebase config on Firebase Hosting -->
   <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-  <style>
-    :root {
-      --primary-blue: #2c3e50;
-      --secondary-blue: #3498db;
-      --white: #ffffff;
-      --light-gray: #f4f7f6;
-      --success-green: #27ae60;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--white) 100%);
-    }
-
-    .container {
-      background: var(--white);
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      width: 90%;
-      max-width: 450px;
-      margin: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      padding: 2rem;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    }
-
-    .header .admin-link {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.75rem;
-      text-decoration: none;
-      z-index: 10;
-      padding: 5px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      transition: all 0.3s ease;
-    }
-
-    .header .admin-link:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .admin-link-footer {
-      display: block;
-      text-align: center;
-      margin-top: 1.5rem;
-      color: #777;
-      text-decoration: none;
-      font-size: 0.8rem;
-      transition: color 0.3s;
-    }
-
-    .admin-link-footer:hover {
-      color: var(--primary-blue);
-      text-decoration: underline;
-    }
-
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .header::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      z-index: 2;
-    }
-
-    .header > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    .header-text {
-      padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-
-    .header-text::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 10px 10px 0 0;
-    }
-
-    .header-text::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 0 0 10px 10px;
-    }
-
-    .logo {
-      max-width: 100px;
-      height: auto;
-      margin-bottom: 0.5rem;
-      background: var(--primary-blue);
-      padding: 8px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    h1 {
-      color: var(--white);
-      font-size: 1.4rem;
-      margin: 0;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .slogan {
-      color: var(--white);
-      font-size: 0.9rem;
-      margin-top: 5px;
-      font-weight: 500;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    label {
-      font-weight: 600;
-      color: var(--primary-blue);
-      font-size: 0.85rem;
-    }
-
-    input[type="text"],
-    input[type="tel"],
-    input[type="number"],
-    input[type="radio"],
-    input[type="checkbox"],
-    input[type="select"],
-    select,
-    textarea {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-
-    select {
-      width: 100%;
-      height: auto;
-      padding: 10px;
-    }
-
-    input[type="radio"],
-    input[type="checkbox"] {
-      width: auto;
-      height: auto;
-      padding: 0;
-      margin: 0;
-    }
-
-    .birthday-group {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .birthday-group input {
-      width: 100%;
-    }
-
-    textarea {
-      height: 60px;
-      resize: vertical;
-    }
-
-    .checkbox-group {
-      display: flex;
-      flex-direction: row !important;
-      align-items: center;
-      gap: 10px;
-      margin-top: 5px;
-      background: #f8f9fa;
-      padding: 10px;
-      border-radius: 6px;
-    }
-
-    .checkbox-group input {
-      width: 18px;
-      height: 18px;
-    }
-
-    button {
-      background: var(--secondary-blue);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    button:hover {
-      background: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    button:disabled {
-      background: #bdc3c7;
-      cursor: not-allowed;
-    }
-
-    #confirmation {
-      display: none;
-      animation: fadeIn 0.5s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .details-card {
-      background: var(--light-gray);
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-    }
-
-    .details-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .details-card li {
-      margin-bottom: 8px;
-      font-size: 0.9rem;
-    }
-
-    /* Full-screen Blessing Overlay */
-    #fullBlessingOverlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--white) 100%);
-      z-index: 2000;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 1rem;
-      box-sizing: border-box;
-      overflow-y: auto;
-    }
-
-    .blessing-content {
-      max-width: 500px;
-      width: 95%;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 3rem 2rem;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      animation: zoomIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes zoomIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .blessing-logo {
-      max-width: 150px;
-      margin-bottom: 2rem;
-    }
-
-    .thank-you-note {
-      color: var(--success-green);
-      font-size: 2rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-
-    .blessing-text {
-      font-size: 1.4rem;
-      font-style: italic;
-      color: var(--primary-blue);
-      line-height: 1.6;
-      margin: 2rem 0;
-      padding: 0 1rem;
-    }
-
-    .slogan-footer {
-      color: var(--secondary-blue);
-      font-weight: 600;
-      margin-top: 2rem;
-      font-size: 1.1rem;
-    }
-
-    .done-btn {
-      margin-top: 3rem;
-      padding: 15px 40px;
-      font-size: 1.2rem;
-      background: var(--success-green);
-    }
-
-    @media (max-width: 480px) {
-      .container { padding: 1.5rem; }
-      h1 { font-size: 1.25rem; }
-      .thank-you-note { font-size: 1.5rem; }
-      .blessing-text { font-size: 1.1rem; }
-    }
-
-    /* Blessing Overlay Styles */
-  </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <a href="dashboard.html" class="admin-link">Admin Access</a>
-      <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
-      <div class="header-text">
-        <h1>Grace of Jesus Christ Ministries</h1>
-        <div class="slogan">An encounter with the Holy Spirit</div>
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!--  HERO HEADER                                          -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="hero__inner">
+      <img src="church logo/New Logo 2026.png"
+           alt="Grace of Jesus Christ Ministries logo"
+           class="hero__logo">
+      <h1 class="hero__name">Grace of Jesus Christ Ministries</h1>
+      <p class="hero__slogan">An encounter with the Holy Spirit</p>
+      <div class="hero__pills" aria-label="Church highlights">
+        <span class="hero__pill">📍 Kitintale</span>
+        <span class="hero__pill">☀️ Sunday 8:00 AM</span>
+        <span class="hero__pill">💬 WhatsApp Group</span>
       </div>
     </div>
+  </header>
 
-    <form id="registrationForm">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" placeholder="Enter your name" required>
-      </div>
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!--  MAIN CONTENT                                         -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <main>
 
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="tel" id="phone" placeholder="e.g. 0700000000" required>
-      </div>
+    <!-- REGISTRATION SECTION ─────────────────────────────── -->
+    <section aria-label="Church Registration">
 
-      <div class="form-group">
-        <label for="location">Residence</label>
-        <input type="text" id="location" placeholder="Where do you live?" required>
-      </div>
+      <!-- Step Indicator -->
+      <nav class="step-indicator" aria-label="Registration steps">
+        <div class="step-item active" id="si-1">
+          <div class="step-item__circle" id="sc-1">1</div>
+          <span class="step-item__label">Your Info</span>
+        </div>
+        <div class="step-line" id="sl-1" aria-hidden="true"></div>
+        <div class="step-item" id="si-2">
+          <div class="step-item__circle" id="sc-2">2</div>
+          <span class="step-item__label">How to Serve</span>
+        </div>
+        <div class="step-line" id="sl-2" aria-hidden="true"></div>
+        <div class="step-item" id="si-3">
+          <div class="step-item__circle" id="sc-3">3</div>
+          <span class="step-item__label">Confirm</span>
+        </div>
+      </nav>
 
-      <div class="form-group">
-        <label>Registered?</label>
-        <div class="checkbox-group" style="gap: 20px;">
-          <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="yes"> First time registering online
-          </label>
-          <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="no" checked> I have registered before
-          </label>
+      <!-- ─── STEP 1: Basic Info ─────────────────────────── -->
+      <div class="card step active" id="step-1" aria-labelledby="step1-title">
+        <h2 class="step__title" id="step1-title">Your Information</h2>
+
+        <div class="form-group">
+          <label for="name">Full Name <span aria-hidden="true">*</span></label>
+          <input type="text"
+                 id="name"
+                 placeholder="Enter your full name"
+                 required
+                 aria-required="true"
+                 autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number <span aria-hidden="true">*</span></label>
+          <input type="tel"
+                 id="phone"
+                 placeholder="e.g. 0700 000 000"
+                 required
+                 aria-required="true"
+                 autocomplete="tel">
+        </div>
+
+        <div class="form-group">
+          <label for="location">Residence <span aria-hidden="true">*</span></label>
+          <input type="text"
+                 id="location"
+                 placeholder="Where do you live?"
+                 required
+                 aria-required="true">
+        </div>
+
+        <fieldset>
+          <legend>Are you registering for the first time online?</legend>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="firstTime" value="yes" id="ft-yes">
+              First time online
+            </label>
+            <label>
+              <input type="radio" name="firstTime" value="no" id="ft-no" checked>
+              I have registered before
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn--primary" id="nextBtn1">
+            Next <span aria-hidden="true">→</span>
+          </button>
         </div>
       </div>
 
-      <div id="firstTimeFields" style="display: none;">
+      <!-- ─── STEP 2: Serving & Birthday ────────────────── -->
+      <div class="card step" id="step-2" aria-labelledby="step2-title">
+        <h2 class="step__title" id="step2-title">How You Can Serve</h2>
+
         <div class="form-group">
-          <label>Your Birthday (Optional)</label>
-          <div class="birthday-group">
-            <input type="number" id="birthDay" placeholder="Day (e.g. 24)" min="1" max="31">
-            <select id="birthMonth">
+          <label>Your Birthday <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
+          <div class="birthday-grid">
+            <input type="number"
+                   id="birthDay"
+                   placeholder="Day (e.g. 24)"
+                   min="1" max="31"
+                   aria-label="Birth day">
+            <select id="birthMonth" aria-label="Birth month">
               <option value="">Month</option>
               <option value="1">January</option>
               <option value="2">February</option>
@@ -444,467 +157,605 @@
           </div>
         </div>
 
-        <div class="form-group" id="volunteerSection">
-          <label>How can you serve? (Optional)</label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 6px;">
-            <label style="cursor: pointer; display: flex; gap: 8px;">
-              <input type="checkbox" id="vol-ushering" value="Ushering"> Ushering
+        <fieldset>
+          <legend>How can you serve? <span style="font-weight:400; font-size:0.8rem;">(Optional)</span></legend>
+          <div class="checkbox-grid">
+            <label class="checkbox-item">
+              <input type="checkbox" id="vol-ushering" value="Ushering">
+              Ushering
             </label>
-            <label style="cursor: pointer; display: flex; gap: 8px;">
-              <input type="checkbox" id="vol-choir" value="Choir"> Choir
+            <label class="checkbox-item">
+              <input type="checkbox" id="vol-choir" value="Choir">
+              Choir
             </label>
-            <label style="cursor: pointer; display: flex; gap: 8px; grid-column: span 2;">
-              <input type="checkbox" id="vol-instruments" value="Playing musical instruments"> Playing musical instruments:
-              <input type="text" id="instrument-type" placeholder="Which instrument?" style="padding: 4px; font-size: 0.8rem; border: 1px solid #ccc; border-radius: 4px; flex: 1;">
+            <label class="checkbox-item checkbox-item--span2">
+              <input type="checkbox" id="vol-instruments" value="Playing musical instruments">
+              Playing instruments:
+              <input type="text"
+                     id="instrument-type"
+                     class="instrument-input"
+                     placeholder="Which instrument?"
+                     aria-label="Instrument type">
             </label>
-            <label style="cursor: pointer; display: flex; gap: 8px; grid-column: span 2;">
-              <input type="checkbox" id="vol-venue" value="Venue Management"> Venue Management
+            <label class="checkbox-item checkbox-item--span2">
+              <input type="checkbox" id="vol-venue" value="Venue Management">
+              Venue Management
             </label>
-            <label style="cursor: pointer; display: flex; gap: 8px;">
-              <input type="checkbox" id="vol-other" value="Other"> Other
+            <label class="checkbox-item">
+              <input type="checkbox" id="vol-other" value="Other">
+              Other
             </label>
           </div>
+        </fieldset>
+
+        <div class="consent-row">
+          <input type="checkbox" id="consent" checked aria-label="WhatsApp group consent">
+          <label for="consent">Would you like to be added to the WhatsApp group?</label>
         </div>
 
-        <div class="form-group checkbox-group" id="consentGroup">
-          <input type="checkbox" id="consent" checked>
-          <label for="consent" style="cursor: pointer;">Would you like to be added to the WhatsApp group?</label>
+        <div class="form-group">
+          <label for="referredBy">
+            How did you hear about us?
+            <span style="font-weight:400; color:var(--text-muted);">(Optional)</span>
+          </label>
+          <input type="text"
+                 id="referredBy"
+                 placeholder="Friend, social media, flyer...">
         </div>
 
-        <div class="form-group" style="margin-top:8px;">
-          <label for="referredBy">How did you hear about us? (Optional)</label>
-          <input type="text" id="referredBy" placeholder="Friend, social media, flyer..." style="padding:8px; margin-top:6px; border:1px solid #ddd; border-radius:6px; width:100%;">
+        <div class="btn-row">
+          <button type="button" class="btn btn--outline" id="backBtn2">
+            <span aria-hidden="true">←</span> Back
+          </button>
+          <button type="button" class="btn btn--primary" id="nextBtn2">
+            Next <span aria-hidden="true">→</span>
+          </button>
         </div>
       </div>
 
-      <button type="submit" id="submitBtn">Done Registering</button>
-    </form>
+      <!-- ─── STEP 3: Confirm ───────────────────────────── -->
+      <div class="card step" id="step-3" aria-labelledby="step3-title">
+        <h2 class="step__title" id="step3-title">Confirm Your Details</h2>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
+          Please check your information before saving.
+        </p>
 
-    <div id="confirmation">
-      <div style="text-align: center;">
-        <h2 style="color: var(--primary-blue); margin-top: 0;">Confirm Your Details</h2>
-        <p>Ensure your information is correct before saving.</p>
-      </div>
-      <div class="details-card">
-        <ul id="detailsList"></ul>
-      </div>
-      <button id="saveBtn" style="width: 100%; background: var(--success-green); margin-bottom: 10px;">Save Registration</button>
-      <button id="editBtn" style="width: 100%; background: var(--primary-blue);">Edit Details</button>
-    </div>
-    
-    <a href="dashboard.html" class="admin-link-footer">Admin Login</a>
-  </div>
+        <div class="details-card">
+          <ul id="detailsList" aria-live="polite" aria-label="Your registration details"></ul>
+        </div>
 
-  <div id="fullBlessingOverlay">
+        <div class="btn-row">
+          <button type="button" class="btn btn--outline" id="editBtn">
+            <span aria-hidden="true">←</span> Edit
+          </button>
+          <button type="button" class="btn btn--success" id="saveBtn">
+            <span id="saveBtnText">Save Registration</span>
+            <span class="spinner" id="saveSpinner" role="status" aria-label="Saving…"></span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- GALLERY STRIP ───────────────────────────────────── -->
+    <section class="gallery-section" aria-label="Church Gallery">
+      <div class="gallery-header">
+        <h2>📷 Church Gallery</h2>
+        <select id="galleryFilter"
+                class="gallery-filter"
+                aria-label="Filter gallery by category">
+          <option value="all">All Photos</option>
+          <option value="General">General</option>
+          <option value="Events">Events</option>
+          <option value="Sermons">Sermons</option>
+          <option value="Counseling">Counseling</option>
+          <option value="Blessings">Blessings</option>
+        </select>
+      </div>
+      <div class="gallery-strip"
+           id="galleryGrid"
+           role="list"
+           aria-label="Church photos">
+        <p style="color:var(--text-muted); font-size:0.85rem; padding:10px 0;">
+          Loading photos…
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!--  BLESSING OVERLAY                                     -->
+  <!-- ══════════════════════════════════════════════════════ -->
+  <div id="fullBlessingOverlay"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="thankYouNote">
     <div class="blessing-content">
-      <img src="church logo/New Logo 2026.png" alt="Church Logo" class="blessing-logo">
-      <div class="thank-you-note">Thank You for Registering!</div>
+      <img src="church logo/New Logo 2026.png"
+           alt=""
+           aria-hidden="true"
+           class="blessing-logo">
+      <div class="thank-you-note" id="thankYouNote">Thank You for Registering!</div>
       <p id="blessingText" class="blessing-text"></p>
       <div class="slogan-footer">An encounter with the Holy Spirit</div>
-      <button class="done-btn" onclick="closeBlessing()">Amen</button>
+      <button class="done-btn" onclick="closeBlessing()">Amen 🙏</button>
     </div>
   </div>
 
+  <!-- ══════════════════════════════════════════════════════ -->
+  <!--  APPLICATION SCRIPT                                   -->
+  <!-- ══════════════════════════════════════════════════════ -->
   <script type="module">
-    import { 
-      formatName, 
-      isUpcomingBirthday, 
-      formatBirthday, 
-      getWeeklyVerse, 
-      WEEKLY_VERSES, 
-      DEFAULT_CHURCH_PROGRAMS 
+    import {
+      formatName,
+      isUpcomingBirthday,
+      formatBirthday,
+      getWeeklyVerse,
+      WEEKLY_VERSES,
+      DEFAULT_CHURCH_PROGRAMS
     } from './js/utils.js';
 
+    /* ── Constants ─────────────────────────────────────────── */
     const REGISTER_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
-    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
-    
-    const form = document.getElementById('registrationForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const confirmation = document.getElementById('confirmation');
-    const detailsList = document.getElementById('detailsList');
-    const saveBtn = document.getElementById('saveBtn');
-    const editBtn = document.getElementById('editBtn');
-    const fullBlessingOverlay = document.getElementById('fullBlessingOverlay');
-    
-    let currentEntry = null;
+    const GET_DATA_API_URL  = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
+
+    /* ── DOM refs ───────────────────────────────────────────── */
+    const step1El   = document.getElementById('step-1');
+    const step2El   = document.getElementById('step-2');
+    const step3El   = document.getElementById('step-3');
+    const nextBtn1  = document.getElementById('nextBtn1');
+    const nextBtn2  = document.getElementById('nextBtn2');
+    const backBtn2  = document.getElementById('backBtn2');
+    const editBtn   = document.getElementById('editBtn');
+    const saveBtn   = document.getElementById('saveBtn');
+    const saveBtnText   = document.getElementById('saveBtnText');
+    const saveSpinner   = document.getElementById('saveSpinner');
+    const detailsList   = document.getElementById('detailsList');
+    const galleryGrid   = document.getElementById('galleryGrid');
+    const galleryFilter = document.getElementById('galleryFilter');
+    const blessingOverlay = document.getElementById('fullBlessingOverlay');
+
+    /* ── State ──────────────────────────────────────────────── */
+    let currentEntry     = null;
     let allRegistrations = [];
-    let db = null;
-    
-    // Initialize Firestore after script load
+    let allMedia         = [];
+    let db               = null;
+    let currentStep      = 1;
+    let churchPrograms   = { ...DEFAULT_CHURCH_PROGRAMS };
+
+    /* ── Firebase Init ──────────────────────────────────────── */
     window.addEventListener('load', () => {
-      if (typeof firebase !== 'undefined') {
-        db = firebase.firestore();
-        console.log("Firestore Initialized");
-      }
-    });
-
-    let churchPrograms = { ...DEFAULT_CHURCH_PROGRAMS };
-
-    // Pre-fetch registrations & programs
-    async function prefetchData() {
       try {
-        // First try Firestore (More reliable)
-        if (typeof firebase !== 'undefined' && db) {
-          const snapshot = await db.collection('registrations').get();
-          allRegistrations = snapshot.docs.map(doc => doc.data());
-          console.log("Fetched from Firestore");
-          
-          // Fetch programs from special doc
-          const progDoc = await db.collection('settings').doc('programs').get();
-          if (progDoc.exists) {
-            churchPrograms = progDoc.data();
-          }
-        }
-
-        // Secondary fallback: Google Sheets
-        const response = await fetch(GET_DATA_API_URL);
-        if (response.ok) {
-          const data = await response.json();
-          // Merge with allRegistrations (avoiding duplicates by phone)
-          data.forEach(reg => {
-            if (reg.name !== "SYSTEM_PROGRAMS") {
-              const phone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-              if (!allRegistrations.some(r => String(r.phone || "").replace(/\D/g, '').slice(-9) === phone)) {
-                allRegistrations.push(reg);
-              }
-            } else if (!churchPrograms.custom) { // only if firestore was empty
-               try {
-                 churchPrograms = JSON.parse(reg.location);
-               } catch(e){}
-            }
-          });
+        if (typeof firebase !== 'undefined') {
+          db = firebase.firestore();
+          fetchGallery();
+          setTimeout(prefetchData, 1000);
         }
       } catch (e) {
-        console.error("Could not fetch existing data", e);
+        console.warn('Firebase not initialised (running locally?):', e.message);
       }
-    }
-    
-    // Wait for Firestore to be ready before pre-fetching
-    window.addEventListener('load', () => {
-       setTimeout(prefetchData, 1000);
     });
 
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW registration failed', err));
+    /* ── Step Navigation ────────────────────────────────────── */
+    function showStep(n) {
+      [step1El, step2El, step3El].forEach(el => {
+        el.classList.remove('active', 'step--slide');
       });
+      const target = document.getElementById('step-' + n);
+      target.classList.add('active');
+      // Trigger slide animation on next frame
+      requestAnimationFrame(() => target.classList.add('step--slide'));
+      currentStep = n;
+      updateStepIndicator();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function handleReview(e) {
-      e.preventDefault();
-      
-      const rawName = document.getElementById('name').value.trim();
-      const formattedName = formatName(rawName);
+    function updateStepIndicator() {
+      const isFirstTime = getFirstTimeValue() === 'yes';
+      [1, 2, 3].forEach(n => {
+        const si = document.getElementById('si-' + n);
+        const sc = document.getElementById('sc-' + n);
+        si.classList.remove('active', 'done');
 
-      const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "no";
-
-      // Get volunteer interests
-      const volunteering = [];
-      const volCheckboxes = document.querySelectorAll('#volunteerSection input[type="checkbox"]:checked');
-      volCheckboxes.forEach(cb => {
-        if (cb.value === "Playing musical instruments") {
-          const instrument = document.getElementById('instrument-type').value.trim();
-          volunteering.push(`Instruments: ${instrument || "General"}`);
-        } else if (cb.value) {
-          volunteering.push(cb.value);
+        if (n < currentStep && !(n === 2 && !isFirstTime)) {
+          si.classList.add('done');
+          sc.textContent = '✓';
+        } else if (n === currentStep) {
+          si.classList.add('active');
+          sc.textContent = n;
+        } else {
+          sc.textContent = n;
         }
       });
 
-      currentEntry = {
-        name: formattedName,
-        phone: document.getElementById('phone').value.trim(),
-        location: document.getElementById('location').value.trim(),
-        firstTime: firstTimeValue,
-        birthDay: document.getElementById('birthDay')?.value || "",
-        birthMonth: document.getElementById('birthMonth')?.value || "",
-        referredBy: document.getElementById('referredBy')?.value.trim() || null,
-        volunteering: volunteering,
-        consent: document.getElementById('consent').checked
-      };
-
-      showConfirmation(currentEntry);
+      // Connecting lines
+      document.getElementById('sl-1').classList.toggle('done', currentStep > 1);
+      document.getElementById('sl-2').classList.toggle('done', currentStep > 2);
     }
 
-    form.addEventListener('submit', handleReview);
-    editBtn.addEventListener('click', () => {
-      form.style.display = "flex";
-      confirmation.style.display = "none";
+    /* ── Helpers ────────────────────────────────────────────── */
+    function getFirstTimeValue() {
+      return document.querySelector('input[name="firstTime"]:checked')?.value || 'no';
+    }
+
+    /* ── Step 1 → Next ──────────────────────────────────────── */
+    nextBtn1.addEventListener('click', () => {
+      const name     = document.getElementById('name').value.trim();
+      const phone    = document.getElementById('phone').value.trim();
+      const location = document.getElementById('location').value.trim();
+
+      if (!name || !phone || !location) {
+        alert('Please fill in your name, phone number, and residence.');
+        return;
+      }
+
+      if (getFirstTimeValue() === 'yes') {
+        showStep(2);
+      } else {
+        buildEntry();
+        showStep(3);
+      }
     });
 
-    // firstTime radio behaviour: show volunteer section and birthday only for first-time visitors.
-    function updateFirstTimeUI(value) {
-      const firstTimeFields = document.getElementById('firstTimeFields');
+    /* ── Step 2 ─────────────────────────────────────────────── */
+    backBtn2.addEventListener('click', () => showStep(1));
 
-      if (value === 'yes') {
-        firstTimeFields.style.display = 'block';
+    nextBtn2.addEventListener('click', () => {
+      buildEntry();
+      showStep(3);
+    });
+
+    /* ── Step 3 ─────────────────────────────────────────────── */
+    editBtn.addEventListener('click', () => {
+      showStep(getFirstTimeValue() === 'yes' ? 2 : 1);
+    });
+
+    /* ── Build currentEntry ─────────────────────────────────── */
+    function buildEntry() {
+      const firstTimeValue = getFirstTimeValue();
+      const volunteering   = [];
+
+      if (firstTimeValue === 'yes') {
+        document.querySelectorAll('#step-2 input[type="checkbox"]:checked')
+          .forEach(cb => {
+            if (cb.id === 'vol-instruments') {
+              const inst = document.getElementById('instrument-type').value.trim();
+              volunteering.push(`Instruments: ${inst || 'General'}`);
+            } else if (cb.value) {
+              volunteering.push(cb.value);
+            }
+          });
+      }
+
+      currentEntry = {
+        name:       formatName(document.getElementById('name').value.trim()),
+        phone:      document.getElementById('phone').value.trim(),
+        location:   document.getElementById('location').value.trim(),
+        firstTime:  firstTimeValue,
+        birthDay:   firstTimeValue === 'yes' ? (document.getElementById('birthDay').value  || '') : '',
+        birthMonth: firstTimeValue === 'yes' ? (document.getElementById('birthMonth').value || '') : '',
+        referredBy: firstTimeValue === 'yes' ? (document.getElementById('referredBy').value.trim() || null) : null,
+        volunteering,
+        consent: firstTimeValue === 'yes' ? document.getElementById('consent').checked : false
+      };
+
+      renderConfirmation(currentEntry);
+    }
+
+    /* ── Render Confirmation (Step 3) ───────────────────────── */
+    function renderConfirmation(data) {
+      const monthNames = ['','January','February','March','April','May','June',
+                          'July','August','September','October','November','December'];
+      const birthdayStr = (data.birthDay && data.birthMonth)
+        ? `${data.birthDay} ${monthNames[data.birthMonth]}` : '—';
+      const volStr = data.volunteering.length > 0
+        ? data.volunteering.join(', ') : 'Not interested';
+
+      if (data.firstTime === 'no') {
+        detailsList.innerHTML = `
+          <li><strong>Name</strong> ${data.name}</li>
+          <li><strong>Phone</strong> ${data.phone}</li>
+          <li><strong>Residence</strong> ${data.location}</li>
+          <li><strong>Type</strong> Returning visitor</li>
+        `;
       } else {
-        // For returning visitors show only name, phone and location (residence)
-        firstTimeFields.style.display = 'none';
-        
-        // Clear hidden fields
-        document.querySelectorAll('#firstTimeFields input[type="checkbox"]').forEach(cb => cb.checked = false);
-        const instr = document.getElementById('instrument-type');
-        const ref = document.getElementById('referredBy');
-        const bDay = document.getElementById('birthDay');
-        const bMonth = document.getElementById('birthMonth');
-        if (instr) instr.value = '';
-        if (ref) ref.value = '';
-        if (bDay) bDay.value = '';
-        if (bMonth) bMonth.value = '';
+        detailsList.innerHTML = `
+          <li><strong>Name</strong> ${data.name}</li>
+          <li><strong>Phone</strong> ${data.phone}</li>
+          <li><strong>Residence</strong> ${data.location}</li>
+          <li><strong>Birthday</strong> ${birthdayStr}</li>
+          <li><strong>Type</strong> First-time online</li>
+          <li><strong>Volunteer</strong> ${volStr}</li>
+          <li><strong>WhatsApp</strong> ${data.consent ? 'Yes – add me' : 'No thanks'}</li>
+        `;
       }
     }
 
-    document.querySelectorAll('input[name="firstTime"]').forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        updateFirstTimeUI(e.target.value);
-      });
-    });
-
-    // Initialize UI based on default selection
-    const initialFirst = document.querySelector('input[name="firstTime"]:checked')?.value || 'no';
-    updateFirstTimeUI(initialFirst);
-
-    function showBlessing(verse) {
-      document.getElementById('blessingText').textContent = verse;
-      fullBlessingOverlay.style.display = 'flex';
-    }
-
-    function closeBlessing() {
-      fullBlessingOverlay.style.display = 'none';
-      resetForm();
-    }
-    // Expose closeBlessing to window for onclick handler
-    window.closeBlessing = closeBlessing;
+    /* ── Save Registration ──────────────────────────────────── */
+    saveBtn.addEventListener('click', handleSave);
 
     async function handleSave() {
       if (!currentEntry) return;
 
       saveBtn.disabled = true;
-      saveBtn.textContent = "Saving...";
+      saveBtnText.textContent = 'Saving…';
+      saveSpinner.style.display = 'inline-block';
 
       const blessing = getWeeklyVerse(WEEKLY_VERSES);
-      
-      // 1. Prepare data for Google Sheets
+
       const formData = {
-        name: currentEntry.name,
-        phone: currentEntry.phone,
-        location: currentEntry.location,
-        birthMonth: currentEntry.birthMonth || "",
-        birthDay: currentEntry.birthDay || "",
-        registered: currentEntry.firstTime,
-        whatsapp: currentEntry.consent ? currentEntry.phone : "—",
-        volunteering: currentEntry.volunteering.join(", "),
-        referredBy: currentEntry.referredBy || ""
+        name:        currentEntry.name,
+        phone:       currentEntry.phone,
+        location:    currentEntry.location,
+        birthMonth:  currentEntry.birthMonth  || '',
+        birthDay:    currentEntry.birthDay    || '',
+        registered:  currentEntry.firstTime,
+        whatsapp:    currentEntry.consent ? currentEntry.phone : '—',
+        volunteering: currentEntry.volunteering.join(', '),
+        referredBy:  currentEntry.referredBy  || ''
       };
 
-      // 2. Determine if returning user (Check if phone already exists)
-      const cleanInputPhone = (currentEntry.phone || "").replace(/\D/g, '').slice(-9);
+      const cleanInputPhone = (currentEntry.phone || '').replace(/\D/g, '').slice(-9);
       let isReturning = false;
-      
+
+      /* Check for duplicate */
       try {
         if (db) {
-          // Optimized check: 
-          // 1. Check if a document with this clean phone ID already exists
-          const docRef = db.collection('registrations').doc(cleanInputPhone);
-          const docSnap = await docRef.get();
-          
+          const docSnap = await db.collection('registrations').doc(cleanInputPhone).get();
           if (docSnap.exists) {
             isReturning = true;
           } else {
-            // 2. Fallback: Search for existing phone number in other fields (for older records)
-            const snapshot = await db.collection('registrations')
-              .where('phone', '==', currentEntry.phone)
-              .get();
-            
-            if (!snapshot.empty) {
-              isReturning = true;
-            } else {
-              // 3. Last fallback: Check locally prefetched data
-              isReturning = allRegistrations.some(reg => {
-                const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-                return cleanInputPhone && dbPhone === cleanInputPhone;
-              });
-            }
+            const snap = await db.collection('registrations')
+              .where('phone', '==', currentEntry.phone).get();
+            isReturning = !snap.empty;
           }
-        } else if (Array.isArray(allRegistrations)) {
-          isReturning = allRegistrations.some(reg => {
-            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-            return cleanInputPhone && dbPhone === cleanInputPhone;
-          });
+        }
+        if (!isReturning) {
+          isReturning = allRegistrations.some(r =>
+            String(r.phone || '').replace(/\D/g, '').slice(-9) === cleanInputPhone
+          );
         }
       } catch (e) {
-        console.warn("Direct DB check failed, falling back to local list", e);
-        if (Array.isArray(allRegistrations)) {
-          isReturning = allRegistrations.some(reg => {
-            const dbPhone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-            return cleanInputPhone && dbPhone === cleanInputPhone;
-          });
-        }
+        console.warn('Duplicate check fallback:', e.message);
+        isReturning = allRegistrations.some(r =>
+          String(r.phone || '').replace(/\D/g, '').slice(-9) === cleanInputPhone
+        );
       }
 
-      // 3. Save to database using a hidden form (The most reliable method)
       try {
-        if (isReturning) {
-          console.log("User already registered, skipping save.");
-        } else {
-          // A. FIREBASE SAVE (Direct and reliable)
+        if (!isReturning) {
+          /* A. Firebase Firestore */
           if (db) {
-            // Using cleanInputPhone as document ID to naturally prevent duplicates
             await db.collection('registrations').doc(cleanInputPhone).set({
               ...formData,
               cleanPhone: cleanInputPhone,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              timestamp:  firebase.firestore.FieldValue.serverTimestamp()
             });
-            console.log("Saved to Firestore with ID:", cleanInputPhone);
           }
 
-          // B. GOOGLE SHEETS SAVE (Backup)
-          const formId = 'temp_gas_form';
-          let tempForm = document.getElementById(formId);
+          /* B. Google Sheets backup via hidden form */
+          let tempForm = document.getElementById('temp_gas_form');
           if (!tempForm) {
             tempForm = document.createElement('form');
-            tempForm.id = formId;
+            tempForm.id     = 'temp_gas_form';
             tempForm.style.display = 'none';
             tempForm.method = 'POST';
             tempForm.action = REGISTER_API_URL;
             tempForm.target = 'hidden_iframe';
-            
             if (!document.getElementById('hidden_iframe')) {
-              const iframe = document.createElement('iframe');
-              iframe.id = 'hidden_iframe';
-              iframe.name = 'hidden_iframe';
+              const iframe      = document.createElement('iframe');
+              iframe.id         = 'hidden_iframe';
+              iframe.name       = 'hidden_iframe';
               iframe.style.display = 'none';
               document.body.appendChild(iframe);
             }
             document.body.appendChild(tempForm);
           }
-
           tempForm.innerHTML = '';
-          for (const key in formData) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = formData[key];
-            tempForm.appendChild(input);
-          }
-
+          Object.entries(formData).forEach(([k, v]) => {
+            const inp = document.createElement('input');
+            inp.type  = 'hidden';
+            inp.name  = k;
+            inp.value = v;
+            tempForm.appendChild(inp);
+          });
           tempForm.submit();
         }
 
-        // 4. Prepare WhatsApp URL if needed
+        /* Build WhatsApp message */
         let whatsappUrl = null;
         if (!isReturning) {
-          let rawNumber = currentEntry.phone.replace(/\D/g, '');
-          if (rawNumber.startsWith('0')) {
-            rawNumber = '256' + rawNumber.substring(1);
-          } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
-            rawNumber = '256' + rawNumber;
-          }
+          let raw = currentEntry.phone.replace(/\D/g, '');
+          if (raw.startsWith('0'))     raw = '256' + raw.substring(1);
+          else if (raw.length === 9)   raw = '256' + raw;
 
-          let programMessage = 
-            "Church Programs:\n" +
-            "• Sunday Services: " + churchPrograms.sunday + "\n" +
-            "• Monday Kyoto Prayers: " + churchPrograms.monday + "\n" +
-            "• Wednesday Evening Glory: " + churchPrograms.wednesday + "\n" +
-            "• Tue & Thu Counseling: " + churchPrograms.tueThu + "\n" +
-            "• Friday Night Prayers: " + churchPrograms.friday;
-          
-          if (churchPrograms.custom && churchPrograms.custom.trim()) {
-            programMessage += "\n• " + churchPrograms.custom;
-          }
+          let prog =
+            'Church Programs:\n' +
+            '• Sunday Services: '       + churchPrograms.sunday    + '\n' +
+            '• Monday Kyoto Prayers: '  + churchPrograms.monday    + '\n' +
+            '• Wednesday Evening Glory: '+ churchPrograms.wednesday + '\n' +
+            '• Tue & Thu Counseling: '  + churchPrograms.tueThu   + '\n' +
+            '• Friday Night Prayers: '  + churchPrograms.friday;
+          if (churchPrograms.custom?.trim()) prog += '\n• ' + churchPrograms.custom;
 
-          let messageText = "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
-            "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
-            programMessage;
+          let msg =
+            `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
+            `🕊 *A Blessing for you:* "${blessing}"\n\n${prog}`;
 
-          if (currentEntry.consent) {
-            messageText += "\n\nJoin our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h";
-          }
+          if (currentEntry.consent)
+            msg += '\n\nJoin our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h';
 
-          messageText += "\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
-            "*An encounter with the Holy Spirit*";
-
-          const message = encodeURIComponent(messageText);
-          whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
+          msg += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n*An encounter with the Holy Spirit*';
+          whatsappUrl = `https://wa.me/${raw}?text=${encodeURIComponent(msg)}`;
         }
 
-        // 5. Show blessing and open WhatsApp
+        /* Show blessing overlay */
         setTimeout(() => {
-          const thankYouNote = document.querySelector('.thank-you-note');
+          const thankYouNote = document.getElementById('thankYouNote');
           const blessingPara = document.getElementById('blessingText');
 
           if (isReturning) {
-            if (thankYouNote) thankYouNote.textContent = "Welcome Back!";
+            thankYouNote.textContent = 'Welcome Back!';
             blessingPara.textContent = `You are already registered! "${blessing}"`;
           } else {
-            if (thankYouNote) thankYouNote.textContent = "Thank You for Registering!";
+            thankYouNote.textContent = 'Thank You for Registering!';
             if (whatsappUrl) {
-              window.open(whatsappUrl, "_blank");
-              blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
+              window.open(whatsappUrl, '_blank');
+              blessingPara.innerHTML =
+                `"${blessing}"<br><br>` +
+                `<a href="${whatsappUrl}" target="_blank" ` +
+                `style="color:#25D366;font-size:0.9rem;font-weight:bold;text-decoration:none;">` +
+                `Tap here to open WhatsApp if it didn't launch automatically</a>`;
             } else {
               blessingPara.textContent = `"${blessing}"`;
             }
           }
-          showBlessing(blessing);
-        }, 800);
+          blessingOverlay.style.display = 'flex';
+        }, 700);
 
       } catch (error) {
-        console.error("Save error:", error);
-        alert("❌ Error saving registration. Please try again.");
+        console.error('Save error:', error);
+        alert('❌ Error saving registration. Please try again.');
+      } finally {
         saveBtn.disabled = false;
-        saveBtn.textContent = "Save Registration";
+        saveBtnText.textContent = 'Save Registration';
+        saveSpinner.style.display = 'none';
       }
     }
 
-    saveBtn.addEventListener('click', handleSave);
-
-    function showConfirmation(data) {
-      // Add a smooth transition effect
-      const container = document.querySelector('.container');
-      container.style.opacity = '0';
-      container.style.transform = 'scale(0.98)';
-      
-      setTimeout(() => {
-        if (data.firstTime === 'no') {
-          detailsList.innerHTML = `
-            <li><strong>Name:</strong> ${data.name}</li>
-            <li><strong>Phone:</strong> ${data.phone}</li>
-            <li><strong>Residence:</strong> ${data.location}</li>
-            <li><strong>Registration:</strong> Returning</li>
-          `;
-        } else {
-          const volStr = data.volunteering.length > 0 ? data.volunteering.join(", ") : "Not interested";
-          const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-          const birthdayStr = (data.birthDay && data.birthMonth) ? `${data.birthDay} ${monthNames[data.birthMonth]}` : "—";
-          
-          detailsList.innerHTML = `
-            <li><strong>Name:</strong> ${data.name}</li>
-            <li><strong>Phone:</strong> ${data.phone}</li>
-            <li><strong>Residence:</strong> ${data.location}</li>
-            <li><strong>Birthday:</strong> ${birthdayStr}</li>
-            <li><strong>Registration:</strong> First-time online</li>
-            <li><strong>Volunteer Interests:</strong> ${volStr}</li>
-            <li><strong>WhatsApp Group Invite:</strong> ${data.consent ? "Yes" : "No"}</li>
-          `;
-        }
-        form.style.display = "none";
-        confirmation.style.display = "block";
-        container.style.opacity = '1';
-        container.style.transform = 'scale(1)';
-      }, 300);
-    }
+    /* ── Close Blessing & Reset ─────────────────────────────── */
+    window.closeBlessing = function () {
+      blessingOverlay.style.display = 'none';
+      resetForm();
+    };
 
     function resetForm() {
-      form.reset();
+      ['name','phone','location','birthDay','instrument-type','referredBy']
+        .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+      document.getElementById('birthMonth').value = '';
+      document.getElementById('ft-no').checked = true;
+      document.getElementById('consent').checked = true;
+      document.querySelectorAll('#step-2 input[type="checkbox"]')
+        .forEach(cb => { cb.checked = false; });
       currentEntry = null;
-      form.style.display = "flex";
-      confirmation.style.display = "none";
-      saveBtn.disabled = false;
-      saveBtn.textContent = "Save Registration";
-      prefetchData(); // Refresh local list
+      showStep(1);
+      prefetchData();
     }
+
+    /* ── Gallery ────────────────────────────────────────────── */
+    async function fetchGallery() {
+      if (!db) return;
+      try {
+        const snapshot = await db.collection('media').orderBy('timestamp', 'desc').get();
+        allMedia = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderGallery();
+      } catch (e) {
+        console.error('Gallery error:', e);
+        galleryGrid.innerHTML =
+          '<p style="color:var(--danger);font-size:0.85rem;padding:10px 0;">Error loading photos.</p>';
+      }
+    }
+
+    function renderGallery() {
+      const filter   = galleryFilter.value;
+      const filtered = filter === 'all'
+        ? allMedia
+        : allMedia.filter(m => m.category === filter);
+
+      if (filtered.length === 0) {
+        galleryGrid.innerHTML =
+          '<p style="color:var(--text-muted);font-size:0.85rem;padding:10px 0;">No photos in this category.</p>';
+        return;
+      }
+
+      galleryGrid.innerHTML = filtered.map(item => `
+        <div class="gallery-item" role="listitem">
+          <img src="${item.url}"
+               alt="Church photo"
+               loading="lazy"
+               onclick="window.open('${item.url}','_blank')">
+          <div class="gallery-item__actions">
+            <button class="gallery-btn gallery-btn--share"
+                    onclick="shareMedia('${item.url}','${item.name}')"
+                    aria-label="Share this photo">📤 Share</button>
+            <button class="gallery-btn gallery-btn--save"
+                    onclick="downloadImage('${item.url}','${item.name}')"
+                    aria-label="Save this photo">💾 Save</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    galleryFilter.addEventListener('change', renderGallery);
+
+    window.downloadImage = async function (url, name) {
+      try {
+        const res     = await fetch(url);
+        const blob    = await res.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const a       = document.createElement('a');
+        a.href        = blobUrl;
+        a.download    = name || 'church_photo.jpg';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(blobUrl);
+      } catch (e) {
+        window.open(url, '_blank');
+      }
+    };
+
+    window.shareMedia = async function (url, name) {
+      const siteUrl   = window.location.href.split('?')[0].split('#')[0];
+      const shareText = `Check out this photo from Grace of Jesus Christ Ministries!\n\nWebsite: ${siteUrl}\nPhoto: ${url}`;
+      if (navigator.share) {
+        try { await navigator.share({ title: 'Church Photo', text: shareText, url }); return; }
+        catch (e) { /* fall through */ }
+      }
+      window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+    };
+
+    /* ── Prefetch registrations + programs ──────────────────── */
+    async function prefetchData() {
+      try {
+        if (db) {
+          const snap = await db.collection('registrations').get();
+          allRegistrations = snap.docs.map(d => d.data());
+          const progDoc = await db.collection('settings').doc('programs').get();
+          if (progDoc.exists) churchPrograms = progDoc.data();
+        }
+        const res = await fetch(GET_DATA_API_URL);
+        if (res.ok) {
+          const data = await res.json();
+          data.forEach(reg => {
+            if (reg.name !== 'SYSTEM_PROGRAMS') {
+              const ph = String(reg.phone || '').replace(/\D/g, '').slice(-9);
+              if (!allRegistrations.some(r =>
+                String(r.phone || '').replace(/\D/g, '').slice(-9) === ph
+              )) allRegistrations.push(reg);
+            } else if (!churchPrograms.custom) {
+              try { churchPrograms = JSON.parse(reg.location); } catch (e) {}
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('Prefetch error:', e.message);
+      }
+    }
+
+    /* ── Service Worker ─────────────────────────────────────── */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(() => console.log('SW registered'))
+          .catch(e => console.warn('SW failed:', e));
+      });
+    }
+
+    /* ── Init ───────────────────────────────────────────────── */
+    updateStepIndicator();
+
   </script>
 </body>
 </html>
