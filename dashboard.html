@@ -9,6 +9,7 @@
   <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
+  <script defer src="/__/firebase/9.6.1/firebase-storage-compat.js"></script>
   <script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
   <!-- Chart.js for Analytics -->
@@ -395,6 +396,95 @@
       height: 300px;
     }
 
+    /* Media Management Styles */
+    .media-section {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fdfdfd;
+      border-radius: 8px;
+      border: 1px solid #eee;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .media-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .media-item img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .media-item .category-badge {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--accent-green);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .media-actions-inline {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .btn-download { background: var(--secondary-blue); color: white; padding: 4px 8px; font-size: 0.75rem; }
+    .btn-delete-media { background: var(--danger-red); color: white; padding: 4px 8px; font-size: 0.75rem; }
+
+    #uploadArea {
+      border: 2px dashed #ccc;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      background: #f9f9f9;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #uploadArea:hover {
+      border-color: var(--accent-green);
+      background: #f0fdf4;
+    }
+
+    #uploadProgress {
+      height: 6px;
+      background: #eee;
+      border-radius: 3px;
+      margin-top: 10px;
+      overflow: hidden;
+      display: none;
+    }
+
+    #uploadProgressBar {
+      height: 100%;
+      background: var(--accent-green);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
     /* Modal Styles */
     #editModal {
       display: none;
@@ -561,6 +651,55 @@
       <div id="birthdayList"></div>
     </div>
 
+    <div class="media-section">
+      <h3>Media Library Management</h3>
+      <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+        Upload photos for the website gallery. Maximum 5MB per image to ensure fast loading.
+      </p>
+      
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <div style="flex: 1; min-width: 200px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px;">1. Select Category</label>
+            <select id="mediaCategory" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+              <option value="General">General</option>
+              <option value="Events">Events</option>
+              <option value="Sermons">Sermons</option>
+              <option value="Counseling">Counseling</option>
+              <option value="Blessings">Blessings</option>
+            </select>
+          </div>
+          <div style="flex: 2; min-width: 250px;">
+            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px;">2. Choose Image(s)</label>
+            <div id="uploadArea" onclick="document.getElementById('fileInput').click()" style="padding: 10px; margin-bottom: 0;">
+              <span id="uploadText">Click to select photos</span>
+              <input type="file" id="fileInput" accept="image/*" style="display: none;" multiple>
+            </div>
+          </div>
+          <button id="uploadBtn" style="background: var(--accent-green); color: white; padding: 10px 20px; align-self: flex-end;">Upload to Gallery</button>
+        </div>
+        <div id="uploadProgress">
+          <div id="uploadProgressBar"></div>
+        </div>
+        <p id="uploadStatus" style="font-size: 0.75rem; color: #666; margin-top: 5px; display: none;"></p>
+      </div>
+
+      <div class="controls" style="margin-top: 20px;">
+        <select id="filterMediaCategory" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+          <option value="all">Show All Categories</option>
+          <option value="General">General</option>
+          <option value="Events">Events</option>
+          <option value="Sermons">Sermons</option>
+          <option value="Counseling">Counseling</option>
+          <option value="Blessings">Blessings</option>
+        </select>
+      </div>
+
+      <div class="media-grid" id="mediaGrid">
+        <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #777;">Loading media library...</div>
+      </div>
+    </div>
+
     <div class="program-section">
       <h3>Manage Church Program Schedule</h3>
       <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
@@ -702,6 +841,16 @@
     const saveEditBtn = document.getElementById('saveEditBtn');
     const cancelEditBtn = document.getElementById('cancelEditBtn');
 
+    // Media Controls
+    const mediaGrid = document.getElementById('mediaGrid');
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const mediaCategoryInput = document.getElementById('mediaCategory');
+    const filterMediaCategory = document.getElementById('filterMediaCategory');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const uploadProgressDiv = document.getElementById('uploadProgress');
+    const uploadStatus = document.getElementById('uploadStatus');
+
     // Auth Controls
     const authOverlay = document.getElementById('authOverlay');
     const loginForm = document.getElementById('loginForm');
@@ -711,7 +860,9 @@
     const rememberMe = document.getElementById('rememberMe');
 
     let allRegistrations = [];
+    let allMedia = [];
     let db = null;
+    let storage = null;
     let editingId = null;
     let currentFilter = 'all';
     let regChart = null;
@@ -735,21 +886,178 @@
         if (user) {
           authOverlay.style.display = 'none';
           console.log("Authenticated as:", user.email);
-          if (db) {
-            fetchRegistrations();
-          } else {
-            db = firebase.firestore();
-            fetchRegistrations();
-          }
+          if (!db) db = firebase.firestore();
+          if (!storage) storage = firebase.storage();
+          fetchRegistrations();
+          fetchMedia();
         } else {
           authOverlay.style.display = 'flex';
           console.log("Not authenticated");
           // Clear any potentially cached data in UI
           allRegistrations = [];
+          allMedia = [];
           renderTable([]);
+          renderMedia([]);
         }
       });
     }
+
+    // --- Media Management ---
+    async function fetchMedia() {
+      if (!db) return;
+      try {
+        const snapshot = await db.collection('media').orderBy('timestamp', 'desc').get();
+        allMedia = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderMedia(allMedia);
+      } catch (e) {
+        console.error("Error fetching media:", e);
+        mediaGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: red;">Error loading media library</div>`;
+      }
+    }
+
+    function renderMedia(data) {
+      const filter = filterMediaCategory.value;
+      let filtered = data;
+      if (filter !== 'all') {
+        filtered = data.filter(m => m.category === filter);
+      }
+
+      if (filtered.length === 0) {
+        mediaGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #777;">No images found in this category.</div>`;
+        return;
+      }
+
+      mediaGrid.innerHTML = filtered.map(item => `
+        <div class="media-item">
+          <span class="category-badge">${item.category || 'General'}</span>
+          <img src="${item.url}" alt="Church photo" onclick="window.open('${item.url}', '_blank')">
+          <div style="font-size: 0.75rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>
+          <div class="media-actions-inline">
+            <button class="btn-download" onclick="downloadImage('${item.url}', '${item.name}')" title="Save to computer before deleting">Download</button>
+            <button class="btn-delete-media" onclick="deleteMedia('${item.id}', '${item.storagePath}')">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Exposed to global for onclick
+    window.downloadImage = async function(url, name) {
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = name || 'image.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      } catch (e) {
+        window.open(url, '_blank');
+      }
+    }
+
+    window.deleteMedia = async function(id, storagePath) {
+      if (!confirm("Are you sure you want to delete this image? We recommend downloading it first if you need it.")) return;
+      
+      try {
+        // 1. Delete from Storage
+        if (storagePath) {
+          const ref = storage.ref(storagePath);
+          await ref.delete();
+        }
+        
+        // 2. Delete from Firestore
+        await db.collection('media').doc(id).delete();
+        
+        fetchMedia();
+        alert("Image deleted successfully.");
+      } catch (e) {
+        alert("Error deleting image: " + e.message);
+      }
+    }
+
+    uploadBtn.addEventListener('click', async () => {
+      const files = fileInput.files;
+      if (files.length === 0) {
+        alert("Please select images first.");
+        return;
+      }
+
+      const category = mediaCategoryInput.value;
+      uploadBtn.disabled = true;
+      uploadProgressDiv.style.display = 'block';
+      uploadStatus.style.display = 'block';
+      
+      let successCount = 0;
+      let failCount = 0;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // Size validation (Max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`Skipping ${file.name}: File size too large (Max 5MB).`);
+          failCount++;
+          continue;
+        }
+
+        const timestamp = Date.now();
+        const safeName = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
+        const storagePath = `media/${category}/${timestamp}_${safeName}`;
+        const storageRef = storage.ref(storagePath);
+
+        try {
+          uploadStatus.textContent = `Uploading ${file.name} (${i+1}/${files.length})...`;
+          const uploadTask = storageRef.put(file);
+          
+          uploadTask.on('state_changed', (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            uploadProgressBar.style.width = progress + '%';
+          });
+
+          await uploadTask;
+          const url = await storageRef.getDownloadURL();
+
+          await db.collection('media').add({
+            name: file.name,
+            url: url,
+            storagePath: storagePath,
+            category: category,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          
+          successCount++;
+        } catch (e) {
+          console.error(`Error uploading ${file.name}:`, e);
+          failCount++;
+        }
+      }
+
+      uploadBtn.disabled = false;
+      uploadProgressDiv.style.display = 'none';
+      uploadProgressBar.style.width = '0%';
+      uploadStatus.style.display = 'none';
+      fileInput.value = '';
+      document.getElementById('uploadText').textContent = "Click to select photos";
+      
+      if (successCount > 0) {
+        fetchMedia();
+        alert(`Successfully uploaded ${successCount} image(s).` + (failCount > 0 ? ` Failed: ${failCount}` : ""));
+      } else if (failCount > 0) {
+        alert("Failed to upload images. Check console for details.");
+      }
+    });
+
+    filterMediaCategory.addEventListener('change', () => {
+      renderMedia(allMedia);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const count = e.target.files.length;
+        document.getElementById('uploadText').textContent = count > 0 ? `${count} file(s) selected` : "Click to select photos";
+    });
 
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -776,7 +1084,7 @@
         loginBtn.textContent = "Logging in...";
         await firebase.auth().signInWithEmailAndPassword(email, pass);
       } catch (e) {
-        loginError.textContent = "Invalid login credentials";
+        loginError.textContent = "Login Failed: " + e.message;
         loginError.style.display = 'block';
       } finally {
         loginBtn.disabled = false;

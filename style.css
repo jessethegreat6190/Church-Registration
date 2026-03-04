@@ -1,6 +1,6 @@
 /* ============================================================
    Grace of Jesus Christ Ministries — Registration Home Page
-   style.css · Extracted from inline styles + Option 2 redesign
+   style.css
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -139,7 +139,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   max-width: 480px;
-  margin: 0 auto 1.25rem;
+  margin: 0 auto 0.5rem;
 }
 
 .step-item {
@@ -186,7 +186,7 @@ body {
 }
 
 .step-item.active .step-item__label { color: var(--secondary); font-weight: 600; }
-.step-item.done  .step-item__label { color: var(--success); }
+.step-item.done  .step-item__label  { color: var(--success); }
 
 .step-line {
   flex: 1;
@@ -199,8 +199,26 @@ body {
 
 .step-line.done { background: var(--success); }
 
+/* === PROGRESS BAR ========================================== */
+.progress-bar-wrap {
+  max-width: 480px;
+  margin: 0 auto 1.25rem;
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 33%;
+  background: linear-gradient(90deg, var(--secondary), var(--success));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
 /* === FORM STEPS ============================================ */
-.step       { display: none; }
+.step        { display: none; }
 .step.active { display: block; }
 
 .step__title {
@@ -257,6 +275,23 @@ textarea:focus {
   outline: 3px solid var(--secondary);
   outline-offset: 2px;
   border-radius: 3px;
+}
+
+/* Disabled inputs */
+input:disabled {
+  background: var(--gray-100);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  border-color: var(--gray-200);
+}
+
+/* === INLINE FIELD ERRORS =================================== */
+.field-error {
+  font-size: 0.78rem;
+  color: var(--danger);
+  min-height: 1rem;
+  display: block;
+  font-weight: 500;
 }
 
 /* === FIELDSET (radio / checkbox groups) ==================== */
@@ -456,98 +491,27 @@ legend {
   flex-shrink: 0;
 }
 
-/* === GALLERY STRIP ========================================= */
-.gallery-section {
+/* === SITE FOOTER =========================================== */
+.site-footer {
+  text-align: center;
   max-width: 480px;
-  margin: 0 auto 1.5rem;
-  background: var(--white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  padding: 1.25rem;
-}
-
-.gallery-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.gallery-header h2 {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.gallery-filter {
-  padding: 5px 10px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border);
+  margin: 0 auto 1rem;
+  padding: 1rem;
   font-size: 0.8rem;
-  font-family: var(--font);
-  background: var(--white);
-  color: var(--text);
-}
-
-.gallery-strip {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 6px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gray-400) transparent;
-}
-
-.gallery-strip::-webkit-scrollbar { height: 4px; }
-.gallery-strip::-webkit-scrollbar-track { background: transparent; }
-.gallery-strip::-webkit-scrollbar-thumb { background: var(--gray-400); border-radius: 4px; }
-
-.gallery-item {
-  flex-shrink: 0;
-  width: 150px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  background: var(--gray-100);
-  border: 1px solid var(--gray-200);
-  box-shadow: var(--shadow-sm);
-}
-
-.gallery-item img {
-  width: 150px;
-  height: 115px;
-  object-fit: cover;
-  display: block;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.gallery-item:hover img { transform: scale(1.04); }
-
-/* Action buttons always visible — NOT hover-only */
-.gallery-item__actions {
-  display: flex;
-  border-top: 1px solid var(--gray-200);
-}
-
-.gallery-btn {
-  flex: 1;
-  padding: 7px 4px;
-  border: none;
-  background: var(--white);
-  font-size: 0.72rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: var(--font);
-  transition: background 0.15s;
   color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
 }
 
-.gallery-btn:first-child  { border-right: 1px solid var(--gray-200); }
-.gallery-btn:hover        { background: var(--gray-100); }
-.gallery-btn--share       { color: #25D366; }
-.gallery-btn--save        { color: var(--secondary); }
+.site-footer a {
+  color: var(--secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.site-footer a:hover { text-decoration: underline; }
 
 /* === BLESSING OVERLAY ====================================== */
 #fullBlessingOverlay {
@@ -655,8 +619,8 @@ legend {
 /* === REDUCED MOTION ======================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration:       0.01ms !important;
-    animation-iteration-count: 1     !important;
-    transition-duration:      0.01ms !important;
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
   }
 }
