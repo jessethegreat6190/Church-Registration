@@ -2,1603 +2,342 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard - Grace of Jesus Christ Ministries</title>
+  <title>Admin Dashboard – Grace of Jesus Christ Ministries</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <!-- Firebase SDK (Compat versions for ease of use) -->
+
+  <!-- Firebase SDK (served by Firebase Hosting) -->
   <script defer src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
   <script defer src="/__/firebase/9.6.1/firebase-storage-compat.js"></script>
-  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+  <script defer src="/__/firebase/init.js"></script>
 
-  <!-- Chart.js for Analytics -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <style>
-    :root {
-      --primary-blue: #2c3e50;
-      --secondary-blue: #3498db;
-      --accent-green: #27ae60;
-      --danger-red: #e74c3c;
-      --white: #ffffff;
-      --light-gray: #f4f6f9;
-    }
-
-    body {
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: var(--light-gray);
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
-      color: #fff;
-      text-align: center;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-      animation: headerSlide 0.8s ease-out;
-    }
-
-    @keyframes headerSlide {
-      from { transform: translateY(-100%); }
-      to { transform: translateY(0); }
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: 
-        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    header::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      z-index: 2;
-    }
-
-    header > * {
-      position: relative;
-      z-index: 2;
-    }
-
-    .header-content {
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      position: relative;
-    }
-
-    .header-content::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 10px 10px 0 0;
-    }
-
-    .header-content::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 10%;
-      right: 10%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 0 0 10px 10px;
-    }
-
-    .logo {
-      max-width: 80px;
-      height: auto;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-      transition: transform 0.3s ease;
-    }
-
-    .logo:hover {
-      transform: scale(1.1) rotate(-5deg);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #fff;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-    }
-
-    header h2 {
-      margin: 0;
-      font-size: 0.95rem;
-      font-weight: 400;
-      color: #fff;
-      opacity: 0.95;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      overflow-x: auto;
-      animation: mainFade 1s ease-out;
-    }
-
-    @keyframes mainFade {
-      from { opacity: 0; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .controls {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    #searchBar {
-      flex: 1;
-      min-width: 250px;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-
-    .stats {
-      background: var(--secondary-blue);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 6px;
-      font-weight: 600;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .program-section {
-      margin-top: 30px;
-      padding: 20px;
-      background: #f8f9fa;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-    }
-
-    .program-section h3 {
-      margin-top: 0;
-      color: var(--primary-blue);
-    }
-
-    .program-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .program-item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .program-item label {
-      font-weight: 600;
-      font-size: 0.8rem;
-    }
-
-    .program-item input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    #saveProgramsBtn {
-      background: var(--accent-green);
-      color: white;
-      padding: 10px 20px;
-      font-weight: 600;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      min-width: 800px;
-    }
-
-    th, td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-
-    th {
-      background: var(--accent-green);
-      color: #fff;
-      font-weight: 600;
-      position: sticky;
-      top: 0;
-    }
-
-    tr:hover {
-      background: #f9f9f9;
-    }
-
-    .actions {
-      display: flex;
-      gap: 5px;
-    }
-
-    button {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      transition: opacity 0.2s;
-    }
-
-    button:hover {
-      opacity: 0.8;
-    }
-
-    .delete-btn {
-      background: var(--danger-red);
-      color: #fff;
-    }
-
-    .whatsapp-link {
-      color: #25D366;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    /* Auth Styles */
-    #authOverlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, var(--accent-green) 0%, var(--primary-blue) 100%);
-      z-index: 5000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-
-    .auth-card {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 15px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      animation: authPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes authPop {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .auth-input:focus, #searchBar:focus {
-      outline: none;
-      border-color: var(--accent-green);
-      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
-      transform: translateY(-1px);
-      transition: all 0.2s ease;
-    }
-
-    tr {
-      transition: background 0.2s ease;
-    }
-
-    tr:hover {
-      background: #f0fdf4 !important;
-    }
-
-    button:active {
-      transform: scale(0.95);
-    }
-
-    .auth-card h2 { color: var(--primary-blue); margin-bottom: 1.5rem; }
-    .auth-input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-    .auth-btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent-green);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    #logoutBtn {
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.4);
-      color: white;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-
-    /* Volunteer Tabs */
-    .view-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      padding-bottom: 5px;
-    }
-    .view-tab {
-      background: #ddd;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .view-tab.active {
-      background: var(--accent-green);
-      color: white;
-    }
-
-    /* Analytics Section */
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-    }
-    .chart-container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #eee;
-      height: 300px;
-    }
-
-    /* Media Management Styles */
-    .media-section {
-      margin-top: 30px;
-      padding: 20px;
-      background: #fdfdfd;
-      border-radius: 8px;
-      border: 1px solid #eee;
-    }
-
-    .media-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .media-item {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      position: relative;
-    }
-
-    .media-item img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      cursor: pointer;
-    }
-
-    .media-item .category-badge {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      background: var(--accent-green);
-      color: white;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    .media-actions-inline {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      margin-top: 5px;
-    }
-
-    .btn-download { background: var(--secondary-blue); color: white; padding: 4px 8px; font-size: 0.75rem; }
-    .btn-delete-media { background: var(--danger-red); color: white; padding: 4px 8px; font-size: 0.75rem; }
-
-    #uploadArea {
-      border: 2px dashed #ccc;
-      padding: 20px;
-      text-align: center;
-      border-radius: 8px;
-      background: #f9f9f9;
-      margin-bottom: 20px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    #uploadArea:hover {
-      border-color: var(--accent-green);
-      background: #f0fdf4;
-    }
-
-    #uploadProgress {
-      height: 6px;
-      background: #eee;
-      border-radius: 3px;
-      margin-top: 10px;
-      overflow: hidden;
-      display: none;
-    }
-
-    #uploadProgressBar {
-      height: 100%;
-      background: var(--accent-green);
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    /* Modal Styles */
-    #editModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 450px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-
-    .modal-header {
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 0.5rem;
-      color: var(--primary-blue);
-    }
-
-    .modal-group {
-      margin-bottom: 1rem;
-    }
-
-    .modal-group label {
-      display: block;
-      font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .modal-group input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-sizing: border-box;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 1.5rem;
-    }
-
-    .btn-save { background: var(--accent-green); color: white; flex: 1; }
-    .btn-cancel { background: #777; color: white; flex: 1; }
-
-    .birthday-alerts {
-      background: #fff3cd;
-      border: 2px solid #ffc107;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .birthday-alerts h3 {
-      margin-top: 0;
-      color: #856404;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .birthday-alert-item {
-      background: #fff;
-      padding: 12px;
-      border-left: 4px solid #ffc107;
-      margin-bottom: 10px;
-      border-radius: 4px;
-    }
-
-    .birthday-alert-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .upcoming-birthday {
-      background-color: #fff3cd !important;
-    }
-
-    .birthday-tag {
-      display: inline-block;
-      background: #ffc107;
-      color: #333;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-
-
-
-    @media (max-width: 600px) {
-      header h1 { font-size: 1rem; }
-      header h2 { font-size: 0.8rem; }
-      main { margin: 10px; padding: 15px; }
-    }
-  </style>
+  <!-- Dashboard styles -->
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
-  <div id="authOverlay">
-    <form class="auth-card" id="loginForm">
-      <img src="church logo/New Logo 2026.png" alt="Church Logo" style="max-width: 100px; margin-bottom: 1rem;">
-      <h2>Admin Login</h2>
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Admin Email" required autocomplete="email">
-      <input type="password" id="loginPassword" class="auth-input" placeholder="Password" required autocomplete="current-password">
-      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; font-size: 0.85rem; color: var(--primary-blue);">
-        <input type="checkbox" id="rememberMe" style="width: auto; height: auto;">
-        <label for="rememberMe" style="cursor: pointer;">Remember Email</label>
+  <!-- ════════════════════════════════════════════════════
+       TOAST CONTAINER
+       ════════════════════════════════════════════════════ -->
+  <div id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ════════════════════════════════════════════════════
+       AUTH OVERLAY
+       ════════════════════════════════════════════════════ -->
+  <div id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <form class="auth-card" id="loginForm" novalidate>
+      <img src="church logo/New Logo 2026.png" alt="Church logo">
+      <h2 id="loginTitle">Admin Login</h2>
+
+      <input type="email"
+             id="loginEmail"
+             class="auth-input"
+             placeholder="Admin Email"
+             required
+             autocomplete="email">
+
+      <div class="pwd-wrapper">
+        <input type="password"
+               id="loginPassword"
+               class="auth-input"
+               placeholder="Password"
+               required
+               autocomplete="current-password">
+        <button type="button"
+                id="togglePassword"
+                class="pwd-toggle"
+                aria-label="Show password">👁</button>
       </div>
+
+      <div class="remember-row">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">Remember Email</label>
+      </div>
+
       <button type="submit" id="loginBtn" class="auth-btn">Access Dashboard</button>
-      <p id="loginError" style="color: var(--danger-red); margin-top: 10px; font-size: 0.85rem; display: none;"></p>
+      <p id="loginError" role="alert"></p>
     </form>
   </div>
 
+  <!-- ════════════════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════════════════ -->
   <header>
-    <img src="church logo/New Logo 2026.png" alt="Church Logo" class="logo">
+    <img src="church logo/New Logo 2026.png" alt="Church logo" class="logo">
     <div class="header-content">
       <h1>Grace of Jesus Christ Ministries – Kitintale</h1>
       <h2>Admin Dashboard: Registrations</h2>
-      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
-        <button id="logoutBtn">Admin Logout</button>
-        <button onclick="window.location.href='/'" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer;">Go to Registration</button>
+      <div class="header-actions">
+        <button id="logoutBtn" class="btn-header">Admin Logout</button>
+        <button onclick="window.location.href='/'" class="btn-header">← Registration Page</button>
       </div>
     </div>
   </header>
 
+  <!-- ════════════════════════════════════════════════════
+       SECTION TABS
+       ════════════════════════════════════════════════════ -->
+  <nav class="section-tabs" aria-label="Dashboard sections">
+    <button class="section-tab active" data-section="section-members">👥 Members</button>
+    <button class="section-tab"        data-section="section-media">🖼 Media</button>
+    <button class="section-tab"        data-section="section-programs">📅 Programs</button>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════
+       MAIN
+       ════════════════════════════════════════════════════ -->
   <main>
-    <div class="analytics-grid">
-      <div class="chart-container">
-        <canvas id="registrationChart"></canvas>
+
+    <!-- ─── SECTION: MEMBERS ──────────────────────────── -->
+    <section id="section-members" class="dashboard-section active" aria-label="Members">
+
+      <!-- Stat cards -->
+      <div class="stat-cards">
+        <div class="stat-card stat-card--green">
+          <span class="stat-card__label">Total Members</span>
+          <span class="stat-card__value" id="stat-total">—</span>
+        </div>
+        <div class="stat-card stat-card--blue">
+          <span class="stat-card__label">First-Timers</span>
+          <span class="stat-card__value" id="stat-firsttimers">—</span>
+        </div>
+        <div class="stat-card stat-card--wa">
+          <span class="stat-card__label">WhatsApp Members</span>
+          <span class="stat-card__value" id="stat-whatsapp">—</span>
+        </div>
+        <div class="stat-card stat-card--week">
+          <span class="stat-card__label">Joined This Week</span>
+          <span class="stat-card__value" id="stat-week">—</span>
+        </div>
       </div>
-      <div class="chart-container">
-        <canvas id="ministryChart"></canvas>
+
+      <!-- Charts -->
+      <div class="analytics-grid">
+        <div class="chart-container">
+          <canvas id="registrationChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="ministryChart"></canvas>
+        </div>
       </div>
-    </div>
 
-    <div class="view-tabs" id="viewTabs">
-      <div class="view-tab active" data-filter="all">All Members</div>
-      <div class="view-tab" data-filter="Ushering">Ushers</div>
-      <div class="view-tab" data-filter="Choir">Choir</div>
-      <div class="view-tab" data-filter="Instruments">Instrumentalists</div>
-      <div class="view-tab" data-filter="Venue">Venue Mgmt</div>
-      <div class="view-tab" data-filter="Other">Others</div>
-    </div>
+      <!-- Ministry filter tabs -->
+      <div class="view-tabs" id="viewTabs" role="tablist" aria-label="Filter by ministry">
+        <button class="view-tab active" data-filter="all"        role="tab">All Members</button>
+        <button class="view-tab"        data-filter="Ushering"   role="tab">Ushers</button>
+        <button class="view-tab"        data-filter="Choir"      role="tab">Choir</button>
+        <button class="view-tab"        data-filter="Instruments"role="tab">Instrumentalists</button>
+        <button class="view-tab"        data-filter="Venue"      role="tab">Venue Mgmt</button>
+        <button class="view-tab"        data-filter="Other"      role="tab">Others</button>
+      </div>
 
-    <div class="controls">
-      <input type="text" id="searchBar" placeholder="Search by name, phone, or location...">
-      <button id="exportBtn" style="background: var(--secondary-blue); color: white; padding: 10px 20px; font-weight: 600;">Export to Excel (CSV)</button>
-      <div class="stats" id="totalCount">Total: 0</div>
-    </div>
+      <!-- Search + Export + Count -->
+      <div class="controls">
+        <input type="search"
+               id="searchBar"
+               placeholder="Search by name, phone or location…"
+               aria-label="Search registrations">
+        <button id="exportBtn" class="btn-export">⬇ Export CSV</button>
+        <div class="stats-badge" id="totalCount">Total: 0</div>
+      </div>
 
-    <div class="birthday-alerts" id="birthdayAlerts" style="display: none;">
-      <h3>🎂 Upcoming Birthdays (Next 7 Days)</h3>
-      <div id="birthdayList"></div>
-    </div>
+      <!-- Birthday alerts -->
+      <div class="birthday-alerts" id="birthdayAlerts" style="display:none;" aria-live="polite">
+        <h3>🎂 Upcoming Birthdays (Next 7 Days)</h3>
+        <div id="birthdayList"></div>
+      </div>
 
-    <div class="media-section">
-      <h3>Media Library Management</h3>
-      <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
-        Upload photos for the website gallery. Maximum 5MB per image to ensure fast loading.
-      </p>
-      
-      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px;">
-        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-          <div style="flex: 1; min-width: 200px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px;">1. Select Category</label>
-            <select id="mediaCategory" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-              <option value="General">General</option>
-              <option value="Events">Events</option>
-              <option value="Sermons">Sermons</option>
-              <option value="Counseling">Counseling</option>
-              <option value="Blessings">Blessings</option>
-            </select>
-          </div>
-          <div style="flex: 2; min-width: 250px;">
-            <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 5px;">2. Choose Image(s)</label>
-            <div id="uploadArea" onclick="document.getElementById('fileInput').click()" style="padding: 10px; margin-bottom: 0;">
-              <span id="uploadText">Click to select photos</span>
-              <input type="file" id="fileInput" accept="image/*" style="display: none;" multiple>
+      <!-- Registrations table -->
+      <div class="table-wrapper">
+        <table id="registrationsTable" aria-label="Church registrations">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Residence</th>
+              <th>Birthday</th>
+              <th>First Time</th>
+              <th>Volunteering</th>
+              <th>Heard From</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr>
+              <td colspan="9" style="text-align:center;padding:40px;color:#777;">Loading registrations…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </section>
+
+    <!-- ─── SECTION: MEDIA ────────────────────────────── -->
+    <section id="section-media" class="dashboard-section" aria-label="Media library">
+
+      <div class="media-section">
+        <h3>📷 Media Library</h3>
+        <p class="section-hint">Upload photos for the website gallery. Maximum 5 MB per image.</p>
+
+        <div class="upload-controls">
+          <div class="upload-row">
+            <div class="upload-field">
+              <label for="mediaCategory">1. Category</label>
+              <select id="mediaCategory">
+                <option value="General">General</option>
+                <option value="Events">Events</option>
+                <option value="Sermons">Sermons</option>
+                <option value="Counseling">Counseling</option>
+                <option value="Blessings">Blessings</option>
+              </select>
             </div>
+            <div class="upload-field" style="flex:2;">
+              <label>2. Choose Image(s)</label>
+              <div id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <span id="uploadText">Click to select photos</span>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;" multiple>
+              </div>
+            </div>
+            <button id="uploadBtn" class="btn-upload">Upload</button>
           </div>
-          <button id="uploadBtn" style="background: var(--accent-green); color: white; padding: 10px 20px; align-self: flex-end;">Upload to Gallery</button>
+          <div id="uploadProgress">
+            <div id="uploadProgressBar"></div>
+          </div>
+          <p id="uploadStatus" style="font-size:0.75rem;color:#666;margin-top:5px;display:none;"></p>
         </div>
-        <div id="uploadProgress">
-          <div id="uploadProgressBar"></div>
+
+        <div class="controls">
+          <select id="filterMediaCategory" style="padding:8px 12px;border-radius:6px;border:1.5px solid var(--gray-400);font-family:var(--font);">
+            <option value="all">Show All Categories</option>
+            <option value="General">General</option>
+            <option value="Events">Events</option>
+            <option value="Sermons">Sermons</option>
+            <option value="Counseling">Counseling</option>
+            <option value="Blessings">Blessings</option>
+          </select>
         </div>
-        <p id="uploadStatus" style="font-size: 0.75rem; color: #666; margin-top: 5px; display: none;"></p>
+
+        <div class="media-grid" id="mediaGrid">
+          <div style="grid-column:1/-1;text-align:center;padding:20px;color:#777;">Loading media library…</div>
+        </div>
       </div>
 
-      <div class="controls" style="margin-top: 20px;">
-        <select id="filterMediaCategory" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-          <option value="all">Show All Categories</option>
-          <option value="General">General</option>
-          <option value="Events">Events</option>
-          <option value="Sermons">Sermons</option>
-          <option value="Counseling">Counseling</option>
-          <option value="Blessings">Blessings</option>
-        </select>
+    </section>
+
+    <!-- ─── SECTION: PROGRAMS ─────────────────────────── -->
+    <section id="section-programs" class="dashboard-section" aria-label="Church programs">
+
+      <div class="program-section">
+        <h3>📅 Church Program Schedule</h3>
+        <p class="section-hint">Changes are reflected in WhatsApp messages sent to new registrants.</p>
+
+        <div class="program-grid">
+          <div class="program-item">
+            <label for="prog-sunday">Sunday Services</label>
+            <input type="text" id="prog-sunday" value="8:00 AM">
+          </div>
+          <div class="program-item">
+            <label for="prog-monday">Monday Kyoto Prayers</label>
+            <input type="text" id="prog-monday" value="7:00 AM – 9:00 AM">
+          </div>
+          <div class="program-item">
+            <label for="prog-wednesday">Wednesday Evening Glory</label>
+            <input type="text" id="prog-wednesday" value="Evening Glory 5pm–7pm">
+          </div>
+          <div class="program-item">
+            <label for="prog-tue-thu">Tue &amp; Thu Counseling</label>
+            <input type="text" id="prog-tue-thu" value="7:00 AM – 3:00 PM">
+          </div>
+          <div class="program-item">
+            <label for="prog-friday">Friday Night Prayers</label>
+            <input type="text" id="prog-friday" value="3pm, 2am, 3am (Not overnight)">
+          </div>
+          <div class="program-item">
+            <label for="prog-custom">Additional Program (Optional)</label>
+            <input type="text" id="prog-custom" placeholder="e.g. Saturday Fellowship 10am">
+          </div>
+          <div class="program-item" style="grid-column: span 2;">
+            <label for="prog-whatsapp-link">WhatsApp Group Link</label>
+            <input type="url" id="prog-whatsapp-link" placeholder="https://chat.whatsapp.com/…">
+          </div>
+        </div>
+
+        <button id="saveProgramsBtn" class="btn-save-programs">💾 Save Schedule</button>
       </div>
 
-      <div class="media-grid" id="mediaGrid">
-        <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #777;">Loading media library...</div>
-      </div>
-    </div>
+    </section>
 
-    <div class="program-section">
-      <h3>Manage Church Program Schedule</h3>
-      <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
-        Update the weekly schedule here. Changes will be reflected in the WhatsApp messages.
-      </p>
-      <div class="program-grid">
-        <div class="program-item">
-          <label>Sunday Services</label>
-          <input type="text" id="prog-sunday" value="8:00 AM">
-        </div>
-        <div class="program-item">
-          <label>Monday Kyoto Prayers</label>
-          <input type="text" id="prog-monday" value="7:00 AM - 9:00 AM">
-        </div>
-        <div class="program-item">
-          <label>Wednesday Evening Glory</label>
-          <input type="text" id="prog-wednesday" value="Evening Glory 5pm-7pm">
-        </div>
-        <div class="program-item">
-          <label>Tue & Thu Counseling</label>
-          <input type="text" id="prog-tue-thu" value="7:00 AM - 3:00 PM">
-        </div>
-        <div class="program-item">
-          <label>Friday Night Prayers</label>
-          <input type="text" id="prog-friday" value="3pm, 2am, 3am (Not overnight)">
-        </div>
-        <div class="program-item">
-          <label>Additional Program (Optional)</label>
-          <input type="text" id="prog-custom" placeholder="e.g., Saturday Fellowship 10am">
-        </div>
-      </div>
-      <button id="saveProgramsBtn">Save Schedule</button>
-    </div>
-
-    <table id="registrationsTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Residence</th>
-          <th>Birthday</th>
-          <th>First Time</th>
-          <th>Volunteering</th>
-          <th>Heard From</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody">
-        <tr>
-          <td colspan="9" style="text-align:center; padding: 40px; color: #777;">Loading registrations...</td>
-        </tr>
-      </tbody>
-    </table>
   </main>
 
-  <div id="editModal">
+  <!-- ════════════════════════════════════════════════════
+       EDIT MEMBER MODAL
+       ════════════════════════════════════════════════════ -->
+  <div id="editModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="modalTitle">Edit Member Details</h3>
-      </div>
+      <h3 class="modal-header" id="modalTitle">Edit Member Details</h3>
+
       <div class="modal-group">
-        <label>Name</label>
+        <label for="edit-name">Name</label>
         <input type="text" id="edit-name">
       </div>
       <div class="modal-group">
-        <label>Phone Number</label>
+        <label for="edit-phone">Phone Number</label>
         <input type="tel" id="edit-phone">
       </div>
       <div class="modal-group">
-        <label>Residence</label>
+        <label for="edit-residence">Residence</label>
         <input type="text" id="edit-residence">
       </div>
       <div class="modal-group">
-        <label>Consent (Yes/No)</label>
-        <input type="text" id="edit-consent" placeholder="Yes or —">
+        <label for="edit-consent">WhatsApp (phone or —)</label>
+        <input type="text" id="edit-consent" placeholder="e.g. 0700000000 or —">
       </div>
       <div class="modal-group">
         <label>Birthday</label>
-        <div style="display: flex; gap: 10px;">
+        <div class="birthday-row">
           <input type="number" id="edit-bday" placeholder="Day" min="1" max="31">
-          <select id="edit-bmonth" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+          <select id="edit-bmonth">
             <option value="">Month</option>
-            <option value="1">Jan</option>
-            <option value="2">Feb</option>
-            <option value="3">Mar</option>
-            <option value="4">Apr</option>
-            <option value="5">May</option>
-            <option value="6">Jun</option>
-            <option value="7">Jul</option>
-            <option value="8">Aug</option>
-            <option value="9">Sep</option>
-            <option value="10">Oct</option>
-            <option value="11">Nov</option>
-            <option value="12">Dec</option>
+            <option value="1">Jan</option><option value="2">Feb</option>
+            <option value="3">Mar</option><option value="4">Apr</option>
+            <option value="5">May</option><option value="6">Jun</option>
+            <option value="7">Jul</option><option value="8">Aug</option>
+            <option value="9">Sep</option><option value="10">Oct</option>
+            <option value="11">Nov</option><option value="12">Dec</option>
           </select>
         </div>
       </div>
       <div class="modal-group">
-        <label>Registered?</label>
-        <select id="edit-registered" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;">
+        <label for="edit-registered">Registration Type</label>
+        <select id="edit-registered">
           <option value="yes">Yes (First Time)</option>
           <option value="no">No (Returning)</option>
         </select>
       </div>
       <div class="modal-group">
-        <label>Volunteering</label>
-        <input type="text" id="edit-volunteering" placeholder="e.g., Ushering, Choir">
+        <label for="edit-volunteering">Volunteering</label>
+        <input type="text" id="edit-volunteering" placeholder="e.g. Ushering, Choir">
       </div>
       <div class="modal-group">
-        <label>Referred By</label>
+        <label for="edit-referred">Referred By</label>
         <input type="text" id="edit-referred">
       </div>
+
       <div class="modal-actions">
-        <button class="btn-save" id="saveEditBtn">Save Changes</button>
-        <button class="btn-cancel" id="cancelEditBtn">Cancel</button>
+        <button class="btn-modal-save"   id="saveEditBtn">Save Changes</button>
+        <button class="btn-modal-cancel" id="cancelEditBtn">Cancel</button>
       </div>
     </div>
   </div>
 
-  <script type="module">
-    import { 
-      isUpcomingBirthday, 
-      getDaysUntilBirthday, 
-      formatBirthday 
-    } from './js/utils.js';
-
-    const GET_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
-    const SAVE_DATA_API_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
-
-    const tableBody = document.getElementById('tableBody');
-    const searchBar = document.getElementById('searchBar');
-    const exportBtn = document.getElementById('exportBtn');
-    const totalCount = document.getElementById('totalCount');
-    const saveProgramsBtn = document.getElementById('saveProgramsBtn');
-    const birthdayAlerts = document.getElementById('birthdayAlerts');
-    const birthdayList = document.getElementById('birthdayList');
-    const editModal = document.getElementById('editModal');
-    const saveEditBtn = document.getElementById('saveEditBtn');
-    const cancelEditBtn = document.getElementById('cancelEditBtn');
-
-    // Media Controls
-    const mediaGrid = document.getElementById('mediaGrid');
-    const fileInput = document.getElementById('fileInput');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const mediaCategoryInput = document.getElementById('mediaCategory');
-    const filterMediaCategory = document.getElementById('filterMediaCategory');
-    const uploadProgressBar = document.getElementById('uploadProgressBar');
-    const uploadProgressDiv = document.getElementById('uploadProgress');
-    const uploadStatus = document.getElementById('uploadStatus');
-
-    // Auth Controls
-    const authOverlay = document.getElementById('authOverlay');
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginError = document.getElementById('loginError');
-    const rememberMe = document.getElementById('rememberMe');
-
-    let allRegistrations = [];
-    let allMedia = [];
-    let db = null;
-    let storage = null;
-    let editingId = null;
-    let currentFilter = 'all';
-    let regChart = null;
-    let ministryChart = null;
-
-    // Load remembered email
-    window.addEventListener('load', () => {
-      const savedEmail = localStorage.getItem('church_admin_email');
-      if (savedEmail) {
-        document.getElementById('loginEmail').value = savedEmail;
-        rememberMe.checked = true;
-      }
-    });
-
-    // --- Authentication Logic ---
-    function initAuth() {
-      // Ensure overlay is shown by default if not determined yet
-      authOverlay.style.display = 'flex';
-      
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          authOverlay.style.display = 'none';
-          console.log("Authenticated as:", user.email);
-          if (!db) db = firebase.firestore();
-          if (!storage) storage = firebase.storage();
-          fetchRegistrations();
-          fetchMedia();
-        } else {
-          authOverlay.style.display = 'flex';
-          console.log("Not authenticated");
-          // Clear any potentially cached data in UI
-          allRegistrations = [];
-          allMedia = [];
-          renderTable([]);
-          renderMedia([]);
-        }
-      });
-    }
-
-    // --- Media Management ---
-    async function fetchMedia() {
-      if (!db) return;
-      try {
-        const snapshot = await db.collection('media').orderBy('timestamp', 'desc').get();
-        allMedia = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        renderMedia(allMedia);
-      } catch (e) {
-        console.error("Error fetching media:", e);
-        mediaGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: red;">Error loading media library</div>`;
-      }
-    }
-
-    function renderMedia(data) {
-      const filter = filterMediaCategory.value;
-      let filtered = data;
-      if (filter !== 'all') {
-        filtered = data.filter(m => m.category === filter);
-      }
-
-      if (filtered.length === 0) {
-        mediaGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #777;">No images found in this category.</div>`;
-        return;
-      }
-
-      mediaGrid.innerHTML = filtered.map(item => `
-        <div class="media-item">
-          <span class="category-badge">${item.category || 'General'}</span>
-          <img src="${item.url}" alt="Church photo" onclick="window.open('${item.url}', '_blank')">
-          <div style="font-size: 0.75rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>
-          <div class="media-actions-inline">
-            <button class="btn-download" onclick="downloadImage('${item.url}', '${item.name}')" title="Save to computer before deleting">Download</button>
-            <button class="btn-delete-media" onclick="deleteMedia('${item.id}', '${item.storagePath}')">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    // Exposed to global for onclick
-    window.downloadImage = async function(url, name) {
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = name || 'image.jpg';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-      } catch (e) {
-        window.open(url, '_blank');
-      }
-    }
-
-    window.deleteMedia = async function(id, storagePath) {
-      if (!confirm("Are you sure you want to delete this image? We recommend downloading it first if you need it.")) return;
-      
-      try {
-        // 1. Delete from Storage
-        if (storagePath) {
-          const ref = storage.ref(storagePath);
-          await ref.delete();
-        }
-        
-        // 2. Delete from Firestore
-        await db.collection('media').doc(id).delete();
-        
-        fetchMedia();
-        alert("Image deleted successfully.");
-      } catch (e) {
-        alert("Error deleting image: " + e.message);
-      }
-    }
-
-    uploadBtn.addEventListener('click', async () => {
-      const files = fileInput.files;
-      if (files.length === 0) {
-        alert("Please select images first.");
-        return;
-      }
-
-      const category = mediaCategoryInput.value;
-      uploadBtn.disabled = true;
-      uploadProgressDiv.style.display = 'block';
-      uploadStatus.style.display = 'block';
-      
-      let successCount = 0;
-      let failCount = 0;
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        
-        // Size validation (Max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          alert(`Skipping ${file.name}: File size too large (Max 5MB).`);
-          failCount++;
-          continue;
-        }
-
-        const timestamp = Date.now();
-        const safeName = file.name.replace(/[^a-z0-9.]/gi, '_').toLowerCase();
-        const storagePath = `media/${category}/${timestamp}_${safeName}`;
-        const storageRef = storage.ref(storagePath);
-
-        try {
-          uploadStatus.textContent = `Uploading ${file.name} (${i+1}/${files.length})...`;
-          const uploadTask = storageRef.put(file);
-          
-          uploadTask.on('state_changed', (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            uploadProgressBar.style.width = progress + '%';
-          });
-
-          await uploadTask;
-          const url = await storageRef.getDownloadURL();
-
-          await db.collection('media').add({
-            name: file.name,
-            url: url,
-            storagePath: storagePath,
-            category: category,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
-          
-          successCount++;
-        } catch (e) {
-          console.error(`Error uploading ${file.name}:`, e);
-          failCount++;
-        }
-      }
-
-      uploadBtn.disabled = false;
-      uploadProgressDiv.style.display = 'none';
-      uploadProgressBar.style.width = '0%';
-      uploadStatus.style.display = 'none';
-      fileInput.value = '';
-      document.getElementById('uploadText').textContent = "Click to select photos";
-      
-      if (successCount > 0) {
-        fetchMedia();
-        alert(`Successfully uploaded ${successCount} image(s).` + (failCount > 0 ? ` Failed: ${failCount}` : ""));
-      } else if (failCount > 0) {
-        alert("Failed to upload images. Check console for details.");
-      }
-    });
-
-    filterMediaCategory.addEventListener('change', () => {
-      renderMedia(allMedia);
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        const count = e.target.files.length;
-        document.getElementById('uploadText').textContent = count > 0 ? `${count} file(s) selected` : "Click to select photos";
-    });
-
-    loginForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-      loginError.style.display = 'none';
-
-      if (!email || !pass) {
-        loginError.textContent = "Please enter email and password";
-        loginError.style.display = 'block';
-        return;
-      }
-
-      // Handle remember me
-      if (rememberMe.checked) {
-        localStorage.setItem('church_admin_email', email);
-      } else {
-        localStorage.removeItem('church_admin_email');
-      }
-
-      try {
-        loginBtn.disabled = true;
-        loginBtn.textContent = "Logging in...";
-        await firebase.auth().signInWithEmailAndPassword(email, pass);
-      } catch (e) {
-        loginError.textContent = "Login Failed: " + e.message;
-        loginError.style.display = 'block';
-      } finally {
-        loginBtn.disabled = false;
-        loginBtn.textContent = "Access Dashboard";
-      }
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      firebase.auth().signOut();
-    });
-
-    // Initialize after script load
-    window.addEventListener('load', () => {
-      if (typeof firebase !== 'undefined') {
-        initAuth();
-      }
-    });
-
-    cancelEditBtn.addEventListener('click', () => {
-      editModal.style.display = 'none';
-      editingId = null;
-    });
-
-    saveEditBtn.addEventListener('click', async () => {
-      if (!editingId || !db) return;
-      
-      const newName = document.getElementById('edit-name').value.trim();
-      const newPhone = document.getElementById('edit-phone').value.trim();
-      const newResidence = document.getElementById('edit-residence').value.trim();
-      const newConsent = document.getElementById('edit-consent').value.trim();
-      
-      // New fields
-      const newBDay = document.getElementById('edit-bday').value;
-      const newBMonth = document.getElementById('edit-bmonth').value;
-      const newRegistered = document.getElementById('edit-registered').value;
-      const newVolunteering = document.getElementById('edit-volunteering').value.trim();
-      const newReferred = document.getElementById('edit-referred').value.trim();
-      
-      saveEditBtn.disabled = true;
-      saveEditBtn.textContent = "Saving...";
-      
-      try {
-        await db.collection('registrations').doc(editingId).update({
-          name: newName,
-          phone: newPhone,
-          location: newResidence,
-          residence: newResidence,
-          whatsapp: newConsent,
-          birthDay: newBDay,
-          birthMonth: newBMonth,
-          registered: newRegistered,
-          volunteering: newVolunteering,
-          referredBy: newReferred
-        });
-        
-        editModal.style.display = 'none';
-        alert("Member updated successfully!");
-        fetchRegistrations();
-      } catch (e) {
-        alert("Error updating member: " + e.message);
-      } finally {
-        saveEditBtn.disabled = false;
-        saveEditBtn.textContent = "Save Changes";
-      }
-    });
-
-    // --- Analytics Charts ---
-    function updateCharts(data) {
-      // 1. Registration Trends (Last 7 days)
-      const last7Days = [];
-      const today = new Date();
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(today.getDate() - i);
-        last7Days.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
-      }
-
-      const countsPerDay = new Array(7).fill(0);
-      data.forEach(reg => {
-        const regDate = reg.timestamp ? new Date(reg.timestamp) : null;
-        if (regDate) {
-          const diff = Math.floor((today - regDate) / (1000 * 60 * 60 * 24));
-          if (diff >= 0 && diff < 7) {
-            countsPerDay[6 - diff]++;
-          }
-        }
-      });
-
-      if (regChart) regChart.destroy();
-      regChart = new Chart(document.getElementById('registrationChart').getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: last7Days,
-          datasets: [{
-            label: 'New Registrations',
-            data: countsPerDay,
-            borderColor: '#27ae60',
-            backgroundColor: 'rgba(39, 174, 96, 0.1)',
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // 2. Ministry Distribution
-      const ministries = {
-        Ushering: 0,
-        Choir: 0,
-        Instruments: 0,
-        Venue: 0,
-        Other: 0
-      };
-
-      data.forEach(reg => {
-        const vol = (reg.volunteering || "").toLowerCase();
-        if (vol.includes('usher')) ministries.Ushering++;
-        if (vol.includes('choir')) ministries.Choir++;
-        if (vol.includes('instrument')) ministries.Instruments++;
-        if (vol.includes('venue')) ministries.Venue++;
-        if (vol.includes('other')) ministries.Other++;
-      });
-
-      if (ministryChart) ministryChart.destroy();
-      ministryChart = new Chart(document.getElementById('ministryChart').getContext('2d'), {
-        type: 'doughnut',
-        data: {
-          labels: Object.keys(ministries),
-          datasets: [{
-            data: Object.values(ministries),
-            backgroundColor: ['#3498db', '#e74c3c', '#f1c40f', '#9b59b6', '#95a5a6']
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Ministry Interests' } } }
-      });
-    }
-
-    // --- Volunteer Filtering ---
-    viewTabs.addEventListener('click', (e) => {
-      if (e.target.classList.contains('view-tab')) {
-        document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.dataset.filter;
-        renderTable(allRegistrations);
-      }
-    });
-
-    async function fetchRegistrations() {
-      try {
-        let fireData = [];
-        if (db) {
-          const snapshot = await db.collection('registrations').orderBy('timestamp', 'desc').get();
-          fireData = snapshot.docs.map(doc => {
-            const d = doc.data();
-            d.id = doc.id; // Store Firestore document ID
-            // Convert Firestore Timestamp to Date object for consistency
-            if (d.timestamp && d.timestamp.toDate) {
-              d.timestamp = d.timestamp.toDate();
-            }
-            return d;
-          });
-          
-          // Fetch programs
-          const progDoc = await db.collection('settings').doc('programs').get();
-          if (progDoc.exists) {
-            const progs = progDoc.data();
-            document.getElementById('prog-sunday').value = progs.sunday;
-            document.getElementById('prog-monday').value = progs.monday;
-            document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
-            document.getElementById('prog-tue-thu').value = progs.tueThu;
-            document.getElementById('prog-friday').value = progs.friday;
-            document.getElementById('prog-custom').value = progs.custom || "";
-          }
-        }
-
-        const response = await fetch(GET_DATA_API_URL);
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const sheetData = await response.json();
-        
-        // Merge data, avoiding duplicates by phone number
-        allRegistrations = [...fireData];
-        
-        sheetData.forEach(reg => {
-          if (reg.name !== "SYSTEM_PROGRAMS") {
-            const phone = String(reg.phone || "").replace(/\D/g, '').slice(-9);
-            if (!allRegistrations.some(r => String(r.phone || "").replace(/\D/g, '').slice(-9) === phone)) {
-               allRegistrations.push(reg);
-            }
-          } else if (allRegistrations.length === fireData.length) { // Only if firestore settings were missing
-            try {
-              const progs = JSON.parse(reg.location);
-              document.getElementById('prog-sunday').value = progs.sunday;
-              document.getElementById('prog-monday').value = progs.monday;
-              document.getElementById('prog-wednesday').value = progs.wednesday || "Evening Glory 5pm-7pm";
-              document.getElementById('prog-tue-thu').value = progs.tueThu;
-              document.getElementById('prog-friday').value = progs.friday;
-              document.getElementById('prog-custom').value = progs.custom || "";
-            } catch(e){}
-          }
-        });
-
-        renderTable(allRegistrations);
-        displayBirthdayAlerts(allRegistrations);
-        updateCharts(allRegistrations);
-      } catch (error) {
-        console.error("Error fetching registrations: ", error);
-        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; color:red;">Error loading data. ${error.message}</td></tr>`;
-      }
-    }
-
-    function displayBirthdayAlerts(data) {
-      const upcomingBirthdays = data
-        .filter(reg => {
-          const m = reg.birthmonth || reg.birthMonth || reg['Birth Month'];
-          const d = reg.birthday || reg.birthDay || reg['Birth Day'];
-          return isUpcomingBirthday(m, d);
-        })
-        .sort((a, b) => {
-          const mA = a.birthmonth || a.birthMonth || a['Birth Month'];
-          const dA = a.birthday || a.birthDay || a['Birth Day'];
-          const mB = b.birthmonth || b.birthMonth || b['Birth Month'];
-          const dB = b.birthday || b.birthDay || b['Birth Day'];
-          const daysA = getDaysUntilBirthday(mA, dA);
-          const daysB = getDaysUntilBirthday(mB, dB);
-          return daysA - daysB;
-        });
-
-      if (upcomingBirthdays.length === 0) {
-        birthdayAlerts.style.display = 'none';
-        return;
-      }
-
-      birthdayAlerts.style.display = 'block';
-      birthdayList.innerHTML = upcomingBirthdays
-        .map(reg => {
-          const m = reg.birthmonth || reg.birthMonth || reg['Birth Month'];
-          const d = reg.birthday || reg.birthDay || reg['Birth Day'];
-          const daysLeft = getDaysUntilBirthday(m, d);
-          const dayText = daysLeft === 0 ? "Today!" : `in ${daysLeft} days`;
-          return `
-            <div class="birthday-alert-item">
-              <strong>${reg.name || reg.Name}</strong> - ${formatBirthday(m, d)} (${dayText})
-              ${(reg.whatsapp || reg.Whatsapp) ? `<br><small style="color: #666;">📱 ${reg.whatsapp || reg.Whatsapp}</small>` : ''}
-            </div>
-          `;
-        })
-        .join('');
-    }
-
-    async function savePrograms() {
-      const customProg = document.getElementById('prog-custom').value.trim();
-      const progs = {
-        sunday: document.getElementById('prog-sunday').value,
-        monday: document.getElementById('prog-monday').value,
-        wednesday: document.getElementById('prog-wednesday').value,
-        tueThu: document.getElementById('prog-tue-thu').value,
-        friday: document.getElementById('prog-friday').value
-      };
-      
-      if (customProg) {
-        progs.custom = customProg;
-      }
-
-      saveProgramsBtn.disabled = true;
-      saveProgramsBtn.textContent = "Saving...";
-
-      try {
-        // A. FIREBASE SAVE (Direct and reliable)
-        if (db) {
-          await db.collection('settings').doc('programs').set(progs);
-          console.log("Programs saved to Firestore");
-        }
-
-        // B. GOOGLE SHEETS SAVE (Backup)
-        const params = new URLSearchParams();
-        params.append('name', "SYSTEM_PROGRAMS");
-        params.append('phone', "000");
-        params.append('location', JSON.stringify(progs));
-        params.append('whatsapp', "");
-        params.append('prayers', "");
-
-        const response = await fetch(SAVE_DATA_API_URL, {
-          method: 'POST',
-          body: params.toString()
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          let errorMessage = "Failed to update schedule";
-          try {
-            const result = JSON.parse(errorText);
-            errorMessage = result.error || errorMessage;
-          } catch (e) {
-            errorMessage = errorText || errorMessage;
-          }
-          throw new Error(errorMessage);
-        }
-
-        alert("Schedule updated successfully!");
-      } catch (e) {
-        alert("Error saving schedule: " + e.message);
-      } finally {
-        saveProgramsBtn.disabled = false;
-        saveProgramsBtn.textContent = "Save Schedule";
-      }
-    }
-
-    saveProgramsBtn.addEventListener('click', savePrograms);
-
-    function exportToCSV() {
-      if (allRegistrations.length === 0) {
-        alert("No data to export");
-        return;
-      }
-
-      const headers = ["Date", "Name", "Phone", "Residence", "Birth Month", "Birth Day", "Registered?", "WhatsApp", "Volunteering", "Referred By"];
-      const rows = allRegistrations.map(reg => {
-        const bMonth = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || "";
-        const bDay = reg.birthday || reg.birthDay || reg['Birth Day'] || "";
-        const timestamp = reg.timestamp || reg.date || reg.DATE || reg.Timestamp;
-        const dateStr = timestamp ? new Date(timestamp).toLocaleDateString() : 'N/A';
-        
-        return [
-          dateStr,
-          reg.name || reg.Name || "Unknown",
-          reg.phone || reg.Phone || "—",
-          reg.residence || reg.Residence || reg.location || reg.Location || "—",
-          bMonth,
-          bDay,
-          reg.registered || reg.Registered || reg.firstTime || reg.firsttime || "",
-          reg.whatsapp || reg.Whatsapp || "",
-          reg.volunteering || reg.Volunteering || "",
-          reg.referredby || reg.referredBy || reg['Referred By'] || "—"
-        ].map(val => `"${String(val).replace(/"/g, '""')}"`); // Escape CSV
-      });
-
-      const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Church_Registrations_${new Date().toLocaleDateString()}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    exportBtn.addEventListener('click', exportToCSV);
-
-    function renderTable(data) {
-      tableBody.innerHTML = "";
-      
-      // Filter by ministry if needed
-      let filteredData = data;
-      if (currentFilter !== 'all') {
-        filteredData = data.filter(reg => {
-          const vol = (reg.volunteering || reg.Volunteering || "").toLowerCase();
-          if (currentFilter === 'Other') {
-            return vol.includes('other');
-          }
-          return vol.includes(currentFilter.toLowerCase());
-        });
-      }
-
-      // Filter by search term
-      const term = searchBar.value.toLowerCase();
-      if (term) {
-        filteredData = filteredData.filter(reg => {
-          const name = (reg.name || reg.Name || "").toLowerCase();
-          const phone = (reg.phone || reg.Phone || "").toLowerCase();
-          const residence = (reg.residence || reg.Residence || reg.location || reg.Location || "").toLowerCase();
-          return name.includes(term) || phone.includes(term) || residence.includes(term);
-        });
-      }
-
-      totalCount.textContent = `Total: ${filteredData.length}`;
-
-      if (filteredData.length === 0) {
-        tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 20px;">No records found.</td></tr>`;
-        return;
-      }
-
-      filteredData.forEach(reg => {
-        const name = reg.name || reg.Name || "Unknown";
-        const phone = reg.phone || reg.Phone || "—";
-        const location = reg.residence || reg.Residence || reg.location || reg.Location || "—";
-        const bMonth = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || null;
-        const bDay = reg.birthday || reg.birthDay || reg['Birth Day'] || null;
-        const firstTimeVal = (reg.registered || reg.Registered || reg.firstTime || reg.firsttime || "").toString().toLowerCase();
-        const volunteering = reg.volunteering || reg.Volunteering || "";
-        const referredBy = reg.referredby || reg.referredBy || reg['Referred By'] || "—";
-        const whatsapp = reg.whatsapp || reg.Whatsapp || "";
-        const timestamp = reg.timestamp || reg.date || reg.DATE || reg.Timestamp;
-
-        let dateStr = 'N/A';
-        if (timestamp) {
-           const d = new Date(timestamp);
-           if (!isNaN(d.getTime())) {
-             dateStr = d.toLocaleDateString();
-           }
-        }
-        
-        const tr = document.createElement('tr');
-        const birthdayStr = formatBirthday(bMonth, bDay);
-        const isUpcoming = isUpcomingBirthday(bMonth, bDay);
-        
-        if (isUpcoming) tr.classList.add('upcoming-birthday');
-
-        const isFirstTime = firstTimeVal === 'yes' ? '✓ Yes' : '—';
-        const volStr = volunteering.length > 0 ? volunteering.substring(0, 30) + (volunteering.length > 30 ? '...' : '') : '—';
-        const isFirestore = reg.id ? true : false;
-
-        tr.innerHTML = `
-          <td>${dateStr}</td>
-          <td><strong>${name}</strong></td>
-          <td>${phone}</td>
-          <td>${location}</td>
-          <td>${birthdayStr}${isUpcoming ? '<span class="birthday-tag">Soon!</span>' : ''}</td>
-          <td>${isFirstTime}</td>
-          <td title="${volunteering}" style="font-size: 0.85rem;">${volStr}</td>
-          <td>${referredBy}</td>
-          <td class="actions">
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <div style="display: flex; gap: 4px;">
-                ${whatsapp ? `<a href="https://wa.me/${whatsapp.toString().replace(/\D/g,'')}" target="_blank" class="whatsapp-link" title="Open WhatsApp">WA</a>` : ''}
-                <button onclick="sendTemplate('${name}', '${phone}', 'welcome')" style="background:#3498db; color:white; padding:2px 5px; font-size:0.6rem;">Welcome</button>
-                <button onclick="sendTemplate('${name}', '${phone}', 'birthday')" style="background:#9b59b6; color:white; padding:2px 5px; font-size:0.6rem;">Bday</button>
-              </div>
-              <div style="display: flex; gap: 4px;">
-                ${isFirestore ? `
-                  <button onclick="editMember('${reg.id}')" style="background:#f1c40f; color:white; padding:4px 8px; font-size:0.7rem;">Edit</button>
-                  <button onclick="deleteMember('${reg.id}')" class="delete-btn" style="padding:4px 8px; font-size:0.7rem;">Del</button>
-                ` : '<span style="color: #777; font-size: 0.7rem;">Sheet-only</span>'}
-              </div>
-            </div>
-          </td>
-        `;
-
-        tableBody.appendChild(tr);
-      });
-    }
-
-    window.sendTemplate = function(name, phone, type) {
-      if (!phone || phone === "—") {
-        alert("No phone number available");
-        return;
-      }
-      
-      let cleanPhone = phone.toString().replace(/\D/g, '');
-      if (cleanPhone.startsWith('0')) {
-        cleanPhone = '256' + cleanPhone.substring(1);
-      } else if (cleanPhone.length === 9) {
-        cleanPhone = '256' + cleanPhone;
-      }
-
-      let message = "";
-      if (type === 'welcome') {
-        message = `Hello ${name}! It was a blessing to have you with us at Grace of Jesus Christ Ministries. We look forward to seeing you again. God bless you!`;
-      } else if (type === 'birthday') {
-        message = `Happy Birthday ${name}! Grace of Jesus Christ Ministries celebrates you today. May the Lord shower you with His blessings and favor in this new year!`;
-      }
-
-      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`, "_blank");
-    };
-
-    window.editMember = function(id) {
-      const reg = allRegistrations.find(r => r.id === id);
-      if (!reg) return;
-      
-      editingId = id;
-      document.getElementById('edit-name').value = reg.name || reg.Name || "";
-      document.getElementById('edit-phone').value = reg.phone || reg.Phone || "";
-      document.getElementById('edit-residence').value = reg.residence || reg.Residence || reg.location || reg.Location || "";
-      document.getElementById('edit-consent').value = reg.whatsapp || reg.Whatsapp || "";
-      
-      // New fields
-      document.getElementById('edit-bday').value = reg.birthday || reg.birthDay || reg['Birth Day'] || "";
-      document.getElementById('edit-bmonth').value = reg.birthmonth || reg.birthMonth || reg['Birth Month'] || "";
-      document.getElementById('edit-registered').value = (reg.registered || reg.Registered || reg.firstTime || "no").toLowerCase();
-      document.getElementById('edit-volunteering').value = reg.volunteering || reg.Volunteering || "";
-      document.getElementById('edit-referred').value = reg.referredby || reg.referredBy || reg['Referred By'] || "";
-      
-      editModal.style.display = 'flex';
-    };
-
-    window.deleteMember = async function(id) {
-      if (!db) return;
-      if (!confirm("Are you sure you want to delete this registration?")) return;
-      
-      try {
-        await db.collection('registrations').doc(id).delete();
-        alert("Member deleted successfully!");
-        fetchRegistrations();
-      } catch (e) {
-        alert("Error deleting member: " + e.message);
-      }
-    };
-
-    // Search logic
-    searchBar.addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      const filtered = allRegistrations.filter(reg => {
-        const name = (reg.name || reg.Name || "").toLowerCase();
-        const phone = (reg.phone || reg.Phone || "").toLowerCase();
-        const residence = (reg.residence || reg.Residence || reg.location || reg.Location || "").toLowerCase();
-        
-        return name.includes(term) || phone.includes(term) || residence.includes(term);
-      });
-      renderTable(filtered);
-      displayBirthdayAlerts(allRegistrations);
-    });
-
-    // Initial fetch removed - we only fetch when auth state is confirmed as logged in
-    // fetchRegistrations();
-  </script>
+  <!-- ════════════════════════════════════════════════════
+       DASHBOARD SCRIPT
+       ════════════════════════════════════════════════════ -->
+  <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
