@@ -126,6 +126,95 @@
           </div>
         </fieldset>
 
+        <fieldset>
+          <legend>Registration Type</legend>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="registrationType" value="general" checked>
+              General Church Registration
+            </label>
+            <label>
+              <input type="radio" name="registrationType" value="wedding">
+              Wedding
+            </label>
+            <label>
+              <input type="radio" name="registrationType" value="baptism">
+              Baptism
+            </label>
+            <label>
+              <input type="radio" name="registrationType" value="funeral">
+              Funeral
+            </label>
+            <label>
+              <input type="radio" name="registrationType" value="counseling">
+              Counseling
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Event-specific fields -->
+        <div id="eventFields" style="display:none;">
+          <div id="weddingFields" class="event-fields">
+            <div class="form-group">
+              <label for="groomName">Groom's Name</label>
+              <input type="text" id="groomName" placeholder="Groom's full name">
+            </div>
+            <div class="form-group">
+              <label for="brideName">Bride's Name</label>
+              <input type="text" id="brideName" placeholder="Bride's full name">
+            </div>
+            <div class="form-group">
+              <label for="weddingDate">Expected Wedding Date</label>
+              <input type="date" id="weddingDate">
+            </div>
+          </div>
+          <div id="baptismFields" class="event-fields">
+            <div class="form-group">
+              <label for="baptismDate">Expected Baptism Date</label>
+              <input type="date" id="baptismDate">
+            </div>
+            <div class="form-group">
+              <label for="ageGroup">Age Group</label>
+              <select id="ageGroup">
+                <option value="">Select age group</option>
+                <option value="child">Child (under 18)</option>
+                <option value="adult">Adult (18+)</option>
+              </select>
+            </div>
+          </div>
+          <div id="funeralFields" class="event-fields">
+            <div class="form-group">
+              <label for="deceasedName">Name of Deceased</label>
+              <input type="text" id="deceasedName" placeholder="Full name of deceased">
+            </div>
+            <div class="form-group">
+              <label for="funeralDate">Expected Funeral Date</label>
+              <input type="date" id="funeralDate">
+            </div>
+            <div class="form-group">
+              <label for="contactPerson">Primary Contact Person</label>
+              <input type="text" id="contactPerson" placeholder="Contact person name">
+            </div>
+          </div>
+          <div id="counselingFields" class="event-fields">
+            <div class="form-group">
+              <label for="counselingTopic">Topic for Counseling</label>
+              <select id="counselingTopic">
+                <option value="">Select topic</option>
+                <option value="marriage">Marriage Counseling</option>
+                <option value="family">Family Issues</option>
+                <option value="spiritual">Spiritual Guidance</option>
+                <option value="financial">Financial Counseling</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="preferredDate">Preferred Date</label>
+              <input type="date" id="preferredDate">
+            </div>
+          </div>
+        </div>
+
         <div class="btn-row">
           <button type="button" class="btn btn--primary" id="nextBtn1">
             Next <span aria-hidden="true">→</span>

@@ -14,6 +14,10 @@
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- jsPDF for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
   <!-- Dashboard styles -->
   <link rel="stylesheet" href="dashboard.css">
@@ -135,13 +139,36 @@
         <button class="view-tab"        data-filter="Other"      role="tab">Others</button>
       </div>
 
-      <!-- Search + Export + Count -->
+      <!-- Search + Export + Filters -->
       <div class="controls">
         <input type="search"
                id="searchBar"
                placeholder="Search by name, phone or location…"
                aria-label="Search registrations">
+        
+        <!-- Event Type Filter -->
+        <select id="filterEventType" class="filter-select" aria-label="Filter by event type">
+          <option value="">All Types</option>
+          <option value="general">General</option>
+          <option value="wedding">Wedding</option>
+          <option value="baptism">Baptism</option>
+          <option value="funeral">Funeral</option>
+          <option value="counseling">Counseling</option>
+        </select>
+
+        <!-- Status Filter -->
+        <select id="filterStatus" class="filter-select" aria-label="Filter by attendance status">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="attended">Attended</option>
+          <option value="not-attended">Not Attended</option>
+        </select>
+
+        <!-- Date Filter -->
+        <input type="date" id="filterDate" class="filter-date" aria-label="Filter by date">
+
         <button id="exportBtn" class="btn-export">⬇ Export CSV</button>
+        <button id="exportPdfBtn" class="btn-export btn-pdf">⬇ Export PDF</button>
         <div class="stats-badge" id="totalCount">Total: 0</div>
       </div>
 

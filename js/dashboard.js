@@ -55,20 +55,33 @@ let ministryChart    = null;
    ─────────────────────────────────────────────────────── */
 function normalise(reg) {
   return {
-    id:           reg.id || null,
-    name:         reg.name         || reg.Name         || 'Unknown',
-    phone:        reg.phone        || reg.Phone        || '—',
-    location:     reg.location     || reg.Location     ||
-                  reg.residence    || reg.Residence    || '—',
-    birthDay:     reg.birthDay     || reg.birthday     || reg['Birth Day']    || '',
-    birthMonth:   reg.birthMonth   || reg.birthmonth   || reg['Birth Month']  || '',
-    firstTime:    String(reg.registered || reg.Registered ||
+    id:              reg.id || null,
+    name:            reg.name         || reg.Name         || 'Unknown',
+    phone:           reg.phone        || reg.Phone        || '—',
+    location:        reg.location     || reg.Location     ||
+                    reg.residence    || reg.Residence    || '—',
+    birthDay:        reg.birthDay    || reg.birthday     || reg['Birth Day']    || '',
+    birthMonth:      reg.birthMonth  || reg.birthmonth   || reg['Birth Month']  || '',
+    firstTime:       String(reg.registered || reg.Registered ||
                          reg.firstTime  || reg.firsttime  || '').toLowerCase(),
-    volunteering: reg.volunteering || reg.Volunteering || '',
-    referredBy:   reg.referredBy   || reg.referredby   || reg['Referred By']  || '—',
-    whatsapp:     reg.whatsapp     || reg.Whatsapp     || '',
-    timestamp:    reg.timestamp    || reg.date         || reg.DATE || reg.Timestamp || null,
-    _source:      reg.id ? 'firestore' : 'sheets'
+    volunteering:    reg.volunteering || reg.Volunteering || '',
+    referredBy:      reg.referredBy   || reg.referredby   || reg['Referred By']  || '—',
+    whatsapp:        reg.whatsapp     || reg.Whatsapp     || '',
+    timestamp:       reg.timestamp    || reg.date         || reg.DATE || reg.Timestamp || null,
+    registrationType: reg.registrationType || reg.registrationtype || 'general',
+    groomName:       reg.groomName    || '',
+    brideName:       reg.brideName    || '',
+    weddingDate:     reg.weddingDate  || '',
+    baptismDate:     reg.baptismDate  || '',
+    ageGroup:        reg.ageGroup     || '',
+    deceasedName:    reg.deceasedName || '',
+    funeralDate:     reg.funeralDate  || '',
+    contactPerson:   reg.contactPerson|| '',
+    counselingTopic: reg.counselingTopic|| '',
+    preferredDate:   reg.preferredDate|| '',
+    status:          reg.status       || 'pending',
+    attendedDate:    reg.attendedDate || null,
+    _source:         reg.id ? 'firestore' : 'sheets'
   };
 }
 
@@ -377,11 +390,37 @@ searchBar.addEventListener('input', () => renderTable(allRegistrations));
 /* ── Filtered slice (single source of truth) ─────────── */
 function getFiltered(data) {
   let result = data;
+  
+  // Ministry filter
   if (currentFilter !== 'all') {
     result = result.filter(r =>
       r.volunteering.toLowerCase().includes(currentFilter.toLowerCase())
     );
   }
+  
+  // Event type filter
+  const eventTypeFilter = document.getElementById('filterEventType')?.value;
+  if (eventTypeFilter) {
+    result = result.filter(r => r.registrationType === eventTypeFilter);
+  }
+  
+  // Status filter (attendance)
+  const statusFilter = document.getElementById('filterStatus')?.value;
+  if (statusFilter) {
+    result = result.filter(r => r.status === statusFilter);
+  }
+  
+  // Date filter
+  const dateFilter = document.getElementById('filterDate')?.value;
+  if (dateFilter) {
+    result = result.filter(r => {
+      if (!r.timestamp) return false;
+      const regDate = new Date(r.timestamp).toISOString().split('T')[0];
+      return regDate === dateFilter;
+    });
+  }
+  
+  // Search filter
   const term = searchBar.value.toLowerCase();
   if (term) {
     result = result.filter(r =>
