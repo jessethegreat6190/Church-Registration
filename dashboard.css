@@ -874,3 +874,56 @@ tr:hover td         { background: #f0fdf4; }
     transition-duration:       0.01ms !important;
   }
 }
+
+/* === STATUS BADGES ========================================== */
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-pending { background: #fff3cd; color: #856404; }
+.status-attended { background: #d4edda; color: #155724; }
+.status-not-attended { background: #f8d7da; color: #721c24; }
+
+/* === FILTER STYLES ========================================= */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.filter-select, .filter-date {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  background: var(--white);
+  cursor: pointer;
+}
+.filter-select:focus, .filter-date:focus {
+  outline: none;
+  border-color: var(--secondary);
+}
+.btn-pdf {
+  background: #e74c3c;
+}
+.btn-pdf:hover {
+  background: #c0392b;
+}
+
+/* === ATTENDANCE BUTTON ==================================== */
+.btn-attend {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background: var(--secondary);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btn-attend:hover {
+  background: #2980b9;
+}

@@ -458,6 +458,8 @@ function renderTable(data) {
       <td>${r.phone}</td>
       <td>${r.location}</td>
       <td>${bday}${isUp ? '<span class="birthday-tag">Soon!</span>' : ''}</td>
+      <td>${r.registrationType === 'general' ? '—' : r.registrationType}</td>
+      <td><span class="status-badge status-${r.status}">${r.status || 'pending'}</span></td>
       <td>${r.firstTime === 'yes' ? '✓ Yes' : '—'}</td>
       <td title="${r.volunteering}" style="font-size:0.85rem;">${volStr}</td>
       <td>${r.referredBy}</td>
@@ -472,8 +474,9 @@ function renderTable(data) {
           </div>
           <div class="action-row">
             ${r._source === 'firestore'
-              ? `<button onclick="editMember('${r.id}')" class="btn-edit">Edit</button>
-                 <button onclick="deleteMember('${r.id}')" class="btn-del">Del</button>`
+              ? `<button onclick="toggleAttendance('${r.id}','${r.status}')" class="btn-attend" title="Toggle attendance">${r.status === 'attended' ? '✓ Attended' : 'Mark Present'}</button>
+               <button onclick="editMember('${r.id}')" class="btn-edit">Edit</button>
+               <button onclick="deleteMember('${r.id}')" class="btn-del">Del</button>`
               : '<span class="sheet-only">Sheet-only</span>'}
           </div>
         </div>
@@ -559,6 +562,22 @@ window.deleteMember = async function(id) {
   }
 };
 
+/* ── Toggle Attendance ──────────────────────────────────── */
+window.toggleAttendance = async function(id, currentStatus) {
+  if (!db) return;
+  const newStatus = currentStatus === 'attended' ? 'not-attended' : 'attended';
+  try {
+    await db.collection('registrations').doc(id).update({
+      status: newStatus,
+      attendedDate: newStatus === 'attended' ? new Date().toISOString() : null
+    });
+    toast(newStatus === 'attended' ? 'Marked as attended!' : 'Marked as not attended');
+    fetchRegistrations();
+  } catch (err) {
+    toast('Error updating attendance: ' + err.message, 'error');
+  }
+};
+
 /* ── Export CSV ──────────────────────────────────────── */
 exportBtn.addEventListener('click', () => {
   const filtered = getFiltered(allRegistrations);
@@ -583,6 +602,46 @@ exportBtn.addEventListener('click', () => {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 });
+
+/* ── Export PDF ───────────────────────────────────────── */
+const exportPdfBtn = document.getElementById('exportPdfBtn');
+if (exportPdfBtn) {
+  exportPdfBtn.addEventListener('click', () => {
+    const filtered = getFiltered(allRegistrations);
+    if (!filtered.length) { toast('No data to export.', 'warn'); return; }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Title
+    doc.setFontSize(18);
+    doc.text('Church Registrations Report', 14, 22);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Total Records: ${filtered.length}`, 14, 36);
+
+    // Table data
+    const tableData = filtered.map(r => [
+      r.timestamp ? new Date(r.timestamp).toLocaleDateString() : 'N/A',
+      r.name,
+      r.phone,
+      r.location,
+      r.registrationType || 'general',
+      r.status || 'pending'
+    ]);
+
+    doc.autoTable({
+      startY: 42,
+      head: [['Date', 'Name', 'Phone', 'Location', 'Type', 'Status']],
+      body: tableData,
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: [44, 62, 80] }
+    });
+
+    doc.save(`Church_Registrations_${new Date().toLocaleDateString()}.pdf`);
+    toast('PDF exported successfully!');
+  });
+}
 
 /* ── Media management ────────────────────────────────── */
 async function fetchMedia() {
@@ -702,3 +761,12 @@ fileInput.addEventListener('change', e => {
   document.getElementById('uploadText').textContent =
     count > 0 ? `${count} file(s) selected` : 'Click to select photos';
 });
+
+// Filter event listeners
+const filterEventType = document.getElementById('filterEventType');
+const filterStatus = document.getElementById('filterStatus');
+const filterDate = document.getElementById('filterDate');
+
+if (filterEventType) filterEventType.addEventListener('change', () => renderTable(allRegistrations));
+if (filterStatus) filterStatus.addEventListener('change', () => renderTable(allRegistrations));
+if (filterDate) filterDate.addEventListener('change', () => renderTable(allRegistrations));
