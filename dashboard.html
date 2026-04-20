@@ -203,10 +203,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
     Events
   </div>
-  <div class="nav-item" onclick="showSection('giving',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-    Finance
-  </div>
+  
   <div class="nav-item" onclick="showSection('departments',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
     Departments
@@ -397,53 +394,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
     </div>
   </div>
 
-  <!-- GIVING -->
-  <div class="section" id="section-giving">
-    <div class="page-title">Finance &amp; giving</div>
-    <div class="page-sub">Record tithes, offerings, and track giving per member</div>
-    <div class="metrics" id="finance-metrics">
-      <div class="metric"><div class="metric-num" id="monthly-total">--</div><div class="metric-lbl">This month</div><div class="metric-delta" id="monthly-delta"></div></div>
-      <div class="metric"><div class="metric-num" id="tithes-total">--</div><div class="metric-lbl">Tithes</div></div>
-      <div class="metric"><div class="metric-num" id="offerings-total">--</div><div class="metric-lbl">Offerings</div></div>
-      <div class="metric"><div class="metric-num" id="building-total">--</div><div class="metric-lbl">Building fund</div></div>
-    </div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">Giving by category</div>
-        <div id="giving-chart">
-          <div class="giving-bar-wrap"><div class="giving-bar-label"><span>Tithes</span><span id="tithes-bar-label">--</span></div><div class="giving-bar-bg"><div class="giving-bar-fill" id="tithes-bar" style="width:0%"></div></div></div>
-          <div class="giving-bar-wrap" style="margin-top:12px"><div class="giving-bar-label"><span>Offerings</span><span id="offerings-bar-label">--</span></div><div class="giving-bar-bg"><div class="giving-bar-fill" id="offerings-bar" style="width:0%;background:var(--navy)"></div></div></div>
-          <div class="giving-bar-wrap" style="margin-top:12px"><div class="giving-bar-label"><span>Building fund</span><span id="building-bar-label">--</span></div><div class="giving-bar-bg"><div class="giving-bar-fill" id="building-bar" style="width:0%;background:#2D7D52"></div></div></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Record giving</div>
-        <div class="form-group"><label>Member name</label><input type="text" id="giving-member" placeholder="Search member..."/></div>
-        <div class="form-row">
-          <div class="form-group"><label>Amount (UGX)</label><input type="number" id="giving-amount" placeholder="0"/></div>
-          <div class="form-group"><label>Category</label>
-            <select id="giving-category">
-              <option>Tithe</option>
-              <option>Offering</option>
-              <option>Building fund</option>
-              <option>Special</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group"><label>Date</label><input type="date" id="giving-date"/></div>
-        <button class="btn btn-gold" style="width:100%" onclick="recordGiving()">Record giving</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Recent giving records</div>
-      <table class="tbl">
-        <thead><tr><th>Member</th><th>Category</th><th>Amount</th><th>Date</th><th>Receipt</th></tr></thead>
-        <tbody id="giving-records">
-          <tr><td colspan="5" class="loading">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  
 
   <!-- DEPARTMENTS -->
   <div class="section" id="section-departments">
