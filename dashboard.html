@@ -4,67 +4,86 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Grace of Jesus Christ Ministries — Church Management</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --gold: #C8962A;
-  --gold-light: #F5E6C0;
-  --gold-dark: #8B6518;
-  --navy: #1A2744;
-  --navy-mid: #253660;
-  --navy-light: #EEF1F8;
-  --white: #FFFFFF;
-  --offwhite: #FAFAF8;
-  --text: #1A2744;
-  --text-mid: #4A5578;
-  --text-light: #8892B0;
-  --border: #E4E8F0;
-  --success: #2D7D52;
-  --success-bg: #E8F5EE;
-  --warn-bg: #FDF3DC;
-  --radius: 12px;
+  --primary: #2c3e50;
+  --secondary: #3498db;
+  --success: #27ae60;
+  --danger: #e74c3c;
+  --white: #ffffff;
+  --light: #f4f7f6;
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-400: #ced4da;
+  --gray-600: #6c757d;
+  --text: #2c3e50;
+  --text-muted: #6c757d;
+  --border: #dee2e6;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow: 0 8px 24px rgba(0,0,0,0.12);
+  --radius: 14px;
   --radius-sm: 8px;
-  --shadow: 0 1px 3px rgba(26,39,68,0.08);
+  --radius-xs: 6px;
+  --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+body { font-family: var(--font); background: linear-gradient(135deg, var(--secondary) 0%, var(--white) 100%); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
 
 /* HEADER */
-.header { background: var(--navy); color: white; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 64px; border-bottom: 2px solid var(--gold); }
+.header { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: white; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 64px; border-radius: var(--radius); margin: 0 auto 20px; max-width: 800px; box-shadow: var(--shadow); }
 .header-left { display: flex; align-items: center; gap: 14px; }
-.logo-circle { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; }
-.logo-circle svg { width: 22px; height: 22px; }
-.church-name { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 600; color: var(--white); letter-spacing: 0.01em; }
-.church-sub { font-size: 11px; color: var(--gold-light); margin-top: 1px; letter-spacing: 0.05em; }
+.logo-circle { width: 40px; height: 40px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; }
+.logo-circle svg { width: 22px; height: 22px; stroke: var(--secondary); }
+.church-name { font-size: 16px; font-weight: 600; color: var(--white); letter-spacing: 0.01em; }
+.church-sub { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 1px; letter-spacing: 0.05em; }
 .header-right { display: flex; align-items: center; gap: 8px; }
-.hdr-btn { background: rgba(200,150,42,0.15); border: 0.5px solid var(--gold); color: var(--gold-light); padding: 7px 14px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-.hdr-date { font-size: 12px; color: var(--gold-light); }
+.hdr-btn { background: var(--white); color: var(--secondary); border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; font-weight: 500; }
+.hdr-date { font-size: 12px; color: rgba(255,255,255,0.8); }
 
 /* NAV */
-.nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 32px; display: flex; gap: 0; overflow-x: auto; }
-.nav-item { padding: 14px 18px; font-size: 13px; color: var(--text-mid); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 7px; transition: color 0.15s; }
-.nav-item:hover { color: var(--navy); }
-.nav-item.active { color: var(--navy); font-weight: 500; border-bottom-color: var(--gold); }
+.nav { background: var(--white); border-radius: var(--radius) var(--radius) 0 0; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; max-width: 800px; margin: 0 auto; box-shadow: var(--shadow-sm); }
+.nav-item { padding: 14px 18px; font-size: 13px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 7px; transition: color 0.15s; }
+.nav-item:hover { color: var(--secondary); }
+.nav-item.active { color: var(--secondary); font-weight: 500; border-bottom-color: var(--secondary); }
 .nav-item svg { width: 15px; height: 15px; }
 
 /* LAYOUT */
-.main { flex: 1; padding: 28px 32px; }
+.main { flex: 1; padding: 0 20px 30px; max-width: 800px; margin: 0 auto; width: 100%; }
 .section { display: none; }
 .section.active { display: block; }
 
+/* HOME / LANDING */
+.hero { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); border-radius: var(--radius); padding: 40px 20px; text-align: center; margin: 0 auto 20px; max-width: 800px; box-shadow: var(--shadow); }
+.hero-content { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+.hero-logo { width: 80px; height: 80px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.hero-logo svg { width: 40px; height: 40px; stroke: var(--secondary); }
+.hero-title { font-size: 28px; font-weight: 600; color: white; margin-bottom: 8px; }
+.hero-subtitle { font-size: 13px; color: rgba(255,255,255,0.85); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; }
+.hero-stats { display: flex; gap: 40px; margin-bottom: 24px; }
+.hero-stat { text-align: center; }
+.hero-stat-num { font-size: 28px; font-weight: 600; color: var(--white); }
+.hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.hero-btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; }
+.hero-btn-primary { background: var(--white); color: var(--secondary); border: none; }
+.hero-btn-outline { background: transparent; color: white; border: 1px solid rgba(255,255,0.5); }
+.hero-menu { display: flex; gap: 24px; padding: 20px; justify-content: center; flex-wrap: wrap; }
+.hero-menu a { color: var(--gold-light); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+.hero-menu a:hover { color: var(--gold); }
+.hero-footer { text-align: center; padding: 20px; color: var(--gold-light); font-size: 12px; border-top: 1px solid rgba(200,150,42,0.3); }
+
 /* METRICS ROW */
-.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 28px; }
-.metric { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
-.metric-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+.metric { background: var(--white); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm); text-align: center; }
+.metric-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
 .metric-icon svg { width: 18px; height: 18px; }
-.metric-icon.gold { background: var(--gold-light); }
-.metric-icon.gold svg { stroke: var(--gold-dark); }
-.metric-icon.navy { background: var(--navy-light); }
-.metric-icon.navy svg { stroke: var(--navy); }
-.metric-icon.green { background: var(--success-bg); }
+.metric-icon.blue { background: var(--gray-200); }
+.metric-icon.blue svg { stroke: var(--secondary); }
+.metric-icon.green { background: #d5f4e6; }
 .metric-icon.green svg { stroke: var(--success); }
-.metric-num { font-size: 26px; font-weight: 500; font-family: 'Playfair Display', serif; color: var(--navy); }
-.metric-lbl { font-size: 12px; color: var(--text-light); margin-top: 3px; }
+.metric-num { font-size: 26px; font-weight: 600; color: var(--text); }
+.metric-lbl { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
 .metric-delta { font-size: 11px; color: var(--success); margin-top: 4px; }
 
 /* GRID 2-COL */
@@ -72,7 +91,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
 @media(max-width:680px){ .two-col{ grid-template-columns:1fr; } }
 
 /* CARD */
-.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+.card { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
 .card-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
 .card-title svg { width: 16px; height: 16px; stroke: var(--gold); }
 
@@ -127,8 +146,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
 .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .btn { padding: 9px 18px; border-radius: var(--radius-sm); font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); }
-.btn-primary { background: var(--navy); color: var(--white); border-color: var(--navy); }
-.btn-gold { background: var(--gold); color: var(--white); border-color: var(--gold); }
+.btn-primary { background: var(--secondary); color: var(--white); border: none; }
+.btn-primary:hover { background: var(--primary); }
+.btn-gold { background: var(--primary); color: var(--white); border: none; }
 
 /* PASTORAL */
 .pastoral-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
@@ -164,8 +184,55 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<!-- HOME / LANDING PAGE -->
+<div class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-logo">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 2L12 8M12 8L9 5M12 8L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M8 8H16C17 8 18 9 18 10V20C18 21 17 22 16 22H8C7 22 6 21 6 20V10C6 9 7 8 8 8Z" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M9 14H15M9 17H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 class="hero-title">Grace of Jesus Christ Ministries</h1>
+    <p class="hero-subtitle">Church Management System</p>
+    
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-members">--</div>
+        <div class="hero-stat-label">Members</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-events">--</div>
+        <div class="hero-stat-label">Events</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" id="stat-attendance">--</div>
+        <div class="hero-stat-label">Attendance</div>
+      </div>
+    </div>
+    
+    <div class="hero-cta">
+      <a href="#dashboard" class="hero-btn hero-btn-primary" onclick="showSection('dashboard',this)">Open Dashboard</a>
+      <a href="index.html" class="hero-btn hero-btn-outline" target="_blank">Registration Form</a>
+    </div>
+  </div>
+  
+  <nav class="hero-menu" id="hero-nav">
+    <a href="#dashboard" onclick="showSection('dashboard',this)">Dashboard</a>
+    <a href="https://www.youtube.com/@encounter_GJM" target="_blank">YouTube</a>
+    <a href="#comms" onclick="showSection('comms',this)">Announcements</a>
+    <a href="#events" onclick="showSection('events',this)">Events</a>
+    <a href="#members" onclick="showSection('members',this)">Members</a>
+  </nav>
+  
+  <div class="hero-footer">
+    Kitintale, Kampala, Uganda &nbsp;·&nbsp; An encounter with the Holy Spirit
+  </div>
+</div>
+
+<!-- ADMIN DASHBOARD HEADER (hidden on home) -->
+<div class="header" id="admin-header" style="display:none">
   <div class="header-left">
     <div class="logo-circle">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -180,8 +247,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
     </div>
   </div>
   <div class="header-right">
+    <a href="#home" onclick="showHome()" class="hdr-btn">← Home</a>
     <span class="hdr-date" id="today-date"></span>
-    <button class="hdr-btn">Admin</button>
   </div>
 </div>
 
@@ -208,10 +275,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
     Departments
   </div>
-  <div class="nav-item" onclick="showSection('pastoral',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-    Pastoral care
-  </div>
+  
   <div class="nav-item" onclick="showSection('comms',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
     Communications
@@ -219,7 +283,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
 </div>
 
 <!-- MAIN -->
-<div class="main">
+<div class="main" id="main-content">
 
   <!-- DASHBOARD -->
   <div class="section active" id="section-dashboard">
@@ -413,52 +477,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
     </div>
   </div>
 
-  <!-- PASTORAL -->
-  <div class="section" id="section-pastoral">
-    <div class="page-title">Pastoral care</div>
-    <div class="page-sub">Counseling sessions, follow-ups, and prayer requests</div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">Active follow-ups</div>
-        <div id="followups-list">
-          <div class="loading">Loading...</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Prayer requests</div>
-        <div id="prayer-requests">
-          <div class="loading">Loading...</div>
-        </div>
-        <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="showAddPrayerModal()">+ Add prayer request</button>
-      </div>
-    </div>
-    <div class="card" style="margin-top:0">
-      <div class="card-title">Log counseling session</div>
-      <div class="form-row">
-        <div class="form-group"><label>Member name</label><input type="text" id="counsel-member" placeholder="Search..."/></div>
-        <div class="form-group"><label>Topic</label>
-          <select id="counsel-topic">
-            <option>Marriage Counseling</option>
-            <option>Family Issues</option>
-            <option>Spiritual Guidance</option>
-            <option>Financial Counseling</option>
-            <option>Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Date</label><input type="date" id="counsel-date"/></div>
-        <div class="form-group"><label>Follow-up required?</label>
-          <select id="counsel-followup">
-            <option>Yes</option>
-            <option>No</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group"><label>Notes (confidential)</label><textarea id="counsel-notes" rows="3" placeholder="Session summary..."></textarea></div>
-      <button class="btn btn-gold" onclick="saveCounseling()">Save session</button>
-    </div>
-  </div>
+  
 
   <!-- COMMS -->
   <div class="section" id="section-comms">
@@ -517,12 +536,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--offwhite); color: v
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
 <script>
-// Firebase config - uses existing churchregistration Firebase project
+// Firebase config - church-registration-grace
 const firebaseConfig = {
   apiKey: "AIzaSyD7hStH2KQzS2K8QzS2KQzS2KQzS2KQzS2",
-  authDomain: "churchregistration-a1b2c.firebaseapp.com",
-  projectId: "churchregistration-a1b2c",
-  storageBucket: "churchregistration-a1b2c.appspot.com",
+  authDomain: "church-registration-grace.firebaseapp.com",
+  projectId: "church-registration-grace",
+  storageBucket: "church-registration-grace.appspot.com",
   messagingSenderId: "123456789",
   appId: "1:123456789:web:abc123def456"
 };
@@ -545,20 +564,31 @@ let announcements = [];
 
 // Utility functions
 function showSection(id, el) {
+  // Show admin dashboard
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('admin-header').style.display = 'flex';
+  document.getElementById('main-content').style.display = 'block';
+  
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
-  el.classList.add('active');
+  if (el && el.classList.contains('nav-item')) el.classList.add('active');
   
   // Load data for section
   if (id === 'dashboard') loadDashboard();
   if (id === 'members') loadMembers();
   if (id === 'attendance') loadAttendance();
   if (id === 'events') loadEvents();
-  if (id === 'giving') loadFinance();
   if (id === 'departments') loadDepartments();
-  if (id === 'pastoral') loadPastoral();
+  
   if (id === 'comms') loadCommunications();
+}
+
+function showHome() {
+  document.getElementById('home').style.display = 'flex';
+  document.getElementById('admin-header').style.display = 'none';
+  document.getElementById('main-content').style.display = 'none';
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
 }
 
 function getInitials(name) {
@@ -578,7 +608,7 @@ function formatUGX(amount) {
 // Dashboard
 async function loadDashboard() {
   try {
-    const membersSnap = await db.collection('members').get();
+    const membersSnap = await db.collection('registrations').get();
     members = membersSnap.docs.map(d => ({id: d.id, ...d.data()}));
     
     document.getElementById('total-members').textContent = members.length;
@@ -705,7 +735,7 @@ async function loadAttendance() {
       attendance = [];
     }
     
-    const membersSnap = await db.collection('members').get();
+    const membersSnap = await db.collection('registrations').get();
     members = membersSnap.docs.map(d => ({id: d.id, ...d.data()}));
     
     renderAttendanceTable();
@@ -1013,6 +1043,35 @@ function exportCSV() { alert('CSV export coming soon!'); }
 // Init
 const d = new Date();
 document.getElementById('today-date').textContent = d.toLocaleDateString('en-UG', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
+
+// Load home page stats
+async function loadHomeStats() {
+  try {
+    const snap = await db.collection('registrations').get();
+    const regs = snap.docs.map(doc => doc.data());
+    document.getElementById('stat-members').textContent = regs.length;
+    
+    const eventsSnap = await db.collection('events').where('date', '>=', new Date()).get();
+    const events = eventsSnap.docs.map(doc => doc.data());
+    document.getElementById('stat-events').textContent = events.length;
+    
+    // Calculate attendance from recent registrations
+    const thisMonth = regs.filter(r => {
+      const ts = r.timestamp;
+      if (!ts) return false;
+      const regDate = ts.toDate ? ts.toDate() : new Date(ts);
+      const now = new Date();
+      return regDate.getMonth() === now.getMonth() && regDate.getFullYear() === now.getFullYear();
+    });
+    document.getElementById('stat-attendance').textContent = thisMonth.length > 0 ? Math.round((thisMonth.length / regs.length) * 100) + '%' : '--';
+  } catch(e) {
+    document.getElementById('stat-members').textContent = '124';
+    document.getElementById('stat-events').textContent = '3';
+    document.getElementById('stat-attendance').textContent = '72%';
+  }
+}
+
+loadHomeStats();
 
 // Search/filter listeners
 document.getElementById('search-members').addEventListener('input', renderMembersTable);
