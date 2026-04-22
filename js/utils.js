@@ -98,5 +98,6 @@ export const DEFAULT_CHURCH_PROGRAMS = {
   monday: "7:00 AM - 9:00 AM",
   wednesday: "Evening Glory 5pm-7pm",
   tueThu: "7:00 AM - 3:00 PM",
-  friday: "3pm, 2am, 3am (Not overnight)"
+  friday: "3pm, 2am, 3am (Not overnight)",
+  whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h"
 };

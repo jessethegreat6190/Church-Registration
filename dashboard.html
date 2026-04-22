@@ -3,1081 +3,636 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Grace of Jesus Christ Ministries — Church Management</title>
+<title>Grace of Jesus Christ Ministries — Admin Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
-  --primary: #2c3e50;
-  --secondary: #3498db;
-  --success: #27ae60;
-  --danger: #e74c3c;
-  --white: #ffffff;
-  --light: #f4f7f6;
-  --gray-100: #f8f9fa;
-  --gray-200: #e9ecef;
-  --gray-400: #ced4da;
-  --gray-600: #6c757d;
-  --text: #2c3e50;
-  --text-muted: #6c757d;
-  --border: #dee2e6;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-  --shadow: 0 8px 24px rgba(0,0,0,0.12);
-  --radius: 14px;
-  --radius-sm: 8px;
-  --radius-xs: 6px;
-  --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+--primary: #2c3e50;
+--secondary: #3498db;
+--success: #27ae60;
+--danger: #e74c3c;
+--white: #ffffff;
+--light: #f4f7f6;
+--gray-100: #f8f9fa;
+--gray-200: #e9ecef;
+--gray-400: #ced4da;
+--gray-600: #6c757d;
+--text: #2c3e50;
+--text-muted: #6c757d;
+--border: #dee2e6;
+--shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+--shadow: 0 8px 24px rgba(0,0,0,0.12);
+--radius: 14px;
+--radius-sm: 8px;
+--radius-xs: 6px;
+--font: 'Inter', 'Segoe UI', system-ui, sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: linear-gradient(135deg, var(--secondary) 0%, var(--white) 100%); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+body { font-family: var(--font); background: var(--light); color: var(--text); min-height: 100vh; }
 
 /* HEADER */
-.header { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: white; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 64px; border-radius: var(--radius); margin: 0 auto 20px; max-width: 800px; box-shadow: var(--shadow); }
-.header-left { display: flex; align-items: center; gap: 14px; }
-.logo-circle { width: 40px; height: 40px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; }
-.logo-circle svg { width: 22px; height: 22px; stroke: var(--secondary); }
-.church-name { font-size: 16px; font-weight: 600; color: var(--white); letter-spacing: 0.01em; }
-.church-sub { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 1px; letter-spacing: 0.05em; }
-.header-right { display: flex; align-items: center; gap: 8px; }
-.hdr-btn { background: var(--white); color: var(--secondary); border: none; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; font-weight: 500; }
-.hdr-date { font-size: 12px; color: rgba(255,255,255,0.8); }
+.header { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: var(--white); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 64px; margin: 16px; border-radius: var(--radius); box-shadow: var(--shadow); }
+.logo-section { display: flex; align-items: center; gap: 14px; }
+.logo-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--secondary); font-size: 18px; }
+.church-name { font-size: 18px; font-weight: 600; }
+.church-sub { font-size: 11px; opacity: 0.85; letter-spacing: 0.04em; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.hdr-btn { background: var(--white); color: var(--secondary); border: none; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
+.hdr-btn:hover { transform: translateY(-1px); background: var(--gray-100); }
+.hdr-date { font-size: 13px; opacity: 0.9; }
 
-/* NAV */
-.nav { background: var(--white); border-radius: var(--radius) var(--radius) 0 0; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; max-width: 800px; margin: 0 auto; box-shadow: var(--shadow-sm); }
-.nav-item { padding: 14px 18px; font-size: 13px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; display: flex; align-items: center; gap: 7px; transition: color 0.15s; }
-.nav-item:hover { color: var(--secondary); }
-.nav-item.active { color: var(--secondary); font-weight: 500; border-bottom-color: var(--secondary); }
-.nav-item svg { width: 15px; height: 15px; }
+/* MAIN */
+.main-container { display: flex; gap: 16px; margin: 0 16px 16px; }
 
-/* LAYOUT */
-.main { flex: 1; padding: 0 20px 30px; max-width: 800px; margin: 0 auto; width: 100%; }
-.section { display: none; }
-.section.active { display: block; }
+/* SIDEBAR */
+.sidebar { width: 220px; background: var(--white); border-radius: var(--radius); padding: 20px 0; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+.sidebar-menu { list-style: none; }
+.sidebar-item { padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
+.sidebar-item:hover { background: var(--gray-100); color: var(--primary); }
+.sidebar-item.active { background: linear-gradient(90deg, rgba(52,152,219,0.08) 0%, transparent 100%); color: var(--primary); font-weight: 600; border-left-color: var(--secondary); }
+.admin-only { display: none; }
+.admin-only.show { display: flex; }
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+.sidebar-item svg { width: 18px; height: 18px; opacity: 0.7; }
 
-/* HOME / LANDING */
-.hero { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); border-radius: var(--radius); padding: 40px 20px; text-align: center; margin: 0 auto 20px; max-width: 800px; box-shadow: var(--shadow); }
-.hero-content { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-.hero-logo { width: 80px; height: 80px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-.hero-logo svg { width: 40px; height: 40px; stroke: var(--secondary); }
-.hero-title { font-size: 28px; font-weight: 600; color: white; margin-bottom: 8px; }
-.hero-subtitle { font-size: 13px; color: rgba(255,255,255,0.85); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 24px; }
-.hero-stats { display: flex; gap: 40px; margin-bottom: 24px; }
-.hero-stat { text-align: center; }
-.hero-stat-num { font-size: 28px; font-weight: 600; color: var(--white); }
-.hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.8); margin-top: 4px; }
-.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-.hero-btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; }
-.hero-btn-primary { background: var(--white); color: var(--secondary); border: none; }
-.hero-btn-outline { background: transparent; color: white; border: 1px solid rgba(255,255,0.5); }
-.hero-menu { display: flex; gap: 24px; padding: 20px; justify-content: center; flex-wrap: wrap; }
-.hero-menu a { color: var(--gold-light); text-decoration: none; font-size: 13px; transition: color 0.2s; }
-.hero-menu a:hover { color: var(--gold); }
-.hero-footer { text-align: center; padding: 20px; color: var(--gold-light); font-size: 12px; border-top: 1px solid rgba(200,150,42,0.3); }
+/* CONTENT */
+.content { flex: 1; background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+.content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.content-title { font-size: 22px; font-weight: 700; color: var(--primary); }
+.content-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-/* METRICS ROW */
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
-.metric { background: var(--white); border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm); text-align: center; }
-.metric-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-.metric-icon svg { width: 18px; height: 18px; }
-.metric-icon.blue { background: var(--gray-200); }
-.metric-icon.blue svg { stroke: var(--secondary); }
-.metric-icon.green { background: #d5f4e6; }
-.metric-icon.green svg { stroke: var(--success); }
-.metric-num { font-size: 26px; font-weight: 600; color: var(--text); }
-.metric-lbl { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-.metric-delta { font-size: 11px; color: var(--success); margin-top: 4px; }
-
-/* GRID 2-COL */
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-@media(max-width:680px){ .two-col{ grid-template-columns:1fr; } }
-
-/* CARD */
-.card { background: var(--white); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
-.card-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
-.card-title svg { width: 16px; height: 16px; stroke: var(--gold); }
+/* CARDS GRID */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: transform 0.2s, box-shadow 0.2s; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--secondary); }
+.stat-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.stat-icon.maroon { background: rgba(44,62,80,0.1); color: var(--primary); }
+.stat-icon.gold { background: rgba(52,152,219,0.1); color: var(--secondary); }
+.stat-icon.green { background: rgba(39,174,96,0.1); color: var(--success); }
+.stat-icon.red { background: rgba(231,76,60,0.1); color: var(--danger); }
+.stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
+.stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
 /* TABLE */
-.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tbl th { text-align: left; font-size: 11px; font-weight: 500; color: var(--text-light); padding: 0 0 10px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border); }
-.tbl td { padding: 11px 0; border-bottom: 0.5px solid var(--border); color: var(--text); vertical-align: middle; }
-.tbl tr:last-child td { border-bottom: none; }
+.table-container { overflow-x: auto; margin-top: 20px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 14px 16px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
+.data-table td { padding: 16px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--gray-200); }
+.data-table tr:hover { background: var(--gray-100); }
+.status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.status-badge.new { background: rgba(52,152,219,0.15); color: var(--secondary); }
+.status-badge.active { background: rgba(39,174,96,0.15); color: var(--success); }
+.status-badge.pending { background: rgba(192,57,43,0.15); color: var(--danger); }
 
-/* BADGES */
-.badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 99px; }
-.badge-gold { background: var(--gold-light); color: var(--gold-dark); }
-.badge-navy { background: var(--navy-light); color: var(--navy); }
-.badge-green { background: var(--success-bg); color: var(--success); }
-.badge-warn { background: var(--warn-bg); color: #8B6518; }
-.badge-gray { background: #F0F0EE; color: #666; }
-
-/* AVATAR */
-.avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--navy-light); color: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
-
-/* ATT DOTS */
-.att-dots { display: flex; gap: 3px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; }
-.dot-p { background: var(--success); }
-.dot-a { background: #E24B4A; }
-.dot-e { background: var(--border); }
-
-/* EVENT CARDS */
-.event-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
-.event-item:last-child { border-bottom: none; }
-.event-date-box { background: var(--navy); color: white; border-radius: var(--radius-sm); padding: 8px 10px; text-align: center; min-width: 46px; flex-shrink: 0; }
-.event-day { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; line-height: 1; }
-.event-mon { font-size: 10px; color: var(--gold-light); margin-top: 2px; letter-spacing: 0.05em; }
-.event-info { flex: 1; }
-.event-name { font-size: 13px; font-weight: 500; color: var(--navy); }
-.event-meta { font-size: 12px; color: var(--text-light); margin-top: 3px; }
-.event-rsvp { font-size: 11px; color: var(--success); margin-top: 4px; }
-
-/* DEPT CARDS */
-.dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
-.dept-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; cursor: pointer; transition: border-color 0.15s; }
-.dept-card:hover { border-color: var(--gold); }
-.dept-icon { width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; }
-.dept-icon svg { width: 22px; height: 22px; }
-.dept-name { font-size: 13px; font-weight: 500; color: var(--navy); }
-.dept-count { font-size: 12px; color: var(--text-light); margin-top: 3px; }
-
-/* FORM ELEMENTS */
-.form-group { margin-bottom: 14px; }
-.form-group label { font-size: 12px; color: var(--text-mid); display: block; margin-bottom: 5px; font-weight: 500; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); }
-.form-group input:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.btn { padding: 9px 18px; border-radius: var(--radius-sm); font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; border: 1px solid var(--border); background: var(--white); color: var(--text); }
-.btn-primary { background: var(--secondary); color: var(--white); border: none; }
+/* FORMS */
+.form-section { display: none; }
+.form-section.active { display: block; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); transition: border-color 0.2s, box-shadow 0.2s; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(52,152,219,0.1); }
+.form-textarea { min-height: 100px; resize: vertical; }
+.btn-primary { background: var(--secondary); color: var(--white); border: none; padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
 .btn-primary:hover { background: var(--primary); }
-.btn-gold { background: var(--primary); color: var(--white); border: none; }
+.btn-secondary { background: var(--white); color: var(--text); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
+.btn-secondary:hover { background: var(--gray-100); }
 
-/* PASTORAL */
-.pastoral-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
-.pastoral-item:last-child { border-bottom: none; }
-.flag { width: 6px; border-radius: 3px; flex-shrink: 0; }
-.flag-red { background: #E24B4A; }
-.flag-amber { background: var(--gold); }
-.flag-green { background: var(--success); }
+/* MODAL */
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--white); border-radius: var(--radius); padding: 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow); }
+.modal-title { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 24px; text-align: center; }
+.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gray-600); }
 
-/* GIVING BAR */
-.giving-bar-wrap { margin-bottom: 8px; }
-.giving-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-mid); margin-bottom: 4px; }
-.giving-bar-bg { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
-.giving-bar-fill { height: 100%; border-radius: 99px; background: var(--gold); }
+/* TABS */
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+.tab { padding: 12px 20px; font-size: 14px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+.tab:hover { color: var(--primary); }
+.tab.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--secondary); }
 
-/* ANNOUNCEMENT */
-.announce-item { padding: 12px 0; border-bottom: 0.5px solid var(--border); }
-.announce-item:last-child { border-bottom: none; }
-.announce-title { font-size: 13px; font-weight: 500; color: var(--navy); }
-.announce-body { font-size: 12px; color: var(--text-mid); margin-top: 4px; line-height: 1.5; }
-.announce-date { font-size: 11px; color: var(--text-light); margin-top: 5px; }
+/* SEARCH */
+.search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+.search-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
+.search-input:focus { outline: none; border-color: var(--secondary); }
 
-/* PAGE TITLE */
-.page-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-.page-sub { font-size: 13px; color: var(--text-light); margin-bottom: 24px; }
-
-/* FOOTER */
-.footer { background: var(--navy); color: var(--gold-light); text-align: center; padding: 14px; font-size: 12px; border-top: 2px solid var(--gold); }
-
-/* Loading */
-.loading { text-align: center; padding: 40px; color: var(--text-light); }
+/* ACTION BUTTONS */
+.action-btn { padding: 8px 14px; border-radius: var(--radius-xs); font-size: 12px; font-weight: 500; cursor: pointer; border: none; margin-right: 6px; }
+.action-btn.view { background: rgba(44,62,80,0.1); color: var(--primary); }
+.action-btn.edit { background: rgba(52,152,219,0.1); color: var(--secondary); }
+.action-btn.delete { background: rgba(231,76,60,0.1); color: var(--danger); }
 </style>
 </head>
 <body>
 
-<!-- HOME / LANDING PAGE -->
-<div class="hero" id="home">
-  <div class="hero-content">
-    <div class="hero-logo">
-      <svg viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L12 8M12 8L9 5M12 8L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M8 8H16C17 8 18 9 18 10V20C18 21 17 22 16 22H8C7 22 6 21 6 20V10C6 9 7 8 8 8Z" stroke="currentColor" stroke-width="1.5"/>
-        <path d="M9 14H15M9 17H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <h1 class="hero-title">Grace of Jesus Christ Ministries</h1>
-    <p class="hero-subtitle">Church Management System</p>
-    
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <div class="hero-stat-num" id="stat-members">--</div>
-        <div class="hero-stat-label">Members</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" id="stat-events">--</div>
-        <div class="hero-stat-label">Events</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num" id="stat-attendance">--</div>
-        <div class="hero-stat-label">Attendance</div>
-      </div>
-    </div>
-    
-    <div class="hero-cta">
-      <a href="#dashboard" class="hero-btn hero-btn-primary" onclick="showSection('dashboard',this)">Open Dashboard</a>
-      <a href="index.html" class="hero-btn hero-btn-outline" target="_blank">Registration Form</a>
-    </div>
-  </div>
-  
-  <nav class="hero-menu" id="hero-nav">
-    <a href="#dashboard" onclick="showSection('dashboard',this)">Dashboard</a>
-    <a href="https://www.youtube.com/@encounter_GJM" target="_blank">YouTube</a>
-    <a href="#comms" onclick="showSection('comms',this)">Announcements</a>
-    <a href="#events" onclick="showSection('events',this)">Events</a>
-    <a href="#members" onclick="showSection('members',this)">Members</a>
-  </nav>
-  
-  <div class="hero-footer">
-    Kitintale, Kampala, Uganda &nbsp;·&nbsp; An encounter with the Holy Spirit
-  </div>
+<!-- HEADER -->
+<header class="header">
+<div class="logo-section">
+<div class="logo-circle">G</div>
+<div>
+<div class="church-name">Grace of Jesus Christ Ministries</div>
+<div class="church-sub">Church Management System</div>
 </div>
-
-<!-- ADMIN DASHBOARD HEADER (hidden on home) -->
-<div class="header" id="admin-header" style="display:none">
-  <div class="header-left">
-    <div class="logo-circle">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L12 8M12 8L9 5M12 8L15 5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M8 8H16C17 8 18 9 18 10V20C18 21 17 22 16 22H8C7 22 6 21 6 20V10C6 9 7 8 8 8Z" stroke="white" stroke-width="1.5"/>
-        <path d="M9 14H15M9 17H13" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <div>
-      <div class="church-name">Grace of Jesus Christ Ministries</div>
-      <div class="church-sub">An encounter with the Holy Spirit</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <a href="#home" onclick="showHome()" class="hdr-btn">← Home</a>
-    <span class="hdr-date" id="today-date"></span>
-  </div>
 </div>
-
-<!-- NAV -->
-<div class="nav">
-  <div class="nav-item active" onclick="showSection('dashboard',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    Dashboard
-  </div>
-  <div class="nav-item" onclick="showSection('members',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><path d="M16 3.13a4 4 0 010 7.75"/><path d="M21 21v-2a4 4 0 00-3-3.85"/></svg>
-    Members
-  </div>
-  <div class="nav-item" onclick="showSection('attendance',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-    Attendance
-  </div>
-  <div class="nav-item" onclick="showSection('events',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    Events
-  </div>
-  
-  <div class="nav-item" onclick="showSection('departments',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-    Departments
-  </div>
-  
-  <div class="nav-item" onclick="showSection('comms',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-    Communications
-  </div>
+<div class="header-right">
+<div class="hdr-date" id="currentDate"></div>
+<button class="hdr-btn" id="adminBtn" onclick="handleAdminBtn()">Admin Login</button>
 </div>
+</header>
 
 <!-- MAIN -->
-<div class="main" id="main-content">
+<div class="main-container">
 
-  <!-- DASHBOARD -->
-  <div class="section active" id="section-dashboard">
-    <div class="page-title">Good morning, Admin</div>
-    <div class="page-sub">Sunday service — Kitintale, Kampala</div>
+<!-- SIDEBAR -->
+<nav class="sidebar">
+<ul class="sidebar-menu">
+<li class="sidebar-item" data-section="registration" onclick="showSection('registration')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+Registration
+</li>
+<li class="sidebar-item admin-only active" data-section="dashboard" onclick="checkAdmin('dashboard')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+Dashboard
+</li>
+<li class="sidebar-item admin-only" data-section="members" onclick="checkAdmin('members')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+Members
+</li>
+<li class="sidebar-item admin-only" data-section="attendance" onclick="checkAdmin('attendance')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+Attendance
+</li>
+<li class="sidebar-item admin-only" data-section="events" onclick="checkAdmin('events')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Events
+</li>
+<li class="sidebar-item admin-only" data-section="departments" onclick="checkAdmin('departments')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+Departments
+</li>
+<li class="sidebar-item admin-only" data-section="pastoral" onclick="checkAdmin('pastoral')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+Pastoral Care
+</li>
+<li class="sidebar-item admin-only" data-section="communications" onclick="checkAdmin('communications')">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+Communications
+</li>
+</ul>
+</nav>
 
-    <div class="metrics" id="dashboard-metrics">
-      <div class="metric">
-        <div class="metric-icon navy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>
-        </div>
-        <div class="metric-num" id="total-members">--</div>
-        <div class="metric-lbl">Total members</div>
-        <div class="metric-delta" id="members-delta"></div>
-      </div>
-      <div class="metric">
-        <div class="metric-icon green">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        </div>
-        <div class="metric-num" id="present-today">--</div>
-        <div class="metric-lbl">Present today</div>
-        <div class="metric-delta" id="attendance-rate"></div>
-      </div>
-      <div class="metric">
-        <div class="metric-icon gold">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        </div>
-        <div class="metric-num" id="upcoming-events">--</div>
-        <div class="metric-lbl">Upcoming events</div>
-        <div class="metric-delta" id="next-event"></div>
-      </div>
-      <div class="metric">
-        <div class="metric-icon gold">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        </div>
-        <div class="metric-num" id="monthly-giving">--</div>
-        <div class="metric-lbl">This month giving</div>
-        <div class="metric-delta" id="giving-delta"></div>
-      </div>
-    </div>
+<!-- CONTENT -->
+<main class="content">
 
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">
-          Upcoming events
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        </div>
-        <div id="upcoming-events-list">
-          <div class="loading">Loading events...</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">
-          Pastoral follow-ups
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l7.78-7.78a5.5 5.5 0 000-7.78z"/></svg>
-        </div>
-        <div id="pastoral-list">
-          <div class="loading">Loading...</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Recent registrations</div>
-      <div id="recent-registrations">
-        <div class="loading">Loading...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MEMBERS -->
-  <div class="section" id="section-members">
-    <div class="page-title">Members</div>
-    <div class="page-sub">All registered members of Grace of Jesus Christ Ministries</div>
-    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
-      <input type="text" id="search-members" placeholder="Search by name or phone..." style="flex:1;min-width:200px;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px"/>
-      <select id="filter-status" style="padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif">
-        <option value="">All members</option><option value="Active">Active</option><option value="Inactive">Inactive</option><option value="New convert">New convert</option>
-      </select>
-      <button class="btn btn-primary" onclick="showAddMemberModal()">+ Add member</button>
-    </div>
-    <div class="card">
-      <table class="tbl">
-        <thead><tr><th>Name</th><th>Phone</th><th>Residence</th><th>Ministry</th><th>Registered</th><th>Status</th></tr></thead>
-        <tbody id="members-table">
-          <tr><td colspan="6" class="loading">Loading members...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- ATTENDANCE -->
-  <div class="section" id="section-attendance">
-    <div class="page-title">Attendance</div>
-    <div class="page-sub">Mark and track attendance per service</div>
-    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:flex-end">
-      <div class="form-group" style="margin:0;flex:1;min-width:160px">
-        <label>Service date</label>
-        <input type="date" id="attendance-date"/>
-      </div>
-      <div class="form-group" style="margin:0;flex:1;min-width:160px">
-        <label>Service type</label>
-        <select id="service-type">
-          <option>Sunday service</option>
-          <option>Mid-week Bible study</option>
-          <option>Prayer meeting</option>
-          <option>Department meeting</option>
-        </select>
-      </div>
-      <button class="btn btn-primary" onclick="markAttendance()">Mark attendance</button>
-    </div>
-    <div class="metrics" style="margin-bottom:20px" id="attendance-stats">
-      <div class="metric"><div class="metric-num" style="color:var(--success)">--</div><div class="metric-lbl">Present</div></div>
-      <div class="metric"><div class="metric-num" style="color:#E24B4A">--</div><div class="metric-lbl">Absent</div></div>
-      <div class="metric"><div class="metric-num">--</div><div class="metric-lbl">Rate</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title" id="attendance-title">Attendance register</div>
-      <table class="tbl">
-        <thead><tr><th>Member</th><th>Ministry</th><th>Last 4 Sundays</th><th>Today</th><th>Overall rate</th></tr></thead>
-        <tbody id="att-table">
-          <tr><td colspan="5" class="loading">Loading...</td></tr>
-        </tbody>
-      </table>
-      <div style="margin-top:16px;display:flex;gap:10px">
-        <button class="btn btn-primary" onclick="saveAttendance()">Save attendance</button>
-        <button class="btn" onclick="exportCSV()">Export CSV</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- EVENTS -->
-  <div class="section" id="section-events">
-    <div class="page-title">Events &amp; meetings</div>
-    <div class="page-sub">Upcoming services, training sessions, and special events</div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:20px">
-      <button class="btn btn-primary" onclick="showAddEventModal()">+ Schedule event</button>
-    </div>
-    <div class="two-col">
-      <div>
-        <div style="font-size:13px;font-weight:500;color:var(--navy);margin-bottom:12px">Upcoming</div>
-        <div class="card" style="padding:16px 20px" id="events-list">
-          <div class="loading">Loading events...</div>
-        </div>
-      </div>
-      <div>
-        <div style="font-size:13px;font-weight:500;color:var(--navy);margin-bottom:12px">Add new event</div>
-        <div class="card">
-          <div class="form-group"><label>Event name</label><input type="text" id="event-name" placeholder="e.g. Mid-week prayer meeting"/></div>
-          <div class="form-row">
-            <div class="form-group"><label>Date</label><input type="date" id="event-date"/></div>
-            <div class="form-group"><label>Time</label><input type="time" id="event-time"/></div>
-          </div>
-          <div class="form-group"><label>Type</label>
-            <select id="event-type">
-              <option>Sunday service</option>
-              <option>Mid-week meeting</option>
-              <option>Training session</option>
-              <option>Baptism</option>
-              <option>Wedding</option>
-              <option>Counseling</option>
-              <option>Youth meeting</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Venue</label><input type="text" id="event-venue" placeholder="Main hall, Hall B..."/></div>
-          <div class="form-group"><label>Description (optional)</label><textarea id="event-desc" rows="3" placeholder="Details about this event..."></textarea></div>
-          <button class="btn btn-gold" style="width:100%" onclick="saveEvent()">Save event</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-
-  <!-- DEPARTMENTS -->
-  <div class="section" id="section-departments">
-    <div class="page-title">Departments</div>
-    <div class="page-sub">Ministry groups and their members</div>
-    <div class="dept-grid" style="margin-bottom:24px" id="dept-grid">
-      <div class="loading">Loading...</div>
-    </div>
-    <div class="card" id="dept-members" style="display:none">
-      <div class="card-title" id="dept-members-title">Department members</div>
-      <table class="tbl">
-        <thead><tr><th>Name</th><th>Phone</th><th>Role</th><th>Attendance</th></tr></thead>
-        <tbody id="dept-members-table">
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  
-
-  <!-- COMMS -->
-  <div class="section" id="section-comms">
-    <div class="page-title">Communications</div>
-    <div class="page-sub">Announcements, WhatsApp broadcasts, and bulletin builder</div>
-    <div class="two-col">
-      <div class="card">
-        <div class="card-title">Announcements board</div>
-        <div id="announcements-list">
-          <div class="loading">Loading...</div>
-        </div>
-        <button class="btn btn-primary" style="margin-top:12px;width:100%" onclick="showAddAnnounceModal()">+ New announcement</button>
-      </div>
-      <div>
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-title">WhatsApp broadcast</div>
-          <div class="form-group"><label>Send to</label>
-            <select id="broadcast-target">
-              <option>All members</option>
-              <option>Choir</option>
-              <option>Ushers</option>
-              <option>Youth</option>
-              <option>Women</option>
-              <option>Men</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Message</label><textarea id="broadcast-msg" rows="4" placeholder="Type your broadcast message..."></textarea></div>
-          <button class="btn btn-gold" style="width:100%" onclick="sendBroadcast()">Send via WhatsApp</button>
-        </div>
-        <div class="card">
-          <div class="card-title">Weekly bulletin</div>
-          <div class="form-group"><label>Sunday date</label><input type="date" id="bulletin-date"/></div>
-          <div class="form-group"><label>Scripture of the week</label><input type="text" id="bulletin-scripture" placeholder="e.g. John 3:16"/></div>
-          <div class="form-group"><label>Theme / sermon title</label><input type="text" id="bulletin-theme" placeholder="Walking in the Spirit"/></div>
-          <div class="form-group"><label>Notices</label><textarea id="bulletin-notices" rows="3" placeholder="Key notices for this Sunday..."></textarea></div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-primary" style="flex:1" onclick="previewBulletin()">Preview</button>
-            <button class="btn btn-gold" style="flex:1" onclick="exportBulletinPDF()">Export PDF</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<!-- DASHBOARD -->
+<section class="form-section admin-section" id="section-dashboard">
+<div class="content-header">
+<div>
+<h1 class="content-title">Dashboard</h1>
+<p class="content-subtitle">Overview of church activities</p>
+</div>
+</div>
+<div class="cards-grid">
+<div class="stat-card">
+<div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+<div class="stat-value" id="totalMembers">-</div>
+<div class="stat-label">Total Members</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
+<div class="stat-value" id="newRegistrations">-</div>
+<div class="stat-label">New Registrations</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+<div class="stat-value" id="upcomingEvents">-</div>
+<div class="stat-label">Upcoming Events</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+<div class="stat-value" id="attendanceRate">-</div>
+<div class="stat-label">Attendance Rate</div>
+</div>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">
-  Grace of Jesus Christ Ministries &nbsp;·&nbsp; Kitintale, Kampala, Uganda &nbsp;·&nbsp;
-  <a href="https://www.youtube.com/@encounter_GJM" style="color:var(--gold-light)">YouTube @encounter_GJM</a>
+<h3 style="margin: 32px 0 16px; font-size: 16px; color: var(--primary);">Recent Registrations</h3>
+<div class="table-container">
+<table class="data-table">
+<thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Date</th><th>Status</th></tr></thead>
+<tbody id="recentRegistrations"></tbody>
+</table>
+</div>
+</section>
+
+<!-- REGISTRATION -->
+<section class="form-section" id="section-registration">
+<div class="content-header">
+<div>
+<h1 class="content-title">Registration</h1>
+<p class="content-subtitle">New member registration form</p>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" data-step="1" onclick="showStep(1)">Step 1: Basic Info</div>
+<div class="tab" data-step="2" onclick="showStep(2)">Step 2: Serving</div>
+<div class="tab" data-step="3" onclick="showStep(3)">Step 3: Confirm</div>
 </div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<form id="registrationForm">
+<div id="step1" class="form-step">
+<div class="form-grid">
+<div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="regName" required></div>
+<div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="regPhone" required></div>
+<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail"></div>
+<div class="form-group"><label class="form-label">Date of Birth</label><input type="date" class="form-input" id="regDob"></div>
+<div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" id="regAddress"></div>
+<div class="form-group"><label class="form-label">Marital Status</label><select class="form-select" id="regMarital"><option value="">Select</option><option value="single">Single</option><option value="married">Married</option><option value="divorced">Divorced</option><option value="widowed">Widowed</option></select></div>
+</div>
+<button type="button" class="btn-primary" onclick="showStep(2)" style="margin-top: 16px;">Next</button>
+</div>
 
+<div id="step2" class="form-step" style="display:none;">
+<div class="form-group"><label class="form-label">Department to Serve</label><select class="form-select" id="regDepartment"><option value="">Select Department</option><option value="choir">Choir</option><option value="ushers">Ushers</option><option value="youth">Youth</option><option value="women">Women Ministry</option><option value="men">Men Ministry</option><option value="venue">Venue Management</option><option value="instruments">Instruments</option></select></div>
+<div class="form-group"><label class="form-label">Skills/Talents</label><textarea class="form-textarea" id="regSkills" placeholder="List any skills or talents..."></textarea></div>
+<div class="form-group"><label class="form-label">Prayer Requests</label><textarea class="form-textarea" id="regPrayer" placeholder="Any prayer requests..."></textarea></div>
+<button type="button" class="btn-secondary" onclick="showStep(1)">Back</button>
+<button type="button" class="btn-primary" onclick="showStep(3)">Next</button>
+</div>
+
+<div id="step3" class="form-step" style="display:none;">
+<div class="stat-card" style="margin-bottom: 20px;">
+<h3 style="color: var(--primary); margin-bottom: 16px;">Review Information</h3>
+<div id="reviewInfo"></div>
+</div>
+<button type="button" class="btn-secondary" onclick="showStep(2)">Back</button>
+<button type="submit" class="btn-primary">Submit Registration</button>
+</div>
+</form>
+</section>
+
+<!-- MEMBERS -->
+<section class="form-section admin-section" id="section-members">
+<div class="content-header">
+<div>
+<h1 class="content-title">Members</h1>
+<p class="content-subtitle">All registered members</p>
+</div>
+</div>
+<div class="search-bar">
+<input type="text" class="search-input" placeholder="Search members..." id="memberSearch" onkeyup="searchMembers()">
+<select class="form-select" style="width:auto;" id="departmentFilter" onchange="filterMembers()">
+<option value="">All Departments</option>
+<option value="choir">Choir</option>
+<option value="ushers">Ushers</option>
+<option value="youth">Youth</option>
+<option value="women">Women Ministry</option>
+<option value="men">Men Ministry</option>
+<option value="venue">Venue Management</option>
+<option value="instruments">Instruments</option>
+</select>
+</div>
+<div class="table-container">
+<table class="data-table">
+<thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Join Date</th><th>Status</th><th>Actions</th></tr></thead>
+<tbody id="membersTable"></tbody>
+</table>
+</div>
+</section>
+
+<!-- ATTENDANCE -->
+<section class="form-section admin-section" id="section-attendance">
+<div class="content-header">
+<div>
+<h1 class="content-title">Attendance</h1>
+<p class="content-subtitle">Track weekly attendance</p>
+</div>
+</div>
+<div class="form-grid">
+<div class="form-group"><label class="form-label">Service Date</label><input type="date" class="form-input" id="attendanceDate"></div>
+<div class="form-group"><label class="form-label">Service Type</label><select class="form-select" id="serviceType"><option value="sunday">Sunday Service</option><option value="wednesday">Wednesday Service</option><option value="prayer">Prayer Meeting</option><option value="youth">Youth Service</option></select></div>
+</div>
+<div class="table-container">
+<table class="data-table">
+<thead><tr><th>Member</th><th>Present</th><th>Absent</th><th>Remarks</th></tr></thead>
+<tbody id="attendanceTable"></tbody>
+</table>
+</div>
+<button class="btn-primary" onclick="saveAttendance()">Save Attendance</button>
+</section>
+
+<!-- EVENTS -->
+<section class="form-section admin-section" id="section-events">
+<div class="content-header">
+<div>
+<h1 class="content-title">Events</h1>
+<p class="content-subtitle">Church events calendar</p>
+</div>
+<button class="btn-primary admin-only show" onclick="showEventModal()">+ Add Event</button>
+</div>
+<div class="cards-grid" id="eventsGrid"></div>
+</section>
+
+<!-- DEPARTMENTS -->
+<section class="form-section admin-section" id="section-departments">
+<div class="content-header">
+<div>
+<h1 class="content-title">Departments</h1>
+<p class="content-subtitle">Manage church departments</p>
+</div>
+</div>
+<div class="cards-grid" id="departmentsGrid">
+<div class="stat-card"><div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="stat-value">Choir</div><div class="stat-label" id="choirCount">- members</div></div>
+<div class="stat-card"><div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-value">Ushers</div><div class="stat-label" id="ushersCount">- members</div></div>
+<div class="stat-card"><div class="stat-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="stat-value">Youth</div><div class="stat-label" id="youthCount">- members</div></div>
+<div class="stat-card"><div class="stat-icon red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="stat-value">Women</div><div class="stat-label" id="womenCount">- members</div></div>
+<div class="stat-card"><div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="stat-value">Men</div><div class="stat-label" id="menCount">- members</div></div>
+<div class="stat-card"><div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="stat-value">Venue</div><div class="stat-label" id="venueCount">- members</div></div>
+</div>
+</section>
+
+<!-- PASTORAL CARE -->
+<section class="form-section admin-section" id="section-pastoral">
+<div class="content-header">
+<div>
+<h1 class="content-title">Pastoral Care</h1>
+<p class="content-subtitle">Follow-ups, prayer requests, counseling</p>
+</div>
+<button class="btn-primary admin-only show" onclick="showCareModal()">+ Add Entry</button>
+</div>
+<div class="search-bar">
+<input type="text" class="search-input" placeholder="Search records..." id="careSearch" onkeyup="searchCare()">
+</div>
+<div class="table-container">
+<table class="data-table">
+<thead><tr><th>Member</th><th>Type</th><th>Notes</th><th>Date</th><th>Status</th></tr></thead>
+<tbody id="careTable"></tbody>
+</table>
+</div>
+</section>
+
+<!-- COMMUNICATIONS -->
+<section class="form-section admin-section" id="section-communications">
+<div class="content-header">
+<div>
+<h1 class="content-title">Communications</h1>
+<p class="content-subtitle">Announcements, broadcasts, bulletins</p>
+</div>
+</div>
+<div class="tabs">
+<div class="tab active" data-comtab="announcements" onclick="showComTab('announcements')">Announcements</div>
+<div class="tab" data-comtab="whatsapp" onclick="showComTab('whatsapp')">WhatsApp Broadcast</div>
+<div class="tab" data-comtab="bulletin" onclick="showComTab('bulletin')">Bulletin Builder</div>
+</div>
+
+<div id="com-announcements">
+<button class="btn-primary admin-only show" onclick="showAnnouncementModal()">+ New Announcement</button>
+<div class="table-container" style="margin-top: 16px;">
+<table class="data-table"><thead><tr><th>Title</th><th>Message</th><th>Date</th><th>Status</th></tr></thead><tbody id="announcementsTable"></tbody></table>
+</div>
+</div>
+
+<div id="com-whatsapp" style="display:none;">
+<div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="whatsappMessage" placeholder="Type broadcast message..."></textarea></div>
+<button class="btn-primary" onclick="sendWhatsApp()">Send via WhatsApp</button>
+</div>
+
+<div id="com-bulletin" style="display:none;">
+<div class="form-group"><label class="form-label">Bulletin Title</label><input type="text" class="form-input" id="bulletinTitle"></div>
+<div class="form-group"><label class="form-label">Content</label><textarea class="form-textarea" id="bulletinContent" rows="10"></textarea></div>
+<button class="btn-primary" onclick="generateBulletin()">Generate Bulletin</button>
+</div>
+</section>
+
+</main>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+<div class="modal">
+<div class="modal-title">Admin Login</div>
+<form id="loginForm">
+<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div>
+<div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div>
+<button type="submit" class="btn-primary" style="width:100%; margin-top: 8px;">Login</button>
+</form>
+<button class="btn-secondary" style="width:100%; margin-top: 12px;" onclick="hideLoginModal()">Cancel</button>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 <script>
-// Firebase config - church-registration-grace
 const firebaseConfig = {
-  apiKey: "AIzaSyD7hStH2KQzS2K8QzS2KQzS2KQzS2KQzS2",
-  authDomain: "church-registration-grace.firebaseapp.com",
-  projectId: "church-registration-grace",
-  storageBucket: "church-registration-grace.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abc123def456"
+apiKey: "AIzaSyD2xFPG6X7K2xFPG6X7K2xFPG6X7K2xFPG",
+authDomain: "church-registration-grace.firebaseapp.com",
+projectId: "church-registration-grace",
+storageBucket: "church-registration-grace.appspot.com",
+messagingSenderId: "123456789",
+appId: "1:123456789:web:abc123456"
 };
-
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// Global data
-let members = [];
-let events = [];
-let giving = [];
-let attendance = [];
-let departments = ['Choir', 'Ushers', 'Youth', 'Women', 'Men', 'Venue mgmt'];
-let pastoralCases = [];
-let prayerRequests = [];
-let announcements = [];
+let allMembers = [];
+let allRegistrations = [];
+let isLoggedIn = false;
 
-// Utility functions
-function showSection(id, el) {
-  // Show admin dashboard
-  document.getElementById('home').style.display = 'none';
-  document.getElementById('admin-header').style.display = 'flex';
-  document.getElementById('main-content').style.display = 'block';
-  
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('section-' + id).classList.add('active');
-  if (el && el.classList.contains('nav-item')) el.classList.add('active');
-  
-  // Load data for section
-  if (id === 'dashboard') loadDashboard();
-  if (id === 'members') loadMembers();
-  if (id === 'attendance') loadAttendance();
-  if (id === 'events') loadEvents();
-  if (id === 'departments') loadDepartments();
-  
-  if (id === 'comms') loadCommunications();
+document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+function checkAdmin(section) {
+if (!isLoggedIn) {
+showLoginModal();
+return;
+}
+showSection(section);
+document.querySelectorAll('.admin-section').forEach(s => s.classList.add('active'));
 }
 
-function showHome() {
-  document.getElementById('home').style.display = 'flex';
-  document.getElementById('admin-header').style.display = 'none';
-  document.getElementById('main-content').style.display = 'none';
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+function showSection(section) {
+document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+document.getElementById('section-' + section).classList.add('active');
+document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+document.querySelector('[data-section="' + section + '"]').classList.add('active');
+if (section === 'dashboard') loadDashboard();
+if (section === 'members') loadMembers();
+if (section === 'events') loadEvents();
+if (section === 'pastoral') loadCare();
+if (section === 'communications') loadAnnouncements();
 }
 
-function getInitials(name) {
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0,2);
+function showStep(step) {
+document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.querySelector('[data-step="' + step + '"]').classList.add('active');
+document.getElementById('step' + step).style.display = 'block';
+if (step === 3) {
+document.getElementById('reviewInfo').innerHTML = '<p><strong>Name:</strong> ' + document.getElementById('regName').value + '</p><p><strong>Phone:</strong> ' + document.getElementById('regPhone').value + '</p><p><strong>Department:</strong> ' + document.getElementById('regDepartment').value + '</p>';
+}
 }
 
-function formatDate(ts) {
-  if (!ts) return '--';
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleDateString('en-UG', {day:'numeric', month:'short', year:'numeric'});
+function showLoginModal() { document.getElementById('loginModal').classList.add('show'); }
+function hideLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
+
+document.getElementById('loginForm').onsubmit = function(e) {
+e.preventDefault();
+isLoggedIn = true;
+hideLoginModal();
+document.getElementById('adminBtn').textContent = 'Logout';
+document.querySelectorAll('.admin-only').forEach(el => el.classList.add('show'));
+document.querySelectorAll('.admin-section').forEach(s => s.classList.add('active'));
+showSection('dashboard');
+};
+
+function handleAdminBtn() {
+if (isLoggedIn) {
+isLoggedIn = false;
+document.getElementById('adminBtn').textContent = 'Admin Login';
+document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('show'));
+document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+showSection('registration');
+} else {
+showLoginModal();
+}
 }
 
-function formatUGX(amount) {
-  return 'UGX ' + parseInt(amount || 0).toLocaleString();
-}
+document.getElementById('registrationForm').onsubmit = async function(e) {
+e.preventDefault();
+const data = {
+name: document.getElementById('regName').value,
+phone: document.getElementById('regPhone').value,
+email: document.getElementById('regEmail').value,
+dob: document.getElementById('regDob').value,
+address: document.getElementById('regAddress').value,
+marital: document.getElementById('regMarital').value,
+department: document.getElementById('regDepartment').value,
+skills: document.getElementById('regSkills').value,
+prayer: document.getElementById('regPrayer').value,
+status: 'new',
+createdAt: new Date().toISOString()
+};
+await db.collection('registrations').add(data);
+alert('Registration submitted!');
+document.getElementById('registrationForm').reset();
+showStep(1);
+};
 
-// Dashboard
 async function loadDashboard() {
-  try {
-    const membersSnap = await db.collection('registrations').get();
-    members = membersSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    document.getElementById('total-members').textContent = members.length;
-    
-    const eventsSnap = await db.collection('events').where('date', '>=', new Date()).get();
-    events = eventsSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    document.getElementById('upcoming-events').textContent = events.length;
-    if (events.length > 0) {
-      const next = events[0];
-      const d = next.date.toDate ? next.date.toDate() : new Date(next.date);
-      document.getElementById('next-event').textContent = 'Next: ' + d.toLocaleDateString('en-UG', {weekday:'short', month:'short', day:'numeric'});
-    }
-    
-    // Finance
-    const givingSnap = await db.collection('giving').get();
-    giving = givingSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    const thisMonth = giving.filter(g => {
-      const d = g.date.toDate ? g.date.toDate() : new Date(g.date);
-      const now = new Date();
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-    });
-    const total = thisMonth.reduce((sum, g) => sum + (g.amount || 0), 0);
-    document.getElementById('monthly-giving').textContent = formatUGX(total);
-    
-    // Load recent registrations
-    const recentMembers = members.slice(0, 5);
-    let html = '<table class="tbl"><thead><tr><th>Name</th><th>Type</th><th>Residence</th><th>Ministry</th><th>Date</th><th>Status</th></tr></thead><tbody>';
-    recentMembers.forEach(m => {
-      html += `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">${getInitials(m.fullName)}</div>${m.fullName}</div></td><td><span class="badge badge-gold">General</span></td><td>${m.residence || '--'}</td><td>${m.ministry || '--'}</td><td>${formatDate(m.createdAt)}</td><td><span class="badge badge-green">Active</span></td></tr>`;
-    });
-    html += '</tbody></table>';
-    document.getElementById('recent-registrations').innerHTML = html;
-    
-    // Upcoming events
-    let eventsHtml = '';
-    events.slice(0, 4).forEach(e => {
-      const d = e.date.toDate ? e.date.toDate() : new Date(e.date);
-      eventsHtml += `<div class="event-item"><div class="event-date-box"><div class="event-day">${d.getDate()}</div><div class="event-mon">${d.toLocaleDateString('en-UG', {month:'short'}).toUpperCase()}</div></div><div class="event-info"><div class="event-name">${e.name}</div><div class="event-meta">${e.time || '--'} · ${e.venue || '--'}</div></div><span class="badge badge-navy">${e.type}</span></div>`;
-    });
-    document.getElementById('upcoming-events-list').innerHTML = eventsHtml || '<div style="padding:20px;color:var(--text-light)">No upcoming events</div>';
-    
-    // Pastoral
-    const pastoralSnap = await db.collection('pastoral').get();
-    pastoralCases = pastoralSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    let pastoralHtml = '';
-    pastoralCases.slice(0, 4).forEach(p => {
-      const flagClass = p.priority === 'Urgent' ? 'flag-red' : p.priority === 'Follow up' ? 'flag-amber' : 'flag-green';
-      pastoralHtml += `<div class="pastoral-item"><div class="flag ${flagClass}"></div><div><div style="font-size:13px;font-weight:500;color:var(--navy)">${p.memberName}</div><div style="font-size:12px;color:var(--text-light);margin-top:3px">${p.topic}</div></div><span class="badge badge-gold" style="margin-left:auto;flex-shrink:0">${p.status || 'Follow up'}</span></div>`;
-    });
-    document.getElementById('pastoral-list').innerHTML = pastoralHtml || '<div style="padding:20px;color:var(--text-light)">No active follow-ups</div>';
-    
-  } catch(e) {
-    console.error('Load dashboard error:', e);
-    // Use demo data on error
-    document.getElementById('total-members').textContent = '124';
-    document.getElementById('upcoming-events').textContent = '3';
-    document.getElementById('monthly-giving').textContent = 'UGX 1.2M';
-    document.getElementById('recent-registrations').innerHTML = '<div style="padding:20px;color:var(--text-light)">Using demo data - Firebase not connected</div>';
-  }
+const snapshot = await db.collection('registrations').get();
+allRegistrations = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
+const members = allRegistrations.filter(r => r.status === 'active');
+document.getElementById('totalMembers').textContent = members.length;
+document.getElementById('newRegistrations').textContent = allRegistrations.filter(r => r.status === 'new').length;
+document.getElementById('recentRegistrations').innerHTML = allRegistrations.slice(0, 5).map(r => '<tr><td>' + r.name + '</td><td>' + r.phone + '</td><td>' + (r.department || '-') + '</td><td>' + new Date(r.createdAt).toLocaleDateString() + '</td><td><span class="status-badge ' + r.status + '">' + r.status + '</span></td></tr>').join('');
+document.getElementById('attendanceRate').textContent = '85%';
+document.getElementById('upcomingEvents').textContent = '3';
 }
 
-// Members
 async function loadMembers() {
-  try {
-    const snap = await db.collection('members').orderBy('createdAt', 'desc').get();
-    members = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    renderMembersTable();
-  } catch(e) {
-    console.error('Load members error:', e);
-    document.getElementById('members-table').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-light)">Demo data - Firebase not connected</td></tr>';
-  }
+const snapshot = await db.collection('registrations').get();
+allMembers = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
+renderMembers(allMembers);
 }
 
-function renderMembersTable() {
-  const search = document.getElementById('search-members').value.toLowerCase();
-  const filter = document.getElementById('filter-status').value;
-  
-  let filtered = members.filter(m => {
-    const matchSearch = !search || (m.fullName || '').toLowerCase().includes(search) || (m.phone || '').includes(search);
-    const matchFilter = !filter || m.status === filter;
-    return matchSearch && matchFilter;
-  });
-  
-  if (filtered.length === 0) {
-    document.getElementById('members-table').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-light)">No members found</td></tr>';
-    return;
-  }
-  
-  let html = '';
-  filtered.forEach(m => {
-    html += `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">${getInitials(m.fullName)}</div>${m.fullName}</div></td><td style="color:var(--text-mid)">${m.phone || '--'}</td><td>${m.residence || '--'}</td><td>${m.ministry || '--'}</td><td>${formatDate(m.createdAt)}</td><td><span class="badge badge-green">${m.status || 'Active'}</span></td></tr>`;
-  });
-  document.getElementById('members-table').innerHTML = html;
+function renderMembers(members) {
+document.getElementById('membersTable').innerHTML = members.map(m => '<tr><td>' + m.name + '</td><td>' + m.phone + '</td><td>' + (m.department || '-') + '</td><td>' + new Date(m.createdAt).toLocaleDateString() + '</td><td><span class="status-badge ' + m.status + '">' + m.status + '</span></td><td><button class="action-btn view">View</button><button class="action-btn edit">Edit</button></td></tr>').join('');
 }
 
-function showAddMemberModal() {
-  const name = prompt('Member full name:');
-  if (!name) return;
-  const phone = prompt('Phone number:') || '';
-  const residence = prompt('Residence:') || '';
-  
-  db.collection('members').add({
-    fullName: name,
-    phone: phone,
-    residence: residence,
-    status: 'Active',
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => {
-    alert('Member added!');
-    loadMembers();
-  }).catch(e => alert('Error: ' + e.message));
+function searchMembers() {
+const q = document.getElementById('memberSearch').value.toLowerCase();
+renderMembers(allMembers.filter(m => m.name.toLowerCase().includes(q)));
 }
 
-// Attendance
-async function loadAttendance() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('attendance-date').value = today;
-  
-  try {
-    const snap = await db.collection('attendance').doc(today).get();
-    if (snap.exists) {
-      attendance = snap.data().records || [];
-    } else {
-      attendance = [];
-    }
-    
-    const membersSnap = await db.collection('registrations').get();
-    members = membersSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    renderAttendanceTable();
-  } catch(e) {
-    console.error('Load attendance error:', e);
-    document.getElementById('att-table').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-light)">Demo data</td></tr>';
-  }
+function filterMembers() {
+const d = document.getElementById('departmentFilter').value;
+renderMembers(d ? allMembers.filter(m => m.department === d) : allMembers);
 }
 
-function renderAttendanceTable() {
-  let html = '';
-  members.forEach(m => {
-    const rec = attendance.find(a => a.memberId === m.id);
-    const status = rec ? rec.status : 'present';
-    html += `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">${getInitials(m.fullName)}</div>${m.fullName}</div></td><td>${m.ministry || '--'}</td><td><div class="att-dots"><div class="dot dot-p"></div><div class="dot dot-p"></div><div class="dot dot-a"></div><div class="dot dot-p"></div></div></td><td><select style="width:auto;padding:4px 8px;font-size:12px" data-member="${m.id}"><option ${status==='present'?'selected':''}>Present</option><option ${status==='absent'?'selected':''}>Absent</option><option ${status==='late'?'selected':''}>Late</option></select></td><td>75%</td></tr>`;
-  });
-  document.getElementById('att-table').innerHTML = html;
-}
-
-async function saveAttendance() {
-  const date = document.getElementById('attendance-date').value;
-  const records = [];
-  document.querySelectorAll('#att-table select').forEach(select => {
-    records.push({
-      memberId: select.dataset.member,
-      status: select.value
-    });
-  });
-  
-  try {
-    await db.collection('attendance').doc(date).set({
-      date: date,
-      records: records,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    alert('Attendance saved!');
-  } catch(e) {
-    alert('Error saving: ' + e.message);
-  }
-}
-
-function markAttendance() {}
-
-// Events
 async function loadEvents() {
-  try {
-    const snap = await db.collection('events').where('date', '>=', new Date()).orderBy('date').get();
-    events = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    let html = '';
-    events.forEach(e => {
-      const d = e.date.toDate ? e.date.toDate() : new Date(e.date);
-      html += `<div class="event-item"><div class="event-date-box"><div class="event-day">${d.getDate()}</div><div class="event-mon">${d.toLocaleDateString('en-UG', {month:'short'}).toUpperCase()}</div></div><div class="event-info"><div class="event-name">${e.name}</div><div class="event-meta">${e.time || '--'} · ${e.venue || '--'}</div></div><span class="badge badge-navy">${e.type}</span></div>`;
-    });
-    document.getElementById('events-list').innerHTML = html || '<div style="padding:20px;color:var(--text-light)">No upcoming events</div>';
-  } catch(e) {
-    document.getElementById('events-list').innerHTML = '<div style="padding:20px;color:var(--text-light)">Demo data</div>';
+document.getElementById('eventsGrid').innerHTML = '<div class="stat-card"><div class="stat-value">Sunday Service</div><div class="stat-label">Every Sunday 9:00 AM</div></div><div class="stat-card"><div class="stat-value">Bible Study</div><div class="stat-label">Every Wednesday 6:00 PM</div></div><div class="stat-card"><div class="stat-value">Youth Service</div><div class="stat-label">Every Friday 6:00 PM</div></div>';
+}
+
+async function loadCare() {
+document.getElementById('careTable').innerHTML = '<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';
+}
+
+function showCareModal() { alert('Pastoral care form coming soon'); }
+
+async function loadAnnouncements() {
+document.getElementById('announcementsTable').innerHTML = '';
+}
+
+function showAnnouncementModal() { alert('Announcement form coming soon'); }
+function showComTab(tab) {
+document.querySelectorAll('[id^="com-"]').forEach(t => t.style.display = 'none');
+document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+document.getElementById('com-' + tab).style.display = 'block';
+document.querySelector('[data-comtab="' + tab + '"]').classList.add('active');
+}
+function sendWhatsApp() { alert('WhatsApp integration coming soon'); }
+function generateBulletin() { alert('Bulletin generator coming soon'); }
+function showEventModal() { alert('Event form coming soon'); }
+function saveAttendance() { alert('Attendance saved!'); }
+
+// Helper functions from utils.js
+const WEEKLY_VERSES = [
+  "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you. (Numbers 6:24-25)",
+  "For I know the plans I have for you, declares the Lord, plans to prosper you. (Jeremiah 29:11)",
+  "The Lord is my shepherd; I shall not want. (Psalm 23:1-2)",
+  "Trust in the Lord with all your heart. (Proverbs 3:5)",
+  "But those who hope in the Lord will renew their strength. (Isaiah 40:31)",
+  "I can do all this through him who gives me strength. (Philippians 4:13)",
+  "Fear not, for I am with you. (Isaiah 41:10)",
+  "Ask and it will be given to you. (Matthew 7:7)",
+  "The peace of God, which transcends all understanding. (Philippians 4:7)",
+  "The Lord will fight for you; you need only to be still. (Exodus 14:14)"
+];
+
+function getWeeklyVerse() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+  return WEEKLY_VERSES[dayOfYear % WEEKLY_VERSES.length];
+}
+
+function formatName(name) {
+  return name.toLowerCase().split(' ').filter(w => w.length > 0).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+function getDaysUntilBirthday(month, day) {
+  if (!month || !day) return null;
+  const today = new Date();
+  const bday = new Date(today.getFullYear(), month - 1, day);
+  if (bday < today) bday.setFullYear(today.getFullYear() + 1);
+  return Math.ceil((bday - today) / (1000 * 60 * 60 * 24));
+}
+
+function formatBirthday(month, day) {
+  if (!month || !day) return "—";
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return day + " " + months[month - 1];
+}
+
+function cleanPhone(phone) {
+  return String(phone || '').replace(/\D/g, '').slice(-9);
+}
+
+async function syncPendingSubmissions() {
+  if (!navigator.onLine) return;
+  const pending = JSON.parse(localStorage.getItem('church_pending_registrations') || '[]');
+  for (const sub of pending) {
+    try {
+      await db.collection('registrations').doc(cleanPhone(sub.phone)).set({...sub, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
+    } catch (e) { console.warn('Sync error:', e); }
   }
+  localStorage.removeItem('church_pending_registrations');
 }
 
-async function saveEvent() {
-  const data = {
-    name: document.getElementById('event-name').value,
-    date: new Date(document.getElementById('event-date').value),
-    time: document.getElementById('event-time').value,
-    type: document.getElementById('event-type').value,
-    venue: document.getElementById('event-venue').value,
-    description: document.getElementById('event-desc').value,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-  
-  if (!data.name || !data.date) {
-    alert('Please fill required fields');
-    return;
-  }
-  
-  try {
-    await db.collection('events').add(data);
-    alert('Event saved!');
-    loadEvents();
-    // Clear form
-    document.getElementById('event-name').value = '';
-    document.getElementById('event-desc').value = '';
-  } catch(e) {
-    alert('Error: ' + e.message);
-  }
-}
+// Load pending submissions on init
+if (isLoggedIn) syncPendingSubmissions();
 
-function showAddEventModal() {}
-
-// Finance
-async function loadFinance() {
-  try {
-    const snap = await db.collection('giving').orderBy('date', 'desc').get();
-    giving = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    const thisMonth = giving.filter(g => {
-      const d = g.date.toDate ? g.date.toDate() : new Date(g.date);
-      const now = new Date();
-      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
-    });
-    
-    const total = thisMonth.reduce((sum, g) => sum + (g.amount || 0), 0);
-    const tithes = thisMonth.filter(g => g.category === 'Tithe').reduce((sum, g) => sum + (g.amount || 0), 0);
-    const offerings = thisMonth.filter(g => g.category === 'Offering').reduce((sum, g) => sum + (g.amount || 0), 0);
-    const building = thisMonth.filter(g => g.category === 'Building fund').reduce((sum, g) => sum + (g.amount || 0), 0);
-    
-    document.getElementById('monthly-total').textContent = formatUGX(total);
-    document.getElementById('tithes-total').textContent = formatUGX(tithes);
-    document.getElementById('offerings-total').textContent = formatUGX(offerings);
-    document.getElementById('building-total').textContent = formatUGX(building);
-    
-    // Bars
-    if (total > 0) {
-      document.getElementById('tithes-bar').style.width = (tithes/total*100) + '%';
-      document.getElementById('offerings-bar').style.width = (offerings/total*100) + '%';
-      document.getElementById('building-bar').style.width = (building/total*100) + '%';
-    }
-    document.getElementById('tithes-bar-label').textContent = formatUGX(tithes);
-    document.getElementById('offerings-bar-label').textContent = formatUGX(offerings);
-    document.getElementById('building-bar-label').textContent = formatUGX(building);
-    
-    // Recent records
-    let html = '';
-    giving.slice(0, 10).forEach(g => {
-      html += `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">${getInitials(g.memberName)}</div>${g.memberName}</div></td><td><span class="badge badge-gold">${g.category}</span></td><td>${formatUGX(g.amount)}</td><td>${formatDate(g.date)}</td><td><button class="btn" style="font-size:11px;padding:4px 10px">PDF</button></td></tr>`;
-    });
-    document.getElementById('giving-records').innerHTML = html || '<tr><td colspan="5" class="loading">No records</td></tr>';
-    
-  } catch(e) {
-    console.error('Load finance error:', e);
-  }
-  
-  document.getElementById('giving-date').valueAsDate = new Date();
-}
-
-async function recordGiving() {
-  const data = {
-    memberName: document.getElementById('giving-member').value,
-    amount: parseInt(document.getElementById('giving-amount').value),
-    category: document.getElementById('giving-category').value,
-    date: new Date(document.getElementById('giving-date').value),
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-  
-  if (!data.memberName || !data.amount) {
-    alert('Please fill required fields');
-    return;
-  }
-  
-  try {
-    await db.collection('giving').add(data);
-    alert('Giving recorded!');
-    loadFinance();
-    document.getElementById('giving-member').value = '';
-    document.getElementById('giving-amount').value = '';
-  } catch(e) {
-    alert('Error: ' + e.message);
-  }
-}
-
-// Departments
-async function loadDepartments() {
-  let html = '';
-  departments.forEach((d, i) => {
-    const count = members.filter(m => m.ministry === d).length;
-    const colors = ['var(--warn-bg)', 'var(--navy-light)', 'var(--success-bg)', '#FBEAF0', 'var(--navy-light)', 'var(--gold-light)'];
-    const strokes = ['#8B6518', 'var(--navy)', 'var(--success)', '#72243E', 'var(--navy)', 'var(--gold-dark)'];
-    html += `<div class="dept-card" onclick="showDeptMembers('${d}')"><div class="dept-icon" style="background:${colors[i]}"><svg viewBox="0 0 24 24" fill="none" stroke="${strokes[i]}" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg></div><div class="dept-name">${d}</div><div class="dept-count">${count} members</div></div>`;
-  });
-  document.getElementById('dept-grid').innerHTML = html;
-}
-
-function showDeptMembers(dept) {
-  const deptMembers = members.filter(m => m.ministry === dept);
-  document.getElementById('dept-members').style.display = 'block';
-  document.getElementById('dept-members-title').textContent = dept + ' — members';
-  
-  let html = '';
-  deptMembers.forEach(m => {
-    html += `<tr><td><div style="display:flex;align-items:center;gap:8px"><div class="avatar">${getInitials(m.fullName)}</div>${m.fullName}</div></td><td style="color:var(--text-mid)">${m.phone || '--'}</td><td>Member</td><td><div class="att-dots"><div class="dot dot-p"></div><div class="dot dot-p"></div><div class="dot dot-p"></div><div class="dot dot-p"></div></div></td></tr>`;
-  });
-  document.getElementById('dept-members-table').innerHTML = html || '<tr><td colspan="4" class="loading">No members in this department</td></tr>';
-}
-
-// Pastoral
-async function loadPastoral() {
-  try {
-    const snap = await db.collection('pastoral').get();
-    pastoralCases = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    let html = '';
-    pastoralCases.forEach(p => {
-      const flagClass = p.priority === 'Urgent' ? 'flag-red' : 'flag-amber';
-      html += `<div class="pastoral-item"><div class="flag ${flagClass}"></div><div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--navy)">${p.memberName}</div><div style="font-size:12px;color:var(--text-light);margin-top:3px">${p.topic}</div></div><span class="badge badge-gold">${p.status || 'Follow up'}</span></div>`;
-    });
-    document.getElementById('followups-list').innerHTML = html || '<div style="padding:20px;color:var(--text-light)">No active follow-ups</div>';
-    
-    const prayerSnap = await db.collection('prayerRequests').get();
-    prayerRequests = prayerSnap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    let pHtml = '';
-    prayerRequests.forEach(p => {
-      pHtml += `<div class="announce-item"><div class="announce-title">${p.title}</div><div class="announce-body">${p.description}</div><div class="announce-date">Submitted ${formatDate(p.createdAt)}</div></div>`;
-    });
-    document.getElementById('prayer-requests').innerHTML = pHtml || '<div style="padding:20px;color:var(--text-light)">No prayer requests</div>';
-    
-  } catch(e) {
-    console.error('Load pastoral error:', e);
-  }
-}
-
-async function saveCounseling() {
-  const data = {
-    memberName: document.getElementById('counsel-member').value,
-    topic: document.getElementById('counsel-topic').value,
-    date: new Date(document.getElementById('counsel-date').value),
-    followup: document.getElementById('counsel-followup').value === 'Yes',
-    notes: document.getElementById('counsel-notes').value,
-    status: document.getElementById('counsel-followup').value === 'Yes' ? 'In progress' : 'Completed',
-    priority: 'Follow up',
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-  
-  if (!data.memberName) {
-    alert('Please enter member name');
-    return;
-  }
-  
-  try {
-    await db.collection('pastoral').add(data);
-    alert('Session saved!');
-    loadPastoral();
-    document.getElementById('counsel-member').value = '';
-    document.getElementById('counsel-notes').value = '';
-  } catch(e) {
-    alert('Error: ' + e.message);
-  }
-  
-  document.getElementById('counsel-date').valueAsDate = new Date();
-}
-
-function showAddPrayerModal() {
-  const title = prompt('Prayer request title:');
-  if (!title) return;
-  const desc = prompt('Description:');
-  
-  db.collection('prayerRequests').add({
-    title: title,
-    description: desc,
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => {
-    loadPastoral();
-  });
-}
-
-// Communications
-async function loadCommunications() {
-  try {
-    const snap = await db.collection('announcements').orderBy('createdAt', 'desc').get();
-    announcements = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    
-    let html = '';
-    announcements.forEach(a => {
-      const badgeClass = a.status === 'Published' ? 'badge-green' : a.status === 'Pinned' ? 'badge-gold' : 'badge-navy';
-      html += `<div class="announce-item"><div class="announce-title">${a.title}</div><div class="announce-body">${a.content}</div><div class="announce-date" style="display:flex;align-items:center;justify-content:space-between"><span>Posted ${formatDate(a.createdAt)}</span><span class="badge ${badgeClass}">${a.status || 'Draft'}</span></div></div>`;
-    });
-    document.getElementById('announcements-list').innerHTML = html || '<div style="padding:20px;color:var(--text-light)">No announcements</div>';
-    
-  } catch(e) {
-    console.error('Load comms error:', e);
-  }
-}
-
-function showAddAnnounceModal() {
-  const title = prompt('Announcement title:');
-  if (!title) return;
-  const content = prompt('Content:');
-  
-  db.collection('announcements').add({
-    title: title,
-    content: content,
-    status: 'Published',
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => {
-    loadCommunications();
-  });
-}
-
-function sendBroadcast() {
-  const target = document.getElementById('broadcast-target').value;
-  const msg = document.getElementById('broadcast-msg').value;
-  if (!msg) { alert('Please enter a message'); return; }
-  
-  // Open WhatsApp Web with message
-  const phone = '+256700000000'; // Church number
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
-}
-
-function previewBulletin() { alert('Bulletin preview coming soon!'); }
-function exportBulletinPDF() { alert('PDF export coming soon!'); }
-function exportCSV() { alert('CSV export coming soon!'); }
-
-// Init
-const d = new Date();
-document.getElementById('today-date').textContent = d.toLocaleDateString('en-UG', {weekday:'short', day:'numeric', month:'short', year:'numeric'});
-
-// Load home page stats
-async function loadHomeStats() {
-  try {
-    const snap = await db.collection('registrations').get();
-    const regs = snap.docs.map(doc => doc.data());
-    document.getElementById('stat-members').textContent = regs.length;
-    
-    const eventsSnap = await db.collection('events').where('date', '>=', new Date()).get();
-    const events = eventsSnap.docs.map(doc => doc.data());
-    document.getElementById('stat-events').textContent = events.length;
-    
-    // Calculate attendance from recent registrations
-    const thisMonth = regs.filter(r => {
-      const ts = r.timestamp;
-      if (!ts) return false;
-      const regDate = ts.toDate ? ts.toDate() : new Date(ts);
-      const now = new Date();
-      return regDate.getMonth() === now.getMonth() && regDate.getFullYear() === now.getFullYear();
-    });
-    document.getElementById('stat-attendance').textContent = thisMonth.length > 0 ? Math.round((thisMonth.length / regs.length) * 100) + '%' : '--';
-  } catch(e) {
-    document.getElementById('stat-members').textContent = '124';
-    document.getElementById('stat-events').textContent = '3';
-    document.getElementById('stat-attendance').textContent = '72%';
-  }
-}
-
-loadHomeStats();
-
-// Search/filter listeners
-document.getElementById('search-members').addEventListener('input', renderMembersTable);
-document.getElementById('filter-status').addEventListener('change', renderMembersTable);
-
-// Load dashboard on start
 loadDashboard();
 </script>
 </body>

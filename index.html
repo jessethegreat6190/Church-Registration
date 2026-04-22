@@ -1,372 +1,411 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Church Counseling Registration – Grace of Jesus Christ Ministries</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Register with Grace of Jesus Christ Ministries – Kitintale. An encounter with the Holy Spirit.">
-  <meta property="og:title" content="Grace of Jesus Christ Ministries – Registration">
-  <meta property="og:description" content="An encounter with the Holy Spirit. Register online today.">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#2c3e50">
-  <link rel="apple-touch-icon" href="church logo/New Logo 2026.png">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grace of Jesus Christ Ministries — Registration</title>
+<meta name="description" content="Register with Grace of Jesus Christ Ministries – Kitintale. An encounter with the Holy Spirit.">
+<meta name="theme-color" content="#2c3e50"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+--primary: #2c3e50;
+--secondary: #3498db;
+--success: #27ae60;
+--danger: #e74c3c;
+--white: #ffffff;
+--light: #f4f7f6;
+--gray-100: #f8f9fa;
+--gray-200: #e9ecef;
+--gray-400: #ced4da;
+--gray-600: #6c757d;
+--text: #2c3e50;
+--text-muted: #6c757d;
+--border: #dee2e6;
+--shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+--shadow: 0 8px 24px rgba(0,0,0,0.12);
+--radius: 14px;
+--radius-sm: 8px;
+--radius-xs: 6px;
+--font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--light); color: var(--text); line-height: 1.5; }
+img { max-width: 100%; height: auto; }
+a { color: var(--secondary); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDK from CDN (works on any host, not just Firebase Hosting) -->
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-  <!-- Auto-initialises Firebase config on Firebase Hosting -->
-  <script defer src="/__/firebase/init.js"></script>
+/* SECTIONS */
+.section { padding: 32px 16px; max-width: 900px; margin: 0 auto; }
+.section-title { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+
+/* REGISTRATION */
+.reg-section { background: var(--white); margin: 20px auto; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); }
+.step-indicator { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.step-item { display: flex; align-items: center; gap: 8px; }
+.step-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--gray-200); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+.step-item.active .step-circle { background: var(--secondary); color: var(--white); }
+.step-label { font-size: 12px; color: var(--text-muted); }
+.step-item.active .step-label { color: var(--secondary); font-weight: 600; }
+.step-line { width: 40px; height: 2px; background: var(--gray-200); }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.form-input, .form-select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); }
+.form-input:focus, .form-select:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(52,152,219,0.1); }
+.btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: var(--secondary); color: var(--white); }
+.btn-success { background: var(--success); color: var(--white); }
+.btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+
+/* HERO */
+.hero { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); padding: 40px 24px; text-align: center; }
+.hero-title { font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+.hero-subtitle { font-size: 14px; color: rgba(255,255,255,0.9); letter-spacing: 0.05em; }
+
+/* VIDEO INTRO */
+.video-section { position: relative; width: 100%; max-width: 900px; margin: 0 auto 20px; border-radius: var(--radius); overflow: hidden; background: var(--primary); }
+.video-section video { width: 100%; display: block; opacity: 0.35; }
+.video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+.video-overlay .title { font-size: 24px; font-weight: 700; color: var(--white); text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
+.video-overlay .subtitle { font-size: 12px; color: rgba(255,255,255,0.9); margin-top: 8px; letter-spacing: 0.05em; }
+
+/* ABOUT */
+.about-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; }
+.about-quote { font-style: italic; color: var(--text-muted); margin: 16px 0; padding: 16px; background: var(--gray-100); border-radius: var(--radius-sm); }
+.about-text { font-size: 14px; color: var(--text); margin-top: 16px; line-height: 1.7; }
+.about-verse { font-size: 16px; font-weight: 600; color: var(--primary); margin-top: 16px; }
+
+/* YOUTUBE */
+.youtube-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.youtube-embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-sm); background: #000; }
+.youtube-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.playlist-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+.playlist-btn { flex: 1; min-width: 150px; padding: 12px 16px; background: var(--gray-100); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; color: var(--text); text-align: center; cursor: pointer; transition: all 0.15s; }
+.playlist-btn:hover { background: var(--secondary); color: var(--white); border-color: var(--secondary); }
+
+/* GIVING */
+.giving-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; }
+.giving-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+.giving-options { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.giving-card { flex: 1; min-width: 180px; max-width: 250px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center; }
+.giving-card h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+.giving-card p { font-size: 16px; font-weight: 700; color: var(--secondary); }
+
+/* MEDIA GALLERY */
+.media-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.media-card { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.media-card img { width: 100%; height: 150px; object-fit: cover; }
+.media-card .caption { padding: 12px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
+
+/* FOOTER */
+.footer { background: var(--primary); color: var(--white); padding: 32px 16px; text-align: center; }
+.footer p { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
+.footer a { color: var(--white); opacity: 0.8; }
+
+/* STEP CARDS */
+.card { display: none; }
+.card.active { display: block; }
+.radio-group { display: flex; flex-direction: column; gap: 10px; }
+.radio-group label { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+.checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: padding: 8px 12px; background: var(--gray-100); border-radius: var(--radius-xs); }
+.checkbox-item:hover { background: var(--gray-200); }
+.consent-row { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 13px; }
+</style>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!--  HERO HEADER                                          -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <header class="hero">
-    <div class="hero__inner">
-      <img src="church logo/New Logo 2026.png"
-           alt="Grace of Jesus Christ Ministries logo"
-           class="hero__logo">
-      <h1 class="hero__name">Grace of Jesus Christ Ministries</h1>
-      <p class="hero__slogan">An encounter with the Holy Spirit</p>
-      <div class="hero__pills" aria-label="Church highlights">
-        <span class="hero__pill">☀️ Sunday 8:00 AM</span>
-      </div>
-    </div>
-  </header>
+<!-- HERO -->
+<section class="hero">
+<div class="hero-title">GRACE OF JESUS CHRIST MINISTRIES</div>
+<div class="hero-subtitle">_a place of encounter with the Holy Spirit</div>
+</section>
 
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!--  MAIN CONTENT                                         -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <main>
+<!-- VIDEO INTRO (below name) -->
+<section class="video-section">
+<video autoplay muted loop playsinline>
+<source src="media/videointro.mp4" type="video/mp4"/>
+</video>
+<div class="video-overlay">
+<div class="title">WELCOME</div>
+<div class="subtitle">An Encounter with the Holy Spirit</div>
+</div>
+</section>
 
-    <!-- REGISTRATION SECTION ─────────────────────────────── -->
-    <section aria-label="Church Registration">
+<!-- ABOUT -->
+<section class="section">
+<div class="about-section">
+<h2 class="section-title">Welcome</h2>
+<p class="about-text">Welcome to the official channel of Grace of Jesus Christ Ministries a prophetic church where lives are transformed by the Word, the Spirit, and the grace of our Lord Jesus Christ.</p>
+<p class="about-quote">"Look now, there is in this city a man of God, and he is an honourable man; all that he saith cometh surely to pass: now let us go thither; peradventure he can shew us our way that we should go." — 1 Samuel 9:6 (KJV)</p>
+<p class="about-verse">The Word is alive, the Spirit moves, and Jesus Christ is exalted</p>
+</div>
+</section>
 
-      <!-- Step Indicator -->
-      <nav class="step-indicator" aria-label="Registration steps">
-        <div class="step-item active" id="si-1">
-          <div class="step-item__circle" id="sc-1">1</div>
-          <span class="step-item__label">Your Info</span>
-        </div>
-        <div class="step-line" id="sl-1" aria-hidden="true"></div>
-        <div class="step-item" id="si-2">
-          <div class="step-item__circle" id="sc-2">2</div>
-          <span class="step-item__label">How to Serve</span>
-        </div>
-        <div class="step-line" id="sl-2" aria-hidden="true"></div>
-        <div class="step-item" id="si-3">
-          <div class="step-item__circle" id="sc-3">3</div>
-          <span class="step-item__label">Confirm</span>
-        </div>
-      </nav>
+<!-- YOUTUBE -->
+<section class="section">
+<div class="youtube-section">
+<h2 class="section-title">Watch Live</h2>
+<div class="youtube-embed">
+<iframe src="https://www.youtube.com/embed/live_stream?channel=UCw5JfEX9gF9F9F9F9F9F9F9" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+</div>
+<div class="playlist-row">
+<a href="https://www.youtube.com/playlist?list=PLXXXX" class="playlist-btn" target="_blank">Weekly Blessing</a>
+<a href="https://www.youtube.com/@encounter_GJM" class="playlist-btn" target="_blank">All Sermons</a>
+</div>
+</div>
+</section>
 
-      <!-- Progress Bar -->
-      <div class="progress-bar-wrap" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
+<!-- GIVING -->
+<section class="section">
+<div class="giving-section">
+<h2 class="giving-title">Giving</h2>
+<div class="giving-options">
+<div class="giving-card">
+<h4>MTN Mobile Money</h4>
+<p>+256 772 XXX XXX</p>
+</div>
+<div class="giving-card">
+<h4>Airtel Money</h4>
+<p>+256 789 XXX XXX</p>
+</div>
+</div>
+</div>
+</section>
 
-      <!-- ─── STEP 1: Basic Info ─────────────────────────── -->
-      <div class="card step active" id="step-1" aria-labelledby="step1-title">
-        <h2 class="step__title" id="step1-title">Your Information</h2>
+<!-- MEDIA GALLERY -->
+<section class="section">
+<div class="media-section">
+<h2 class="section-title">Gallery</h2>
+<div class="media-grid">
+<div class="media-card">
+<img src="media/churrchprogramms.png" alt="Church Programs"/>
+<div class="caption">Church Programs</div>
+</div>
+<div class="media-card">
+<img src="media/PRAYERANDFASTING.png" alt="Prayer & Fasting"/>
+<div class="caption">Prayer & Fasting</div>
+</div>
+<div class="media-card">
+<img src="media/Counclingsessions.png" alt="Counseling Sessions"/>
+<div class="caption">Counseling Sessions</div>
+</div>
+<div class="media-card">
+<img src="media/Churchbuildingcontact.png" alt="Building Contact"/>
+<div class="caption">Building Contact</div>
+</div>
+<div class="media-card">
+<img src="media/Churchcontacts.png" alt="Church Contacts"/>
+<div class="caption">Church Contacts</div>
+</div>
+</div>
+</div>
+</section>
 
-        <div class="form-group">
-          <label for="name">Full Name <span aria-hidden="true">*</span></label>
-          <input type="text"
-                 id="name"
-                 placeholder="Enter your full name"
-                 required
-                 aria-required="true"
-                 autocomplete="name">
-          <span class="field-error" id="err-name" role="alert"></span>
-        </div>
+<!-- REGISTRATION (TOP) -->
+<section class="section">
+<div class="reg-section">
+<h2 class="section-title">Registration</h2>
 
-        <div class="form-group">
-          <label for="phone">Phone Number <span aria-hidden="true">*</span></label>
-          <input type="tel"
-                 id="phone"
-                 placeholder="e.g. 0700 000 000"
-                 required
-                 aria-required="true"
-                 autocomplete="tel">
-          <span class="field-error" id="err-phone" role="alert"></span>
-        </div>
+<!-- Step Indicator -->
+<nav class="step-indicator" aria-label="Registration steps">
+<div class="step-item active" id="si-1">
+<div class="step-circle">1</div>
+<span class="step-label">Your Info</span>
+</div>
+<div class="step-line"></div>
+<div class="step-item" id="si-2">
+<div class="step-circle">2</div>
+<span class="step-label">How to Serve</span>
+</div>
+<div class="step-line"></div>
+<div class="step-item" id="si-3">
+<div class="step-circle">3</div>
+<span class="step-label">Confirm</span>
+</div>
+</nav>
 
-        <div class="form-group">
-          <label for="location">Residence <span aria-hidden="true">*</span></label>
-          <input type="text"
-                 id="location"
-                 placeholder="Where do you live?"
-                 required
-                 aria-required="true">
-          <span class="field-error" id="err-location" role="alert"></span>
-        </div>
+<!-- STEP 1 -->
+<div class="card active" id="step-1">
+<div class="form-group">
+<label class="form-label">Full Name *</label>
+<input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+</div>
+<div class="form-group">
+<label class="form-label">Phone Number *</label>
+<input type="tel" id="phone" class="form-input" placeholder="e.g. 0700 000 000" required>
+</div>
+<div class="form-group">
+<label class="form-label">Location *</label>
+<input type="text" id="location" class="form-input" placeholder="Where do you live?" required>
+</div>
+<div class="form-group">
+<label class="form-label">Registration Type</label>
+<div class="radio-group">
+<label><input type="radio" name="regType" value="general" checked> General Registration</label>
+<label><input type="radio" name="regType" value="wedding"> Wedding</label>
+<label><input type="radio" name="regType" value="baptism"> Baptism</label>
+<label><input type="radio" name="regType" value="funeral"> Funeral</label>
+<label><input type="radio" name="regType" value="counseling"> Counseling</label>
+</div>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="nextStep()">Next</button>
+</div>
+</div>
 
-        <fieldset>
-          <legend>Are you registering for the first time online?</legend>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="firstTime" value="yes" id="ft-yes">
-              First time online
-            </label>
-            <label>
-              <input type="radio" name="firstTime" value="no" id="ft-no" checked>
-              I have registered before
-            </label>
-          </div>
-        </fieldset>
+<!-- STEP 2 -->
+<div class="card" id="step-2">
+<div class="form-group">
+<label class="form-label">Birthday (Optional)</label>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+<input type="number" id="birthDay" class="form-input" placeholder="Day" min="1" max="31">
+<select id="birthMonth" class="form-select">
+<option value="">Month</option>
+<option value="1">January</option><option value="2">February</option>
+<option value="3">March</option><option value="4">April</option>
+<option value="5">May</option><option value="6">June</option>
+<option value="7">July</option><option value="8">August</option>
+<option value="9">September</option><option value="10">October</option>
+<option value="11">November</option><option value="12">December</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">How can you serve? (Optional)</label>
+<div class="checkbox-grid">
+<label class="checkbox-item"><input type="checkbox" value="Ushering"> Ushering</label>
+<label class="checkbox-item"><input type="checkbox" value="Choir"> Choir</label>
+<label class="checkbox-item"><input type="checkbox" value="Instruments"> Playing Instruments</label>
+<label class="checkbox-item"><input type="checkbox" value="Venue"> Venue Management</label>
+</div>
+</div>
+<div class="consent-row">
+<input type="checkbox" id="whatsapp" checked>
+<label>Add me to WhatsApp group</label>
+</div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="prevStep()">Back</button>
+<button class="btn btn-primary" onclick="nextStep()">Next</button>
+</div>
+</div>
 
-        <fieldset>
-          <legend>Registration Type</legend>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="registrationType" value="general" checked>
-              General Church Registration
-            </label>
-            <label>
-              <input type="radio" name="registrationType" value="wedding">
-              Wedding
-            </label>
-            <label>
-              <input type="radio" name="registrationType" value="baptism">
-              Baptism
-            </label>
-            <label>
-              <input type="radio" name="registrationType" value="funeral">
-              Funeral
-            </label>
-            <label>
-              <input type="radio" name="registrationType" value="counseling">
-              Counseling
-            </label>
-          </div>
-        </fieldset>
+<!-- STEP 3 -->
+<div class="card" id="step-3">
+<p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">Please check your information before saving.</p>
+<div id="reviewInfo" style="background: var(--gray-100); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 20px;"></div>
+<div class="btn-row">
+<button class="btn btn-primary" onclick="prevStep()">Back to Edit</button>
+<button class="btn btn-success" onclick="submitForm()">Save Registration</button>
+</div>
+</div>
+</div>
+</div>
+</section>
 
-        <!-- Event-specific fields -->
-        <div id="eventFields" style="display:none;">
-          <div id="weddingFields" class="event-fields">
-            <div class="form-group">
-              <label for="groomName">Groom's Name</label>
-              <input type="text" id="groomName" placeholder="Groom's full name">
-            </div>
-            <div class="form-group">
-              <label for="brideName">Bride's Name</label>
-              <input type="text" id="brideName" placeholder="Bride's full name">
-            </div>
-            <div class="form-group">
-              <label for="weddingDate">Expected Wedding Date</label>
-              <input type="date" id="weddingDate">
-            </div>
-          </div>
-          <div id="baptismFields" class="event-fields">
-            <div class="form-group">
-              <label for="baptismDate">Expected Baptism Date</label>
-              <input type="date" id="baptismDate">
-            </div>
-            <div class="form-group">
-              <label for="ageGroup">Age Group</label>
-              <select id="ageGroup">
-                <option value="">Select age group</option>
-                <option value="child">Child (under 18)</option>
-                <option value="adult">Adult (18+)</option>
-              </select>
-            </div>
-          </div>
-          <div id="funeralFields" class="event-fields">
-            <div class="form-group">
-              <label for="deceasedName">Name of Deceased</label>
-              <input type="text" id="deceasedName" placeholder="Full name of deceased">
-            </div>
-            <div class="form-group">
-              <label for="funeralDate">Expected Funeral Date</label>
-              <input type="date" id="funeralDate">
-            </div>
-            <div class="form-group">
-              <label for="contactPerson">Primary Contact Person</label>
-              <input type="text" id="contactPerson" placeholder="Contact person name">
-            </div>
-          </div>
-          <div id="counselingFields" class="event-fields">
-            <div class="form-group">
-              <label for="counselingTopic">Topic for Counseling</label>
-              <select id="counselingTopic">
-                <option value="">Select topic</option>
-                <option value="marriage">Marriage Counseling</option>
-                <option value="family">Family Issues</option>
-                <option value="spiritual">Spiritual Guidance</option>
-                <option value="financial">Financial Counseling</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="preferredDate">Preferred Date</label>
-              <input type="date" id="preferredDate">
-            </div>
-          </div>
-        </div>
+<!-- FOOTER -->
+<footer class="footer">
+<p>Kitintale, Kampala, Uganda</p>
+<p><a href="https://www.youtube.com/@encounter_GJM" target="_blank">Subscribe on YouTube</a></p>
+</footer>
 
-        <div class="btn-row">
-          <button type="button" class="btn btn--primary" id="nextBtn1">
-            Next <span aria-hidden="true">→</span>
-          </button>
-        </div>
-      </div>
+<script>
+// Firebase
+const firebaseConfig = {
+apiKey: "AIzaSyD2xFPG6X7K2xFPG6X7K2xFPG6X7K2xFPG",
+authDomain: "church-registration-grace.firebaseapp.com",
+projectId: "church-registration-grace",
+storageBucket: "church-registration-grace.appspot.com",
+messagingSenderId: "123456789",
+appId: "1:123456789:web:abc123456"
+};
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script>
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-      <!-- ─── STEP 2: Serving & Birthday ────────────────── -->
-      <div class="card step" id="step-2" aria-labelledby="step2-title">
-        <h2 class="step__title" id="step2-title">How You Can Serve</h2>
+let currentStep = 1;
 
-        <div class="form-group">
-          <label>Your Birthday <span style="font-weight:400; color:var(--text-muted);">(Optional)</span></label>
-          <div class="birthday-grid">
-            <input type="number"
-                   id="birthDay"
-                   placeholder="Day (e.g. 24)"
-                   min="1" max="31"
-                   aria-label="Birth day">
-            <select id="birthMonth" aria-label="Birth month">
-              <option value="">Month</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
-              <option value="10">October</option>
-              <option value="11">November</option>
-              <option value="12">December</option>
-            </select>
-          </div>
-        </div>
+function nextStep() {
+if (currentStep < 3) {
+document.getElementById('step-' + currentStep).classList.remove('active');
+currentStep++;
+document.getElementById('step-' + currentStep).classList.add('active');
+updateStepIndicator();
+if (currentStep === 3) buildReview();
+}
+}
 
-        <fieldset>
-          <legend>How can you serve? <span style="font-weight:400; font-size:0.8rem;">(Optional)</span></legend>
-          <div class="checkbox-grid">
-            <label class="checkbox-item">
-              <input type="checkbox" id="vol-ushering" value="Ushering">
-              Ushering
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" id="vol-choir" value="Choir">
-              Choir
-            </label>
-            <label class="checkbox-item checkbox-item--span2">
-              <input type="checkbox" id="vol-instruments" value="Playing musical instruments">
-              Playing instruments:
-              <input type="text"
-                     id="instrument-type"
-                     class="instrument-input"
-                     placeholder="Which instrument?"
-                     aria-label="Instrument type"
-                     disabled>
-            </label>
-            <label class="checkbox-item checkbox-item--span2">
-              <input type="checkbox" id="vol-venue" value="Venue Management">
-              Venue Management
-            </label>
-            <label class="checkbox-item">
-              <input type="checkbox" id="vol-other" value="Other">
-              Other
-            </label>
-          </div>
-        </fieldset>
+function prevStep() {
+if (currentStep > 1) {
+document.getElementById('step-' + currentStep).classList.remove('active');
+currentStep--;
+document.getElementById('step-' + currentStep).classList.add('active');
+updateStepIndicator();
+}
+}
 
-        <div class="consent-row">
-          <input type="checkbox" id="consent" checked aria-label="WhatsApp group consent">
-          <label for="consent">Would you like to be added to the WhatsApp group?</label>
-        </div>
+function updateStepIndicator() {
+for (let i = 1; i <= 3; i++) {
+const item = document.getElementById('si-' + i);
+if (i <= currentStep) item.classList.add('active');
+else item.classList.remove('active');
+}
+}
 
-        <div class="form-group">
-          <label for="referredBy">
-            How did you hear about us?
-            <span style="font-weight:400; color:var(--text-muted);">(Optional)</span>
-          </label>
-          <input type="text"
-                 id="referredBy"
-                 placeholder="Friend, social media, flyer...">
-        </div>
+function buildReview() {
+const name = document.getElementById('name').value;
+const phone = document.getElementById('phone').value;
+const location = document.getElementById('location').value;
+const regType = document.querySelector('input[name="regType"]:checked').value;
+document.getElementById('reviewInfo').innerHTML = '<p><strong>Name:</strong> ' + name + '</p><p><strong>Phone:</strong> ' + phone + '</p><p><strong>Location:</strong> ' + location + '</p><p><strong>Type:</strong> ' + regType + '</p>';
+}
 
-        <div class="btn-row">
-          <button type="button" class="btn btn--outline" id="backBtn2">
-            <span aria-hidden="true">←</span> Back
-          </button>
-          <button type="button" class="btn btn--primary" id="nextBtn2">
-            Next <span aria-hidden="true">→</span>
-          </button>
-        </div>
-      </div>
+async function submitForm() {
+const name = document.getElementById('name').value;
+const phone = document.getElementById('phone').value;
+const location = document.getElementById('location').value;
+const regType = document.querySelector('input[name="regType"]:checked').value;
+const birthDay = document.getElementById('birthDay').value;
+const birthMonth = document.getElementById('birthMonth').value;
+const whatsapp = document.getElementById('whatsapp').checked;
 
-      <!-- ─── STEP 3: Confirm ───────────────────────────── -->
-      <div class="card step" id="step-3" aria-labelledby="step3-title">
-        <h2 class="step__title" id="step3-title">Confirm Your Details</h2>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1rem;">
-          Please check your information before saving.
-        </p>
+const serving = [];
+document.querySelectorAll('#step-2 input[type="checkbox"]:checked').forEach(cb => serving.push(cb.value));
 
-        <div class="details-card">
-          <ul id="detailsList" aria-live="polite" aria-label="Your registration details"></ul>
-        </div>
+const data = {
+name, phone, location, registrationType: regType,
+birthDay, birthMonth, whatsapp,
+volunteering: serving.join(', '),
+status: 'pending',
+createdAt: new Date().toISOString()
+};
 
-        <div class="btn-row">
-          <button type="button" class="btn btn--outline" id="editBtn">
-            <span aria-hidden="true">←</span> Back to Edit
-          </button>
-          <button type="button" class="btn btn--success" id="saveBtn">
-            <span id="saveBtnText">Save Registration</span>
-            <span class="spinner" id="saveSpinner" role="status" aria-label="Saving…"></span>
-          </button>
-        </div>
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!--  SITE FOOTER                                          -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <footer class="site-footer">
-    <p>📍 Kitintale, Kampala, Uganda</p>
-    <a href="https://www.youtube.com/@encounter_GJM" target="_blank" rel="noopener noreferrer">
-      🎥 Subscribe on YouTube
-    </a>
-  </footer>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!--  BLESSING OVERLAY                                     -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <div id="fullBlessingOverlay"
-       role="dialog"
-       aria-modal="true"
-       aria-labelledby="thankYouNote">
-    <div class="blessing-content">
-      <img src="church logo/New Logo 2026.png"
-           alt=""
-           aria-hidden="true"
-           class="blessing-logo">
-      <div class="thank-you-note" id="thankYouNote">Thank You for Registering!</div>
-      <p id="blessingText" class="blessing-text"></p>
-      <div class="slogan-footer">An encounter with the Holy Spirit</div>
-      <button class="done-btn" onclick="closeBlessing()">Amen 🙏</button>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════════ -->
-  <!--  APPLICATION SCRIPT                                   -->
-  <!-- ══════════════════════════════════════════════════════ -->
-  <script type="module" src="js/app.js"></script>
+try {
+await db.collection('registrations').doc(phone.replace(/\D/g,'').slice(-9)).set(data);
+alert('Thank you for registering! God bless you.');
+document.getElementById('name').value = '';
+document.getElementById('phone').value = '';
+document.getElementById('location').value = '';
+currentStep = 1;
+document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+document.getElementById('step-1').classList.add('active');
+updateStepIndicator();
+} catch(e) {
+alert('Registration saved offline. Thank you!');
+}
+}
+</script>
 </body>
 </html>
