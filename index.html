@@ -1,411 +1,538 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Grace of Jesus Christ Ministries — Registration</title>
-<meta name="description" content="Register with Grace of Jesus Christ Ministries – Kitintale. An encounter with the Holy Spirit.">
-<meta name="theme-color" content="#2c3e50"/>
-<link rel="manifest" href="manifest.json"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-:root {
---primary: #2c3e50;
---secondary: #3498db;
---success: #27ae60;
---danger: #e74c3c;
---white: #ffffff;
---light: #f4f7f6;
---gray-100: #f8f9fa;
---gray-200: #e9ecef;
---gray-400: #ced4da;
---gray-600: #6c757d;
---text: #2c3e50;
---text-muted: #6c757d;
---border: #dee2e6;
---shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
---shadow: 0 8px 24px rgba(0,0,0,0.12);
---radius: 14px;
---radius-sm: 8px;
---radius-xs: 6px;
---font: 'Inter', 'Segoe UI', system-ui, sans-serif;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: var(--light); color: var(--text); line-height: 1.5; }
-img { max-width: 100%; height: auto; }
-a { color: var(--secondary); text-decoration: none; }
-a:hover { text-decoration: underline; }
-
-
-
-/* SECTIONS */
-.section { padding: 32px 16px; max-width: 900px; margin: 0 auto; }
-.section-title { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
-
-/* REGISTRATION */
-.reg-section { background: var(--white); margin: 20px auto; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); }
-.step-indicator { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.step-item { display: flex; align-items: center; gap: 8px; }
-.step-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--gray-200); color: var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
-.step-item.active .step-circle { background: var(--secondary); color: var(--white); }
-.step-label { font-size: 12px; color: var(--text-muted); }
-.step-item.active .step-label { color: var(--secondary); font-weight: 600; }
-.step-line { width: 40px; height: 2px; background: var(--gray-200); }
-.form-group { margin-bottom: 16px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-.form-input, .form-select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); }
-.form-input:focus, .form-select:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(52,152,219,0.1); }
-.btn { padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.15s; }
-.btn:hover { transform: translateY(-1px); }
-.btn-primary { background: var(--secondary); color: var(--white); }
-.btn-success { background: var(--success); color: var(--white); }
-.btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
-
-/* HERO */
-.hero { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); padding: 40px 24px; text-align: center; }
-.hero-title { font-size: 28px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-.hero-subtitle { font-size: 14px; color: rgba(255,255,255,0.9); letter-spacing: 0.05em; }
-
-/* VIDEO INTRO */
-.video-section { position: relative; width: 100%; max-width: 900px; margin: 0 auto 20px; border-radius: var(--radius); overflow: hidden; background: var(--primary); }
-.video-section video { width: 100%; display: block; opacity: 0.35; }
-.video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
-.video-overlay .title { font-size: 24px; font-weight: 700; color: var(--white); text-shadow: 0 2px 8px rgba(0,0,0,0.5); }
-.video-overlay .subtitle { font-size: 12px; color: rgba(255,255,255,0.9); margin-top: 8px; letter-spacing: 0.05em; }
-
-/* ABOUT */
-.about-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; }
-.about-quote { font-style: italic; color: var(--text-muted); margin: 16px 0; padding: 16px; background: var(--gray-100); border-radius: var(--radius-sm); }
-.about-text { font-size: 14px; color: var(--text); margin-top: 16px; line-height: 1.7; }
-.about-verse { font-size: 16px; font-weight: 600; color: var(--primary); margin-top: 16px; }
-
-/* YOUTUBE */
-.youtube-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
-.youtube-embed { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius-sm); background: #000; }
-.youtube-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-.playlist-row { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-.playlist-btn { flex: 1; min-width: 150px; padding: 12px 16px; background: var(--gray-100); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; color: var(--text); text-align: center; cursor: pointer; transition: all 0.15s; }
-.playlist-btn:hover { background: var(--secondary); color: var(--white); border-color: var(--secondary); }
-
-/* GIVING */
-.giving-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; text-align: center; }
-.giving-title { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
-.giving-options { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.giving-card { flex: 1; min-width: 180px; max-width: 250px; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); text-align: center; }
-.giving-card h4 { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
-.giving-card p { font-size: 16px; font-weight: 700; color: var(--secondary); }
-
-/* MEDIA GALLERY */
-.media-section { background: var(--white); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
-.media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-.media-card { border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
-.media-card img { width: 100%; height: 150px; object-fit: cover; }
-.media-card .caption { padding: 12px; font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
-
-/* FOOTER */
-.footer { background: var(--primary); color: var(--white); padding: 32px 16px; text-align: center; }
-.footer p { font-size: 13px; opacity: 0.9; margin-bottom: 8px; }
-.footer a { color: var(--white); opacity: 0.8; }
-
-/* STEP CARDS */
-.card { display: none; }
-.card.active { display: block; }
-.radio-group { display: flex; flex-direction: column; gap: 10px; }
-.radio-group label { display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
-.checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: padding: 8px 12px; background: var(--gray-100); border-radius: var(--radius-xs); }
-.checkbox-item:hover { background: var(--gray-200); }
-.consent-row { display: flex; align-items: center; gap: 10px; margin: 16px 0; font-size: 13px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace of Jesus Christ Ministries – Kitintale</title>
+  <meta name="description" content="Grace of Jesus Christ Ministries – An encounter with the Holy Spirit. Worship with us in Kitintale.">
+  <link rel="icon" href="assets/logo/New Logo 2026.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- HERO -->
-<section class="hero">
-<div class="hero-title">GRACE OF JESUS CHRIST MINISTRIES</div>
-<div class="hero-subtitle">_a place of encounter with the Holy Spirit</div>
-</section>
-
-<!-- VIDEO INTRO (below name) -->
-<section class="video-section">
-<video autoplay muted loop playsinline>
-<source src="media/videointro.mp4" type="video/mp4"/>
-</video>
-<div class="video-overlay">
-<div class="title">WELCOME</div>
-<div class="subtitle">An Encounter with the Holy Spirit</div>
-</div>
-</section>
-
-<!-- ABOUT -->
-<section class="section">
-<div class="about-section">
-<h2 class="section-title">Welcome</h2>
-<p class="about-text">Welcome to the official channel of Grace of Jesus Christ Ministries a prophetic church where lives are transformed by the Word, the Spirit, and the grace of our Lord Jesus Christ.</p>
-<p class="about-quote">"Look now, there is in this city a man of God, and he is an honourable man; all that he saith cometh surely to pass: now let us go thither; peradventure he can shew us our way that we should go." — 1 Samuel 9:6 (KJV)</p>
-<p class="about-verse">The Word is alive, the Spirit moves, and Jesus Christ is exalted</p>
-</div>
-</section>
-
-<!-- YOUTUBE -->
-<section class="section">
-<div class="youtube-section">
-<h2 class="section-title">Watch Live</h2>
-<div class="youtube-embed">
-<iframe src="https://www.youtube.com/embed/live_stream?channel=UCw5JfEX9gF9F9F9F9F9F9F9" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
-</div>
-<div class="playlist-row">
-<a href="https://www.youtube.com/playlist?list=PLXXXX" class="playlist-btn" target="_blank">Weekly Blessing</a>
-<a href="https://www.youtube.com/@encounter_GJM" class="playlist-btn" target="_blank">All Sermons</a>
-</div>
-</div>
-</section>
-
-<!-- GIVING -->
-<section class="section">
-<div class="giving-section">
-<h2 class="giving-title">Giving</h2>
-<div class="giving-options">
-<div class="giving-card">
-<h4>MTN Mobile Money</h4>
-<p>+256 772 XXX XXX</p>
-</div>
-<div class="giving-card">
-<h4>Airtel Money</h4>
-<p>+256 789 XXX XXX</p>
-</div>
-</div>
-</div>
-</section>
-
-<!-- MEDIA GALLERY -->
-<section class="section">
-<div class="media-section">
-<h2 class="section-title">Gallery</h2>
-<div class="media-grid">
-<div class="media-card">
-<img src="media/churrchprogramms.png" alt="Church Programs"/>
-<div class="caption">Church Programs</div>
-</div>
-<div class="media-card">
-<img src="media/PRAYERANDFASTING.png" alt="Prayer & Fasting"/>
-<div class="caption">Prayer & Fasting</div>
-</div>
-<div class="media-card">
-<img src="media/Counclingsessions.png" alt="Counseling Sessions"/>
-<div class="caption">Counseling Sessions</div>
-</div>
-<div class="media-card">
-<img src="media/Churchbuildingcontact.png" alt="Building Contact"/>
-<div class="caption">Building Contact</div>
-</div>
-<div class="media-card">
-<img src="media/Churchcontacts.png" alt="Church Contacts"/>
-<div class="caption">Church Contacts</div>
-</div>
-</div>
-</div>
-</section>
-
-<!-- REGISTRATION (TOP) -->
-<section class="section">
-<div class="reg-section">
-<h2 class="section-title">Registration</h2>
-
-<!-- Step Indicator -->
-<nav class="step-indicator" aria-label="Registration steps">
-<div class="step-item active" id="si-1">
-<div class="step-circle">1</div>
-<span class="step-label">Your Info</span>
-</div>
-<div class="step-line"></div>
-<div class="step-item" id="si-2">
-<div class="step-circle">2</div>
-<span class="step-label">How to Serve</span>
-</div>
-<div class="step-line"></div>
-<div class="step-item" id="si-3">
-<div class="step-circle">3</div>
-<span class="step-label">Confirm</span>
-</div>
+<!-- ═══ NAVBAR ═══════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="assets/logo/New Logo 2026.png" alt="Grace of Jesus Christ Ministries">
+    </a>
+<ul class="nav-links" id="navLinks">
+       <li><a href="#home" class="active">Home</a></li>
+       <li><a href="#about">About</a></li>
+       <li><a href="#register">Register</a></li>
+       <li><a href="#sermons">Sermons</a></li>
+       <li><a href="#giving">Give</a></li>
+       <li><a href="#contact">Contact</a></li>
+       <li><a href="dashboard.html" class="nav-btn">Admin</a></li>
+     </ul>
+  </div>
 </nav>
 
-<!-- STEP 1 -->
-<div class="card active" id="step-1">
-<div class="form-group">
-<label class="form-label">Full Name *</label>
-<input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
-</div>
-<div class="form-group">
-<label class="form-label">Phone Number *</label>
-<input type="tel" id="phone" class="form-input" placeholder="e.g. 0700 000 000" required>
-</div>
-<div class="form-group">
-<label class="form-label">Location *</label>
-<input type="text" id="location" class="form-input" placeholder="Where do you live?" required>
-</div>
-<div class="form-group">
-<label class="form-label">Registration Type</label>
-<div class="radio-group">
-<label><input type="radio" name="regType" value="general" checked> General Registration</label>
-<label><input type="radio" name="regType" value="wedding"> Wedding</label>
-<label><input type="radio" name="regType" value="baptism"> Baptism</label>
-<label><input type="radio" name="regType" value="funeral"> Funeral</label>
-<label><input type="radio" name="regType" value="counseling"> Counseling</label>
-</div>
-</div>
-<div class="btn-row">
-<button class="btn btn-primary" onclick="nextStep()">Next</button>
-</div>
-</div>
-
-<!-- STEP 2 -->
-<div class="card" id="step-2">
-<div class="form-group">
-<label class="form-label">Birthday (Optional)</label>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-<input type="number" id="birthDay" class="form-input" placeholder="Day" min="1" max="31">
-<select id="birthMonth" class="form-select">
-<option value="">Month</option>
-<option value="1">January</option><option value="2">February</option>
-<option value="3">March</option><option value="4">April</option>
-<option value="5">May</option><option value="6">June</option>
-<option value="7">July</option><option value="8">August</option>
-<option value="9">September</option><option value="10">October</option>
-<option value="11">November</option><option value="12">December</option>
-</select>
-</div>
-</div>
-<div class="form-group">
-<label class="form-label">How can you serve? (Optional)</label>
-<div class="checkbox-grid">
-<label class="checkbox-item"><input type="checkbox" value="Ushering"> Ushering</label>
-<label class="checkbox-item"><input type="checkbox" value="Choir"> Choir</label>
-<label class="checkbox-item"><input type="checkbox" value="Instruments"> Playing Instruments</label>
-<label class="checkbox-item"><input type="checkbox" value="Venue"> Venue Management</label>
-</div>
-</div>
-<div class="consent-row">
-<input type="checkbox" id="whatsapp" checked>
-<label>Add me to WhatsApp group</label>
-</div>
-<div class="btn-row">
-<button class="btn btn-primary" onclick="prevStep()">Back</button>
-<button class="btn btn-primary" onclick="nextStep()">Next</button>
-</div>
-</div>
-
-<!-- STEP 3 -->
-<div class="card" id="step-3">
-<p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">Please check your information before saving.</p>
-<div id="reviewInfo" style="background: var(--gray-100); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 20px;"></div>
-<div class="btn-row">
-<button class="btn btn-primary" onclick="prevStep()">Back to Edit</button>
-<button class="btn btn-success" onclick="submitForm()">Save Registration</button>
-</div>
-</div>
-</div>
-</div>
+<!-- ═══ HERO ══════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-overlay"></div>
+  <video class="hero-video" autoplay muted loop playsinline poster="assets/logo/Banner.png">
+    <source src="assets/media/videointro.mp4" type="video/mp4">
+  </video>
+   <div class="hero-content">
+     <h1>An Encounter with<br><span class="highlight">the Holy Spirit</span></h1>
+     <p class="hero-sub">Grace of Jesus Christ Ministries – Kitintale</p>
+     <div class="hero-actions">
+       <a href="#register" class="btn btn-primary">Plan Your Visit</a>
+     </div>
+     <div class="hero-meta">
+       <span><i class="fas fa-map-marker-alt"></i> Kitintale, Kampala</span>
+     </div>
+   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ═══ ABOUT ═════════════════════════════════════════════ -->
+<section class="section section-about" id="about">
+  <div class="about-bg" style="background-image: url('assets/media/building.jpg');"></div>
+  <div class="about-overlay"></div>
+  <div class="container">
+<div class="section-header">
+       <span class="section-tag">A Place of Encounter</span>
+       <h2>Welcome to Grace of Jesus Christ Ministries</h2>
+       <p class="section-desc">A prophetic church where lives are transformed by the Word, the Spirit, and the grace of our Lord Jesus Christ.</p>
+     </div>
+     <div class="about-grid">
+       <div class="about-card">
+         <i class="fas fa-book-bible"></i>
+         <h3>The Word is Alive</h3>
+         <p>"Look now, there is in this city a man of God, and he is an honorable man; all that he saith cometh surely to pass: now let us go thither; peradventure he can shew us our way that we should go." — 1 Samuel 9:6 (KJV)</p>
+       </div>
+       <div class="about-card">
+         <i class="fas fa-dove"></i>
+         <h3>A Place of Encounter</h3>
+         <p>Through prophetic utterance, anointed worship, and Spirit-led teaching, we invite you to encounter the Holy Spirit — healing, restoring, and igniting purpose in every heart.</p>
+       </div>
+       <div class="about-card">
+         <i class="fas fa-cross"></i>
+         <h3>Jesus Christ is Exalted</h3>
+         <p>The Word is alive, the Spirit moves, and Jesus Christ is exalted. Join us in worship every Sunday at 8:00 AM for powerful praise and life-changing teaching.</p>
+       </div>
+     </div>
+  </div>
+</section>
+
+<!-- ═══ PLAN YOUR VISIT ═══════════════════════════════════ -->
+<section class="section-plan" id="programs">
+   <div class="container">
+     <div class="split-layout">
+       <div class="split-text">
+         <span class="section-tag">Plan Your Visit</span>
+         <h2>We'd Love to Have You</h2>
+         <p>Whether you're visiting for the first time or looking for a church home, you are welcome at Grace of Jesus Christ Ministries. Experience the presence of God and connect with a community that cares.</p>
+         <ul class="visit-list">
+           <li><i class="fas fa-check-circle"></i> <strong>Sunday Service:</strong> 8:00 AM — Live on site and on YouTube</li>
+           <li><i class="fas fa-check-circle"></i> <strong>Monday Kyoto Prayers:</strong> Every Monday 7:00 AM – 9:00 AM</li>
+           <li><i class="fas fa-check-circle"></i> <strong>Wednesday Kyoto & Evening Glory:</strong> 7:00 AM – 9:00 AM (Kyoto) | 6:00 PM – 7:00 PM (Evening Glory)</li>
+           <li><i class="fas fa-check-circle"></i> <strong>Tue & Thu Counseling:</strong> 7:00 AM – 3:00 PM</li>
+           <li><i class="fas fa-check-circle"></i> <strong>Friday Night Prayers:</strong> 9:00 PM – 2:00 AM</li>
+         </ul>
+       </div>
+       <div class="split-video">
+         <video class="plan-video" autoplay muted loop playsinline>
+           <source src="assets/media/worship.mkv" type="video/x-matroska">
+         </video>
+         <video class="plan-video" autoplay muted loop playsinline>
+           <source src="assets/media/2026-03-22 09-25-36.mkv" type="video/x-matroska">
+         </video>
+         <video class="plan-video" autoplay muted loop playsinline>
+           <source src="assets/media/VID-20251201-WA0019.mp4" type="video/mp4">
+         </video>
+         <video class="plan-video" autoplay muted loop playsinline>
+           <source src="assets/media/VID-20251214-WA0001.mp4" type="video/mp4">
+         </video>
+         <video class="plan-video" autoplay muted loop playsinline>
+           <source src="assets/media/VID-20251214-WA0002.mp4" type="video/mp4">
+         </video>
+       </div>
+     </div>
+   </div>
+</section>
+
+ <!-- ═══ REGISTRATION FORM ════════════════════════════════ -->
+<section class="section" id="register">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Get Connected</span>
+      <h2>Register with Us</h2>
+      <p class="section-desc">Fill in your details and we'll be in touch. Welcome to the family!</p>
+    </div>
+
+    <div class="form-wrapper">
+      <!-- Step Indicator -->
+      <nav class="step-indicator" aria-label="Registration steps">
+        <div class="step-item active" id="si-1">
+          <div class="step-item__circle" id="sc-1">1</div>
+          <span class="step-item__label">Your Info</span>
+        </div>
+        <div class="step-line" id="sl-1"></div>
+        <div class="step-item" id="si-2">
+          <div class="step-item__circle" id="sc-2">2</div>
+          <span class="step-item__label">How to Serve</span>
+        </div>
+        <div class="step-line" id="sl-2"></div>
+        <div class="step-item" id="si-3">
+          <div class="step-item__circle" id="sc-3">3</div>
+          <span class="step-item__label">Confirm</span>
+        </div>
+      </nav>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="card step active" id="step-1">
+        <h3>Your Information</h3>
+        <div class="form-group">
+          <label for="name">Full Name <span class="required">*</span></label>
+          <input type="text" id="name" placeholder="Enter your full name" required autocomplete="name">
+          <span class="field-error" id="err-name" role="alert"></span>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <input type="tel" id="phone" placeholder="e.g. 0700 000 000" required autocomplete="tel">
+          <span class="field-error" id="err-phone" role="alert"></span>
+        </div>
+        <div class="form-group">
+          <label for="location">Residence <span class="required">*</span></label>
+          <input type="text" id="location" placeholder="Where do you live?" required>
+          <span class="field-error" id="err-location" role="alert"></span>
+        </div>
+
+        <fieldset>
+          <legend>Are you registering for the first time online?</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="firstTime" value="yes" id="ft-yes"> First time online</label>
+            <label><input type="radio" name="firstTime" value="no" id="ft-no" checked> I have registered before</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Registration Type</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="registrationType" value="general" checked> General Church Registration</label>
+            <label><input type="radio" name="registrationType" value="wedding"> Wedding</label>
+            <label><input type="radio" name="registrationType" value="baptism"> Baptism</label>
+            <label><input type="radio" name="registrationType" value="counseling"> Counseling</label>
+          </div>
+        </fieldset>
+
+        <div id="eventFields" style="display:none;">
+          <div id="weddingFields" class="event-fields">
+            <div class="form-group"><label for="groomName">Groom's Name</label><input type="text" id="groomName" placeholder="Groom's full name"></div>
+            <div class="form-group"><label for="brideName">Bride's Name</label><input type="text" id="brideName" placeholder="Bride's full name"></div>
+            <div class="form-group"><label for="weddingDate">Expected Wedding Date</label><input type="date" id="weddingDate"></div>
+          </div>
+          <div id="baptismFields" class="event-fields">
+            <div class="form-group"><label for="baptismDate">Expected Baptism Date</label><input type="date" id="baptismDate"></div>
+            <div class="form-group"><label for="ageGroup">Age Group</label>
+              <select id="ageGroup"><option value="">Select age group</option><option value="child">Child (under 18)</option><option value="adult">Adult (18+)</option></select>
+            </div>
+          </div>
+          <div id="counselingFields" class="event-fields">
+            <div class="form-group"><label for="counselingTopic">Topic for Counseling</label>
+              <select id="counselingTopic"><option value="">Select topic</option><option value="marriage">Marriage Counseling</option><option value="family">Family Issues</option><option value="spiritual">Spiritual Guidance</option><option value="financial">Financial Counseling</option><option value="other">Other</option></select>
+            </div>
+            <div class="form-group"><label for="preferredDate">Preferred Date</label><input type="date" id="preferredDate"></div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="nextBtn1">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="card step" id="step-2">
+        <h3>How You Can Serve</h3>
+        <div class="form-group">
+          <label>Your Birthday <span class="optional">(Optional)</span></label>
+          <div class="birthday-grid">
+            <input type="number" id="birthDay" placeholder="Day (e.g. 24)" min="1" max="31">
+            <select id="birthMonth"><option value="">Month</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>How can you serve? <span class="optional">(Optional)</span></legend>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" id="vol-ushering" value="Ushering"> Ushering</label>
+            <label><input type="checkbox" id="vol-choir" value="Choir"> Choir</label>
+            <label><input type="checkbox" id="vol-instruments" value="Playing musical instruments"> Playing instruments: <input type="text" id="instrument-type" placeholder="Which instrument?" disabled></label>
+            <label><input type="checkbox" id="vol-venue" value="Venue Management"> Venue Management</label>
+            <label><input type="checkbox" id="vol-other" value="Other"> Other</label>
+          </div>
+        </fieldset>
+
+        <div class="consent-row">
+          <input type="checkbox" id="consent" checked>
+          <label for="consent">Would you like to be added to the WhatsApp group?</label>
+        </div>
+
+        <div class="form-group">
+          <label for="referredBy">How did you hear about us? <span class="optional">(Optional)</span></label>
+          <input type="text" id="referredBy" placeholder="Friend, social media, flyer...">
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="backBtn2">← Back</button>
+          <button type="button" class="btn btn-primary" id="nextBtn2">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="card step" id="step-3">
+        <h3>Confirm Your Details</h3>
+        <p style="font-size:0.85rem; color:#7f8c8d; margin-bottom:1rem;">Please check your information before saving.</p>
+        <ul class="details-list" id="detailsList"></ul>
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="editBtn">← Back to Edit</button>
+          <button type="button" class="btn btn-primary" id="saveBtn">
+            <span id="saveBtnText">Save Registration</span>
+            <span class="spinner" id="saveSpinner" style="display:none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ONLINE GIVING ═════════════════════════════════════ -->
+<section class="section section-giving" id="giving">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Give Online</span>
+      <h2>Support the Ministry</h2>
+      <p class="section-desc">Your generous offerings help us spread the Gospel and serve the community. Thank you for your faithfulness.</p>
+      <p class="giving-scripture">"Give, and you will receive. Your gift will return to you in full—pressed down, shaken together to make room for more, running over, and poured into your lap. The amount you give will determine the amount you get back." — <em>Luke 6:38 (NLT)</em></p>
+    </div>
+    <div class="giving-content">
+      <img src="assets/media/Opffering moment.png" alt="Offering moment" class="giving-image">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERMONS & TEACHINGS ═══════════════════════════════ -->
+<section class="section section-sermons" id="sermons">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Watch & Learn</span>
+      <h2>Sermons & Teachings</h2>
+      <p class="section-desc">Revisit previous messages and grow in your faith.</p>
+    </div>
+
+    <!-- Live Stream Banner -->
+    <div class="live-banner">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>LIVE</span>
+      </div>
+      <div class="live-content">
+        <h3>Grace of Jesus Christ Ministries</h3>
+        <p>Join our Sunday service at 8:00 AM and experience the presence of God.</p>
+        <a href="https://www.youtube.com/@encounter_GJM/live" target="_blank" class="btn btn-live">
+          <i class="fab fa-youtube"></i> Watch Live Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Videos Grid -->
+    <div class="youtube-videos" id="youtubeVideos">
+      <div class="video-loading">
+        <div class="spinner"></div>
+        <p>Loading recent videos...</p>
+      </div>
+    </div>
+
+    <div class="sermons-footer">
+      <a href="https://www.youtube.com/@encounter_GJM/playlists" target="_blank" class="btn btn-outline-dark">
+        <i class="fab fa-youtube"></i> PROPHETIC BLESSING Playlist on YouTube
+      </a>
+    </div>
+
+    <!-- Google Drive Collections -->
+    <div class="drive-collections">
+      <h3>Message Archives</h3>
+      <div class="sermons-grid">
+        <a href="https://drive.google.com/drive/folders/10MnnuI_6lHGqXeLucl46h_DNbaR4SoUN?usp=sharing" target="_blank" class="sermon-card">
+          <div class="sermon-icon"><i class="fas fa-book-open"></i></div>
+          <h3>Bible Study Messages</h3>
+          <p>Previous teachings and Bible study sessions</p>
+          <span class="sermon-link">View Collection →</span>
+        </a>
+        <a href="https://drive.google.com/drive/folders/1ZDP5LxlEM7Cpq6Aa0CK7fSXX3qKTNNLb?usp=sharing" target="_blank" class="sermon-card">
+          <div class="sermon-icon"><i class="fas fa-church"></i></div>
+          <h3>Sunday Services</h3>
+          <p>Previous Sunday worship services</p>
+          <span class="sermon-link">View Collection →</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ══════════════════════════════════════════ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="section-header" style="text-align:left; margin-bottom:20px;">
+          <span class="section-tag">Get In Touch</span>
+          <h2>Contact Us</h2>
+        </div>
+        <div class="contact-items">
+          <a href="https://wa.me/256730938085" target="_blank" class="contact-item">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+              <span class="contact-label">WhatsApp / Calls</span>
+              <span class="contact-value">+256 730 938 085</span>
+            </div>
+          </a>
+          <div class="contact-item location-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <span class="contact-label">Location</span>
+              <span class="contact-value">Kitintale, Kampala</span>
+            </div>
+          </div>
+          <div class="contact-map">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.757!2d32.6289807!3d0.3176667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMMKwMTknMDMuNiJOIDMywrAzNyc1My42IkU!5e0!3m2!1sen!2sug!4v1700000000000!5m2!1sen!2sug" 
+              width="100%" 
+              height="180" 
+              style="border:0; border-radius: 12px;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <a href="https://www.google.com/maps/place/0%C2%B019'03.6%22N+32%C2%B037'53.6%22E/@0.3176721,32.6289807,17z" target="_blank" class="directions-link">
+              <i class="fas fa-directions"></i> Get Directions
+            </a>
+          </div>
+          <a href="https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h" target="_blank" class="contact-item whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+              <span class="contact-label">Community</span>
+              <span class="contact-value">Join our group</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-media">
+        <video class="contact-video" autoplay muted loop playsinline>
+          <source src="assets/media/Render.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BLESSING OVERLAY ════════════════════════════════ -->
+<div class="overlay" id="fullBlessingOverlay" style="display:none;">
+  <div class="overlay-card">
+    <img src="assets/logo/New Logo 2026.png" alt="Logo" class="overlay-logo">
+    <h2 id="thankYouNote">Thank You!</h2>
+    <p id="blessingText"></p>
+    <button class="btn btn-primary" onclick="closeBlessing()">Done</button>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════ -->
 <footer class="footer">
-<p>Kitintale, Kampala, Uganda</p>
-<p><a href="https://www.youtube.com/@encounter_GJM" target="_blank">Subscribe on YouTube</a></p>
+  <div class="container">
+    <div class="footer-top">
+      <img src="assets/logo/New Logo 2026.png" alt="Logo" class="footer-logo">
+      <div class="footer-info">
+        <h3>Grace of Jesus Christ Ministries</h3>
+        <p>An encounter with the Holy Spirit</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="#home">Home</a>
+      <a href="#about">About Us</a>
+      <a href="#register">Register</a>
+      <a href="#sermons">Sermons</a>
+      <a href="#giving">Give Online</a>
+      <a href="#contact">Contact</a>
+      <a href="dashboard.html">Admin</a>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.youtube.com/@encounter_GJM" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Grace of Jesus Christ Ministries. All Rights Reserved.</p>
+    </div>
+  </div>
 </footer>
 
-<script>
-// Firebase
-const firebaseConfig = {
-apiKey: "AIzaSyD2xFPG6X7K2xFPG6X7K2xFPG6X7K2xFPG",
-authDomain: "church-registration-grace.firebaseapp.com",
-projectId: "church-registration-grace",
-storageBucket: "church-registration-grace.appspot.com",
-messagingSenderId: "123456789",
-appId: "1:123456789:web:abc123456"
-};
-</script>
+<!-- ═══ SCRIPTS ══════════════════════════════════════════ -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
 <script>
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let currentStep = 1;
-
-function nextStep() {
-if (currentStep < 3) {
-document.getElementById('step-' + currentStep).classList.remove('active');
-currentStep++;
-document.getElementById('step-' + currentStep).classList.add('active');
-updateStepIndicator();
-if (currentStep === 3) buildReview();
-}
-}
-
-function prevStep() {
-if (currentStep > 1) {
-document.getElementById('step-' + currentStep).classList.remove('active');
-currentStep--;
-document.getElementById('step-' + currentStep).classList.add('active');
-updateStepIndicator();
-}
-}
-
-function updateStepIndicator() {
-for (let i = 1; i <= 3; i++) {
-const item = document.getElementById('si-' + i);
-if (i <= currentStep) item.classList.add('active');
-else item.classList.remove('active');
-}
-}
-
-function buildReview() {
-const name = document.getElementById('name').value;
-const phone = document.getElementById('phone').value;
-const location = document.getElementById('location').value;
-const regType = document.querySelector('input[name="regType"]:checked').value;
-document.getElementById('reviewInfo').innerHTML = '<p><strong>Name:</strong> ' + name + '</p><p><strong>Phone:</strong> ' + phone + '</p><p><strong>Location:</strong> ' + location + '</p><p><strong>Type:</strong> ' + regType + '</p>';
-}
-
-async function submitForm() {
-const name = document.getElementById('name').value;
-const phone = document.getElementById('phone').value;
-const location = document.getElementById('location').value;
-const regType = document.querySelector('input[name="regType"]:checked').value;
-const birthDay = document.getElementById('birthDay').value;
-const birthMonth = document.getElementById('birthMonth').value;
-const whatsapp = document.getElementById('whatsapp').checked;
-
-const serving = [];
-document.querySelectorAll('#step-2 input[type="checkbox"]:checked').forEach(cb => serving.push(cb.value));
-
-const data = {
-name, phone, location, registrationType: regType,
-birthDay, birthMonth, whatsapp,
-volunteering: serving.join(', '),
-status: 'pending',
-createdAt: new Date().toISOString()
-};
-
+// Firebase fallback for local XAMPP (Firebase Hosting auto-inits on production)
 try {
-await db.collection('registrations').doc(phone.replace(/\D/g,'').slice(-9)).set(data);
-alert('Thank you for registering! God bless you.');
-document.getElementById('name').value = '';
-document.getElementById('phone').value = '';
-document.getElementById('location').value = '';
-currentStep = 1;
-document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-document.getElementById('step-1').classList.add('active');
-updateStepIndicator();
-} catch(e) {
-alert('Registration saved offline. Thank you!');
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "AIzaSyD2xFPG6X7K2xFPG6X7K2xFPG6X7K2xFPG",
+      authDomain: "church-registration-grace.firebaseapp.com",
+      projectId: "church-registration-grace",
+      storageBucket: "church-registration-grace.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abc123456"
+    });
+  }
+} catch(e) { console.warn('Firebase init fallback:', e); }
+</script>
+<script type="module" src="js/utils.js"></script>
+<script type="module" src="js/app.js"></script>
+<script>
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// Active nav link highlighting
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', function() {
+    document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+// YouTube Video Module
+const YOUTUBE_API_KEY = ''; // Get from https://console.cloud.google.com/apis/credentials
+const YOUTUBE_CHANNEL_ID = 'UCxxxxxxxxxxxxxxxxxxxxxxx'; // Get from https://www.youtube.com/@encounter_GJM/about
+
+async function loadYouTubeVideos() {
+  const container = document.getElementById('youtubeVideos');
+  if (!container) return;
+
+  if (!YOUTUBE_API_KEY) {
+    container.innerHTML = `
+      <div class="video-placeholder">
+        <i class="fab fa-youtube" style="font-size:3rem; color:#ff0000; margin-bottom:16px;"></i>
+        <h3>Watch Our Latest Videos</h3>
+        <p>Visit our YouTube channel to see recent sermons and teachings.</p>
+        <a href="https://www.youtube.com/@encounter_GJM" target="_blank" class="btn-live">
+          <i class="fab fa-youtube"></i> Visit YouTube Channel
+        </a>
+      </div>
+    `;
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${YOUTUBE_CHANNEL_ID}&part=snippet,id&order=date&maxResults=6&type=video`
+    );
+    const data = await response.json();
+
+    if (data.items && data.items.length > 0) {
+      container.innerHTML = data.items.map(item => `
+        <div class="video-card">
+          <iframe 
+            src="https://www.youtube.com/embed/${item.id.videoId}" 
+            title="${item.snippet.title}" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+          <div class="video-info">
+            <p class="video-title">${item.snippet.title}</p>
+            <p class="video-date">${new Date(item.snippet.publishedAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      container.innerHTML = '<p style="text-align:center; grid-column:1/-1;">No videos found.</p>';
+    }
+  } catch (error) {
+    console.error('YouTube API error:', error);
+    container.innerHTML = `
+      <div class="video-placeholder">
+        <i class="fab fa-youtube" style="font-size:3rem; color:#ff0000; margin-bottom:16px;"></i>
+        <h3>Watch Our Latest Videos</h3>
+        <p>Visit our YouTube channel to see recent sermons and teachings.</p>
+        <a href="https://www.youtube.com/@encounter_GJM" target="_blank" class="btn-live">
+          <i class="fab fa-youtube"></i> Visit YouTube Channel
+        </a>
+      </div>
+    `;
+  }
 }
-}
+
+document.addEventListener('DOMContentLoaded', loadYouTubeVideos);
 </script>
 </body>
 </html>

@@ -4,636 +4,268 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Grace of Jesus Christ Ministries — Admin Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<style>
-:root {
---primary: #2c3e50;
---secondary: #3498db;
---success: #27ae60;
---danger: #e74c3c;
---white: #ffffff;
---light: #f4f7f6;
---gray-100: #f8f9fa;
---gray-200: #e9ecef;
---gray-400: #ced4da;
---gray-600: #6c757d;
---text: #2c3e50;
---text-muted: #6c757d;
---border: #dee2e6;
---shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
---shadow: 0 8px 24px rgba(0,0,0,0.12);
---radius: 14px;
---radius-sm: 8px;
---radius-xs: 6px;
---font: 'Inter', 'Segoe UI', system-ui, sans-serif;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: var(--font); background: var(--light); color: var(--text); min-height: 100vh; }
-
-/* HEADER */
-.header { background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: var(--white); padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 64px; margin: 16px; border-radius: var(--radius); box-shadow: var(--shadow); }
-.logo-section { display: flex; align-items: center; gap: 14px; }
-.logo-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--secondary); font-size: 18px; }
-.church-name { font-size: 18px; font-weight: 600; }
-.church-sub { font-size: 11px; opacity: 0.85; letter-spacing: 0.04em; margin-top: 2px; }
-.header-right { display: flex; align-items: center; gap: 12px; }
-.hdr-btn { background: var(--white); color: var(--secondary); border: none; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; transition: transform 0.15s; }
-.hdr-btn:hover { transform: translateY(-1px); background: var(--gray-100); }
-.hdr-date { font-size: 13px; opacity: 0.9; }
-
-/* MAIN */
-.main-container { display: flex; gap: 16px; margin: 0 16px 16px; }
-
-/* SIDEBAR */
-.sidebar { width: 220px; background: var(--white); border-radius: var(--radius); padding: 20px 0; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
-.sidebar-menu { list-style: none; }
-.sidebar-item { padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--text-muted); cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
-.sidebar-item:hover { background: var(--gray-100); color: var(--primary); }
-.sidebar-item.active { background: linear-gradient(90deg, rgba(52,152,219,0.08) 0%, transparent 100%); color: var(--primary); font-weight: 600; border-left-color: var(--secondary); }
-.admin-only { display: none; }
-.admin-only.show { display: flex; }
-.admin-section { display: none; }
-.admin-section.active { display: block; }
-.sidebar-item svg { width: 18px; height: 18px; opacity: 0.7; }
-
-/* CONTENT */
-.content { flex: 1; background: var(--white); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
-.content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.content-title { font-size: 22px; font-weight: 700; color: var(--primary); }
-.content-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-/* CARDS GRID */
-.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-.stat-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: transform 0.2s, box-shadow 0.2s; }
-.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--secondary); }
-.stat-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-.stat-icon.maroon { background: rgba(44,62,80,0.1); color: var(--primary); }
-.stat-icon.gold { background: rgba(52,152,219,0.1); color: var(--secondary); }
-.stat-icon.green { background: rgba(39,174,96,0.1); color: var(--success); }
-.stat-icon.red { background: rgba(231,76,60,0.1); color: var(--danger); }
-.stat-value { font-size: 28px; font-weight: 700; color: var(--text); }
-.stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
-
-/* TABLE */
-.table-container { overflow-x: auto; margin-top: 20px; }
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th { text-align: left; padding: 14px 16px; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 2px solid var(--border); }
-.data-table td { padding: 16px; font-size: 14px; color: var(--text); border-bottom: 1px solid var(--gray-200); }
-.data-table tr:hover { background: var(--gray-100); }
-.status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
-.status-badge.new { background: rgba(52,152,219,0.15); color: var(--secondary); }
-.status-badge.active { background: rgba(39,174,96,0.15); color: var(--success); }
-.status-badge.pending { background: rgba(192,57,43,0.15); color: var(--danger); }
-
-/* FORMS */
-.form-section { display: none; }
-.form-section.active { display: block; }
-.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-.form-group { margin-bottom: 16px; }
-.form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
-.form-input, .form-select, .form-textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: var(--font); transition: border-color 0.2s, box-shadow 0.2s; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(52,152,219,0.1); }
-.form-textarea { min-height: 100px; resize: vertical; }
-.btn-primary { background: var(--secondary); color: var(--white); border: none; padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-.btn-primary:hover { background: var(--primary); }
-.btn-secondary { background: var(--white); color: var(--text); border: 1px solid var(--border); padding: 12px 24px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; }
-.btn-secondary:hover { background: var(--gray-100); }
-
-/* MODAL */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-.modal-overlay.show { display: flex; }
-.modal { background: var(--white); border-radius: var(--radius); padding: 32px; width: 100%; max-width: 400px; box-shadow: var(--shadow); }
-.modal-title { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 24px; text-align: center; }
-.modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gray-600); }
-
-/* TABS */
-.tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-.tab { padding: 12px 20px; font-size: 14px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
-.tab:hover { color: var(--primary); }
-.tab.active { color: var(--primary); font-weight: 600; border-bottom-color: var(--secondary); }
-
-/* SEARCH */
-.search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
-.search-input { flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; }
-.search-input:focus { outline: none; border-color: var(--secondary); }
-
-/* ACTION BUTTONS */
-.action-btn { padding: 8px 14px; border-radius: var(--radius-xs); font-size: 12px; font-weight: 500; cursor: pointer; border: none; margin-right: 6px; }
-.action-btn.view { background: rgba(44,62,80,0.1); color: var(--primary); }
-.action-btn.edit { background: rgba(52,152,219,0.1); color: var(--secondary); }
-.action-btn.delete { background: rgba(231,76,60,0.1); color: var(--danger); }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
 
 <!-- HEADER -->
 <header class="header">
-<div class="logo-section">
-<div class="logo-circle">G</div>
-<div>
-<div class="church-name">Grace of Jesus Christ Ministries</div>
-<div class="church-sub">Church Management System</div>
-</div>
-</div>
-<div class="header-right">
-<div class="hdr-date" id="currentDate"></div>
-<button class="hdr-btn" id="adminBtn" onclick="handleAdminBtn()">Admin Login</button>
-</div>
+  <div class="logo-section">
+    <img src="assets/logo/New Logo 2026.png" alt="Logo" class="dashboard-logo">
+    <div>
+      <div class="church-name">Grace of Jesus Christ Ministries</div>
+      <div class="church-sub">Church Management System</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="hdr-btn" id="adminBtn" onclick="handleAdminBtn()">Admin Login</button>
+    <div class="hdr-date" id="currentDate"></div>
+  </div>
 </header>
 
 <!-- MAIN -->
 <div class="main-container">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</li>
+      <li class="sidebar-item" data-section="members"><i class="fas fa-users"></i> Members</li>
+      <li class="sidebar-item" data-section="programs"><i class="fas fa-calendar-alt"></i> Programs</li>
+      <li class="sidebar-item" data-section="events"><i class="fas fa-church"></i> Events</li>
+      <li class="sidebar-item" data-section="pastoral"><i class="fas fa-hands-praying"></i> Pastoral Care</li>
+      <li class="sidebar-item" data-section="communications"><i class="fas fa-comments"></i> Communications</li>
+    </ul>
+  </nav>
 
-<!-- SIDEBAR -->
-<nav class="sidebar">
-<ul class="sidebar-menu">
-<li class="sidebar-item" data-section="registration" onclick="showSection('registration')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-Registration
-</li>
-<li class="sidebar-item admin-only active" data-section="dashboard" onclick="checkAdmin('dashboard')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-Dashboard
-</li>
-<li class="sidebar-item admin-only" data-section="members" onclick="checkAdmin('members')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-Members
-</li>
-<li class="sidebar-item admin-only" data-section="attendance" onclick="checkAdmin('attendance')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-Attendance
-</li>
-<li class="sidebar-item admin-only" data-section="events" onclick="checkAdmin('events')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-Events
-</li>
-<li class="sidebar-item admin-only" data-section="departments" onclick="checkAdmin('departments')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-Departments
-</li>
-<li class="sidebar-item admin-only" data-section="pastoral" onclick="checkAdmin('pastoral')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-Pastoral Care
-</li>
-<li class="sidebar-item admin-only" data-section="communications" onclick="checkAdmin('communications')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-Communications
-</li>
-</ul>
-</nav>
+  <!-- CONTENT -->
+  <main class="content">
+    <div class="content-header">
+      <div>
+        <h1 class="content-title">Dashboard</h1>
+        <p class="content-subtitle">Welcome to the Church Management System</p>
+      </div>
+    </div>
 
-<!-- CONTENT -->
-<main class="content">
+    <!-- DASHBOARD SECTION -->
+    <div id="section-dashboard" class="form-section active">
+      <div class="cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon maroon"><i class="fas fa-users"></i></div>
+          <div class="stat-value" id="totalMembers">0</div>
+          <div class="stat-label">Total Members</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fas fa-user-plus"></i></div>
+          <div class="stat-value" id="newRegistrations">0</div>
+          <div class="stat-label">New Registrations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
+          <div class="stat-value" id="upcomingEvents">0</div>
+          <div class="stat-label">Upcoming Events</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="fas fa-chart-line"></i></div>
+          <div class="stat-value" id="attendanceRate">0%</div>
+          <div class="stat-label">Attendance Rate</div>
+        </div>
+      </div>
 
-<!-- DASHBOARD -->
-<section class="form-section admin-section" id="section-dashboard">
-<div class="content-header">
-<div>
-<h1 class="content-title">Dashboard</h1>
-<p class="content-subtitle">Overview of church activities</p>
-</div>
-</div>
-<div class="cards-grid">
-<div class="stat-card">
-<div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-<div class="stat-value" id="totalMembers">-</div>
-<div class="stat-label">Total Members</div>
-</div>
-<div class="stat-card">
-<div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg></div>
-<div class="stat-value" id="newRegistrations">-</div>
-<div class="stat-label">New Registrations</div>
-</div>
-<div class="stat-card">
-<div class="stat-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-<div class="stat-value" id="upcomingEvents">-</div>
-<div class="stat-label">Upcoming Events</div>
-</div>
-<div class="stat-card">
-<div class="stat-icon red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-<div class="stat-value" id="attendanceRate">-</div>
-<div class="stat-label">Attendance Rate</div>
-</div>
-</div>
+      <h3 style="margin-top: 32px; margin-bottom: 16px;">Recent Registrations</h3>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Department</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recentRegistrations">
+            <tr><td colspan="5" style="text-align:center;color:#6c757d">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<h3 style="margin: 32px 0 16px; font-size: 16px; color: var(--primary);">Recent Registrations</h3>
-<div class="table-container">
-<table class="data-table">
-<thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Date</th><th>Status</th></tr></thead>
-<tbody id="recentRegistrations"></tbody>
-</table>
-</div>
-</section>
+    <!-- MEMBERS SECTION -->
+    <div id="section-members" class="form-section">
+      <div class="content-header" style="margin-bottom: 20px;">
+        <h2 class="content-title">Members Directory</h2>
+        <div class="search-bar">
+          <input type="text" class="search-input" id="memberSearch" placeholder="Search members..." onkeyup="searchMembers()">
+          <select class="form-select" id="departmentFilter" onchange="filterMembers()" style="width:auto;">
+            <option value="">All Departments</option>
+            <option value="Ushering">Ushering</option>
+            <option value="Choir">Choir</option>
+            <option value="Instruments">Instruments</option>
+            <option value="Venue Management">Venue Management</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Department</th>
+              <th>Registered</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="membersTable">
+            <tr><td colspan="6" style="text-align:center;color:#6c757d">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<!-- REGISTRATION -->
-<section class="form-section" id="section-registration">
-<div class="content-header">
-<div>
-<h1 class="content-title">Registration</h1>
-<p class="content-subtitle">New member registration form</p>
-</div>
-</div>
-<div class="tabs">
-<div class="tab active" data-step="1" onclick="showStep(1)">Step 1: Basic Info</div>
-<div class="tab" data-step="2" onclick="showStep(2)">Step 2: Serving</div>
-<div class="tab" data-step="3" onclick="showStep(3)">Step 3: Confirm</div>
-</div>
+    <!-- PROGRAMS SECTION -->
+    <div id="section-programs" class="form-section">
+      <div class="content-header" style="margin-bottom: 20px;">
+        <h2 class="content-title">Church Programs</h2>
+        <button class="btn-primary" onclick="showProgramModal()"><i class="fas fa-plus"></i> Add Program</button>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Title</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="programsTable">
+            <tr><td colspan="6" style="text-align:center;color:#6c757d">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<form id="registrationForm">
-<div id="step1" class="form-step">
-<div class="form-grid">
-<div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input" id="regName" required></div>
-<div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="regPhone" required></div>
-<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="regEmail"></div>
-<div class="form-group"><label class="form-label">Date of Birth</label><input type="date" class="form-input" id="regDob"></div>
-<div class="form-group"><label class="form-label">Address</label><input type="text" class="form-input" id="regAddress"></div>
-<div class="form-group"><label class="form-label">Marital Status</label><select class="form-select" id="regMarital"><option value="">Select</option><option value="single">Single</option><option value="married">Married</option><option value="divorced">Divorced</option><option value="widowed">Widowed</option></select></div>
-</div>
-<button type="button" class="btn-primary" onclick="showStep(2)" style="margin-top: 16px;">Next</button>
-</div>
+    <!-- EVENTS SECTION -->
+    <div id="section-events" class="form-section">
+      <div class="cards-grid" id="eventsGrid">
+        <div class="stat-card">
+          <div class="stat-value">Sunday Service</div>
+          <div class="stat-label">Every Sunday 8:00 AM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Monday Kyoto</div>
+          <div class="stat-label">7:00-9:00 AM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Wednesday Glory</div>
+          <div class="stat-label">6:00-7:00 PM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Friday Prayers</div>
+          <div class="stat-label">9:00 PM - 2:00 AM</div>
+        </div>
+      </div>
+    </div>
 
-<div id="step2" class="form-step" style="display:none;">
-<div class="form-group"><label class="form-label">Department to Serve</label><select class="form-select" id="regDepartment"><option value="">Select Department</option><option value="choir">Choir</option><option value="ushers">Ushers</option><option value="youth">Youth</option><option value="women">Women Ministry</option><option value="men">Men Ministry</option><option value="venue">Venue Management</option><option value="instruments">Instruments</option></select></div>
-<div class="form-group"><label class="form-label">Skills/Talents</label><textarea class="form-textarea" id="regSkills" placeholder="List any skills or talents..."></textarea></div>
-<div class="form-group"><label class="form-label">Prayer Requests</label><textarea class="form-textarea" id="regPrayer" placeholder="Any prayer requests..."></textarea></div>
-<button type="button" class="btn-secondary" onclick="showStep(1)">Back</button>
-<button type="button" class="btn-primary" onclick="showStep(3)">Next</button>
-</div>
+    <!-- PASTORAL CARE SECTION -->
+    <div id="section-pastoral" class="form-section">
+      <div class="content-header" style="margin-bottom: 20px;">
+        <h2 class="content-title">Pastoral Care</h2>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Need</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="careTable">
+            <tr><td colspan="4" style="text-align:center;color:#6c757d">No care requests</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<div id="step3" class="form-step" style="display:none;">
-<div class="stat-card" style="margin-bottom: 20px;">
-<h3 style="color: var(--primary); margin-bottom: 16px;">Review Information</h3>
-<div id="reviewInfo"></div>
-</div>
-<button type="button" class="btn-secondary" onclick="showStep(2)">Back</button>
-<button type="submit" class="btn-primary">Submit Registration</button>
-</div>
-</form>
-</section>
-
-<!-- MEMBERS -->
-<section class="form-section admin-section" id="section-members">
-<div class="content-header">
-<div>
-<h1 class="content-title">Members</h1>
-<p class="content-subtitle">All registered members</p>
-</div>
-</div>
-<div class="search-bar">
-<input type="text" class="search-input" placeholder="Search members..." id="memberSearch" onkeyup="searchMembers()">
-<select class="form-select" style="width:auto;" id="departmentFilter" onchange="filterMembers()">
-<option value="">All Departments</option>
-<option value="choir">Choir</option>
-<option value="ushers">Ushers</option>
-<option value="youth">Youth</option>
-<option value="women">Women Ministry</option>
-<option value="men">Men Ministry</option>
-<option value="venue">Venue Management</option>
-<option value="instruments">Instruments</option>
-</select>
-</div>
-<div class="table-container">
-<table class="data-table">
-<thead><tr><th>Name</th><th>Phone</th><th>Department</th><th>Join Date</th><th>Status</th><th>Actions</th></tr></thead>
-<tbody id="membersTable"></tbody>
-</table>
-</div>
-</section>
-
-<!-- ATTENDANCE -->
-<section class="form-section admin-section" id="section-attendance">
-<div class="content-header">
-<div>
-<h1 class="content-title">Attendance</h1>
-<p class="content-subtitle">Track weekly attendance</p>
-</div>
-</div>
-<div class="form-grid">
-<div class="form-group"><label class="form-label">Service Date</label><input type="date" class="form-input" id="attendanceDate"></div>
-<div class="form-group"><label class="form-label">Service Type</label><select class="form-select" id="serviceType"><option value="sunday">Sunday Service</option><option value="wednesday">Wednesday Service</option><option value="prayer">Prayer Meeting</option><option value="youth">Youth Service</option></select></div>
-</div>
-<div class="table-container">
-<table class="data-table">
-<thead><tr><th>Member</th><th>Present</th><th>Absent</th><th>Remarks</th></tr></thead>
-<tbody id="attendanceTable"></tbody>
-</table>
-</div>
-<button class="btn-primary" onclick="saveAttendance()">Save Attendance</button>
-</section>
-
-<!-- EVENTS -->
-<section class="form-section admin-section" id="section-events">
-<div class="content-header">
-<div>
-<h1 class="content-title">Events</h1>
-<p class="content-subtitle">Church events calendar</p>
-</div>
-<button class="btn-primary admin-only show" onclick="showEventModal()">+ Add Event</button>
-</div>
-<div class="cards-grid" id="eventsGrid"></div>
-</section>
-
-<!-- DEPARTMENTS -->
-<section class="form-section admin-section" id="section-departments">
-<div class="content-header">
-<div>
-<h1 class="content-title">Departments</h1>
-<p class="content-subtitle">Manage church departments</p>
-</div>
-</div>
-<div class="cards-grid" id="departmentsGrid">
-<div class="stat-card"><div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="stat-value">Choir</div><div class="stat-label" id="choirCount">- members</div></div>
-<div class="stat-card"><div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="stat-value">Ushers</div><div class="stat-label" id="ushersCount">- members</div></div>
-<div class="stat-card"><div class="stat-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="stat-value">Youth</div><div class="stat-label" id="youthCount">- members</div></div>
-<div class="stat-card"><div class="stat-icon red"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="stat-value">Women</div><div class="stat-label" id="womenCount">- members</div></div>
-<div class="stat-card"><div class="stat-icon maroon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="stat-value">Men</div><div class="stat-label" id="menCount">- members</div></div>
-<div class="stat-card"><div class="stat-icon gold"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div><div class="stat-value">Venue</div><div class="stat-label" id="venueCount">- members</div></div>
-</div>
-</section>
-
-<!-- PASTORAL CARE -->
-<section class="form-section admin-section" id="section-pastoral">
-<div class="content-header">
-<div>
-<h1 class="content-title">Pastoral Care</h1>
-<p class="content-subtitle">Follow-ups, prayer requests, counseling</p>
-</div>
-<button class="btn-primary admin-only show" onclick="showCareModal()">+ Add Entry</button>
-</div>
-<div class="search-bar">
-<input type="text" class="search-input" placeholder="Search records..." id="careSearch" onkeyup="searchCare()">
-</div>
-<div class="table-container">
-<table class="data-table">
-<thead><tr><th>Member</th><th>Type</th><th>Notes</th><th>Date</th><th>Status</th></tr></thead>
-<tbody id="careTable"></tbody>
-</table>
-</div>
-</section>
-
-<!-- COMMUNICATIONS -->
-<section class="form-section admin-section" id="section-communications">
-<div class="content-header">
-<div>
-<h1 class="content-title">Communications</h1>
-<p class="content-subtitle">Announcements, broadcasts, bulletins</p>
-</div>
-</div>
-<div class="tabs">
-<div class="tab active" data-comtab="announcements" onclick="showComTab('announcements')">Announcements</div>
-<div class="tab" data-comtab="whatsapp" onclick="showComTab('whatsapp')">WhatsApp Broadcast</div>
-<div class="tab" data-comtab="bulletin" onclick="showComTab('bulletin')">Bulletin Builder</div>
+    <!-- COMMUNICATIONS SECTION -->
+    <div id="section-communications" class="form-section">
+      <div class="tabs">
+        <div class="tab active" data-comtab="announcements" onclick="showComTab('announcements')">Announcements</div>
+        <div class="tab" data-comtab="messages" onclick="showComTab('messages')">Messages</div>
+      </div>
+      <div id="com-announcements">
+        <div class="content-header" style="margin-bottom: 20px;">
+          <h3>Announcements</h3>
+          <button class="btn-primary" onclick="showAnnouncementModal()"><i class="fas fa-plus"></i> New</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="announcementsTable">
+              <tr><td colspan="4" style="text-align:center;color:#6c757d">No announcements</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div id="com-messages" style="display:none;">
+        <div class="content-header" style="margin-bottom: 20px;">
+          <h3>WhatsApp Integration</h3>
+        </div>
+        <p>Send messages to registered members via WhatsApp.</p>
+        <button class="btn-primary" onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> Send Message</button>
+      </div>
+    </div>
+  </main>
 </div>
 
-<div id="com-announcements">
-<button class="btn-primary admin-only show" onclick="showAnnouncementModal()">+ New Announcement</button>
-<div class="table-container" style="margin-top: 16px;">
-<table class="data-table"><thead><tr><th>Title</th><th>Message</th><th>Date</th><th>Status</th></tr></thead><tbody id="announcementsTable"></tbody></table>
-</div>
-</div>
-
-<div id="com-whatsapp" style="display:none;">
-<div class="form-group"><label class="form-label">Message</label><textarea class="form-textarea" id="whatsappMessage" placeholder="Type broadcast message..."></textarea></div>
-<button class="btn-primary" onclick="sendWhatsApp()">Send via WhatsApp</button>
-</div>
-
-<div id="com-bulletin" style="display:none;">
-<div class="form-group"><label class="form-label">Bulletin Title</label><input type="text" class="form-input" id="bulletinTitle"></div>
-<div class="form-group"><label class="form-label">Content</label><textarea class="form-textarea" id="bulletinContent" rows="10"></textarea></div>
-<button class="btn-primary" onclick="generateBulletin()">Generate Bulletin</button>
-</div>
-</section>
-
-</main>
+<!-- PROGRAM MODAL -->
+<div class="modal-overlay" id="programModal">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-title">Add / Edit Program</div>
+    <form id="programForm">
+      <input type="hidden" id="progIndex" value="">
+      <div class="form-group"><label class="form-label">Icon (FontAwesome class)</label><input type="text" class="form-input" id="progIcon" placeholder="e.g. fa-church" required></div>
+      <div class="form-group"><label class="form-label">Title</label><input type="text" class="form-input" id="progTitle" required></div>
+      <div class="form-group"><label class="form-label">Date</label><input type="text" class="form-input" id="progDate" placeholder="e.g. Every Sunday" required></div>
+      <div class="form-group"><label class="form-label">Time</label><input type="text" class="form-input" id="progTime" placeholder="e.g. 8:00 AM" required></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="progDesc" required></textarea></div>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top: 8px;">Save Program</button>
+    </form>
+    <button class="btn-secondary" style="width:100%; margin-top: 12px;" onclick="hideProgramModal()">Cancel</button>
+  </div>
 </div>
 
 <!-- LOGIN MODAL -->
 <div class="modal-overlay" id="loginModal">
-<div class="modal">
-<div class="modal-title">Admin Login</div>
-<form id="loginForm">
-<div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div>
-<div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div>
-<button type="submit" class="btn-primary" style="width:100%; margin-top: 8px;">Login</button>
-</form>
-<button class="btn-secondary" style="width:100%; margin-top: 12px;" onclick="hideLoginModal()">Cancel</button>
-</div>
+  <div class="modal">
+    <div class="modal-title">Admin Login</div>
+    <form id="loginForm">
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" required></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" required></div>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top: 8px;">Login</button>
+    </form>
+    <button class="btn-secondary" style="width:100%; margin-top: 12px;" onclick="hideLoginModal()">Cancel</button>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = {
-apiKey: "AIzaSyD2xFPG6X7K2xFPG6X7K2xFPG6X7K2xFPG",
-authDomain: "church-registration-grace.firebaseapp.com",
-projectId: "church-registration-grace",
-storageBucket: "church-registration-grace.appspot.com",
-messagingSenderId: "123456789",
-appId: "1:123456789:web:abc123456"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-let allMembers = [];
-let allRegistrations = [];
-let isLoggedIn = false;
-
-document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-function checkAdmin(section) {
-if (!isLoggedIn) {
-showLoginModal();
-return;
-}
-showSection(section);
-document.querySelectorAll('.admin-section').forEach(s => s.classList.add('active'));
-}
-
-function showSection(section) {
-document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-document.getElementById('section-' + section).classList.add('active');
-document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-document.querySelector('[data-section="' + section + '"]').classList.add('active');
-if (section === 'dashboard') loadDashboard();
-if (section === 'members') loadMembers();
-if (section === 'events') loadEvents();
-if (section === 'pastoral') loadCare();
-if (section === 'communications') loadAnnouncements();
-}
-
-function showStep(step) {
-document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
-document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-document.querySelector('[data-step="' + step + '"]').classList.add('active');
-document.getElementById('step' + step).style.display = 'block';
-if (step === 3) {
-document.getElementById('reviewInfo').innerHTML = '<p><strong>Name:</strong> ' + document.getElementById('regName').value + '</p><p><strong>Phone:</strong> ' + document.getElementById('regPhone').value + '</p><p><strong>Department:</strong> ' + document.getElementById('regDepartment').value + '</p>';
-}
-}
-
-function showLoginModal() { document.getElementById('loginModal').classList.add('show'); }
-function hideLoginModal() { document.getElementById('loginModal').classList.remove('show'); }
-
-document.getElementById('loginForm').onsubmit = function(e) {
-e.preventDefault();
-isLoggedIn = true;
-hideLoginModal();
-document.getElementById('adminBtn').textContent = 'Logout';
-document.querySelectorAll('.admin-only').forEach(el => el.classList.add('show'));
-document.querySelectorAll('.admin-section').forEach(s => s.classList.add('active'));
-showSection('dashboard');
-};
-
-function handleAdminBtn() {
-if (isLoggedIn) {
-isLoggedIn = false;
-document.getElementById('adminBtn').textContent = 'Admin Login';
-document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('show'));
-document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-showSection('registration');
-} else {
-showLoginModal();
-}
-}
-
-document.getElementById('registrationForm').onsubmit = async function(e) {
-e.preventDefault();
-const data = {
-name: document.getElementById('regName').value,
-phone: document.getElementById('regPhone').value,
-email: document.getElementById('regEmail').value,
-dob: document.getElementById('regDob').value,
-address: document.getElementById('regAddress').value,
-marital: document.getElementById('regMarital').value,
-department: document.getElementById('regDepartment').value,
-skills: document.getElementById('regSkills').value,
-prayer: document.getElementById('regPrayer').value,
-status: 'new',
-createdAt: new Date().toISOString()
-};
-await db.collection('registrations').add(data);
-alert('Registration submitted!');
-document.getElementById('registrationForm').reset();
-showStep(1);
-};
-
-async function loadDashboard() {
-const snapshot = await db.collection('registrations').get();
-allRegistrations = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
-const members = allRegistrations.filter(r => r.status === 'active');
-document.getElementById('totalMembers').textContent = members.length;
-document.getElementById('newRegistrations').textContent = allRegistrations.filter(r => r.status === 'new').length;
-document.getElementById('recentRegistrations').innerHTML = allRegistrations.slice(0, 5).map(r => '<tr><td>' + r.name + '</td><td>' + r.phone + '</td><td>' + (r.department || '-') + '</td><td>' + new Date(r.createdAt).toLocaleDateString() + '</td><td><span class="status-badge ' + r.status + '">' + r.status + '</span></td></tr>').join('');
-document.getElementById('attendanceRate').textContent = '85%';
-document.getElementById('upcomingEvents').textContent = '3';
-}
-
-async function loadMembers() {
-const snapshot = await db.collection('registrations').get();
-allMembers = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
-renderMembers(allMembers);
-}
-
-function renderMembers(members) {
-document.getElementById('membersTable').innerHTML = members.map(m => '<tr><td>' + m.name + '</td><td>' + m.phone + '</td><td>' + (m.department || '-') + '</td><td>' + new Date(m.createdAt).toLocaleDateString() + '</td><td><span class="status-badge ' + m.status + '">' + m.status + '</span></td><td><button class="action-btn view">View</button><button class="action-btn edit">Edit</button></td></tr>').join('');
-}
-
-function searchMembers() {
-const q = document.getElementById('memberSearch').value.toLowerCase();
-renderMembers(allMembers.filter(m => m.name.toLowerCase().includes(q)));
-}
-
-function filterMembers() {
-const d = document.getElementById('departmentFilter').value;
-renderMembers(d ? allMembers.filter(m => m.department === d) : allMembers);
-}
-
-async function loadEvents() {
-document.getElementById('eventsGrid').innerHTML = '<div class="stat-card"><div class="stat-value">Sunday Service</div><div class="stat-label">Every Sunday 9:00 AM</div></div><div class="stat-card"><div class="stat-value">Bible Study</div><div class="stat-label">Every Wednesday 6:00 PM</div></div><div class="stat-card"><div class="stat-value">Youth Service</div><div class="stat-label">Every Friday 6:00 PM</div></div>';
-}
-
-async function loadCare() {
-document.getElementById('careTable').innerHTML = '<tr><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>';
-}
-
-function showCareModal() { alert('Pastoral care form coming soon'); }
-
-async function loadAnnouncements() {
-document.getElementById('announcementsTable').innerHTML = '';
-}
-
-function showAnnouncementModal() { alert('Announcement form coming soon'); }
-function showComTab(tab) {
-document.querySelectorAll('[id^="com-"]').forEach(t => t.style.display = 'none');
-document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-document.getElementById('com-' + tab).style.display = 'block';
-document.querySelector('[data-comtab="' + tab + '"]').classList.add('active');
-}
-function sendWhatsApp() { alert('WhatsApp integration coming soon'); }
-function generateBulletin() { alert('Bulletin generator coming soon'); }
-function showEventModal() { alert('Event form coming soon'); }
-function saveAttendance() { alert('Attendance saved!'); }
-
-// Helper functions from utils.js
-const WEEKLY_VERSES = [
-  "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you. (Numbers 6:24-25)",
-  "For I know the plans I have for you, declares the Lord, plans to prosper you. (Jeremiah 29:11)",
-  "The Lord is my shepherd; I shall not want. (Psalm 23:1-2)",
-  "Trust in the Lord with all your heart. (Proverbs 3:5)",
-  "But those who hope in the Lord will renew their strength. (Isaiah 40:31)",
-  "I can do all this through him who gives me strength. (Philippians 4:13)",
-  "Fear not, for I am with you. (Isaiah 41:10)",
-  "Ask and it will be given to you. (Matthew 7:7)",
-  "The peace of God, which transcends all understanding. (Philippians 4:7)",
-  "The Lord will fight for you; you need only to be still. (Exodus 14:14)"
-];
-
-function getWeeklyVerse() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now - start;
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  return WEEKLY_VERSES[dayOfYear % WEEKLY_VERSES.length];
-}
-
-function formatName(name) {
-  return name.toLowerCase().split(' ').filter(w => w.length > 0).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
-
-function getDaysUntilBirthday(month, day) {
-  if (!month || !day) return null;
-  const today = new Date();
-  const bday = new Date(today.getFullYear(), month - 1, day);
-  if (bday < today) bday.setFullYear(today.getFullYear() + 1);
-  return Math.ceil((bday - today) / (1000 * 60 * 60 * 24));
-}
-
-function formatBirthday(month, day) {
-  if (!month || !day) return "—";
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return day + " " + months[month - 1];
-}
-
-function cleanPhone(phone) {
-  return String(phone || '').replace(/\D/g, '').slice(-9);
-}
-
-async function syncPendingSubmissions() {
-  if (!navigator.onLine) return;
-  const pending = JSON.parse(localStorage.getItem('church_pending_registrations') || '[]');
-  for (const sub of pending) {
-    try {
-      await db.collection('registrations').doc(cleanPhone(sub.phone)).set({...sub, timestamp: firebase.firestore.FieldValue.serverTimestamp()});
-    } catch (e) { console.warn('Sync error:', e); }
-  }
-  localStorage.removeItem('church_pending_registrations');
-}
-
-// Load pending submissions on init
-if (isLoggedIn) syncPendingSubmissions();
-
-loadDashboard();
-</script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>
