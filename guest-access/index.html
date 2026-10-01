@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2c3e50">
+<title>Guest WiFi — Grace of Jesus Christ Ministries</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/logo/logo.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="offline-bar" id="offlineBar">No connection — please check your network</div>
+
+<!-- ═══ SCREEN 1: WELCOME ══════════════════════════════ -->
+<section class="screen" id="screen-welcome">
+  <div class="ph-header">
+    <div class="logo"><img src="assets/logo/logo.png" alt=""></div>
+    <div>
+      <h1>Grace of Jesus Christ<br>Ministries</h1>
+      <p>Kitintale</p>
+    </div>
+  </div>
+  <div class="ph-body" style="padding-top:34px; text-align:center;">
+    <div style="font-size:54px; margin-bottom:14px;">&#128246;</div>
+    <div class="ph-title" style="font-size:20px;">Welcome!</div>
+    <p style="font-size:13px; color:var(--gray); margin-bottom:22px; line-height:1.6;">
+      You are connected to our guest WiFi.<br>
+      Register with us to get <b>45 minutes of free access</b> and explore what's happening at church.
+    </p>
+    <button class="btn btn-primary" id="btn-start">Get 45-Min Access</button>
+    <div class="privacy">WiFi access is for new guests. One session per phone per day.</div>
+  </div>
+</section>
+
+<!-- ═══ SCREEN 2: REGISTRATION ═════════════════════════ -->
+<section class="screen" id="screen-register">
+  <div class="ph-header">
+    <div class="logo"><img src="assets/logo/logo.png" alt=""></div>
+    <div><h1>Register for WiFi</h1><p>Step 1 of 1</p></div>
+  </div>
+  <div class="ph-body">
+    <div class="ph-title">Tell us a little about you</div>
+    <div class="ph-sub">New guests get 45 minutes of free WiFi access.</div>
+
+    <div class="alert error" id="alert-error"></div>
+
+    <div class="card">
+      <div class="field">
+        <label for="in-name">Full Name *</label>
+        <input type="text" id="in-name" placeholder="e.g. John Smith" autocomplete="name">
+        <div class="hint">Please enter your full name.</div>
+      </div>
+      <div class="field">
+        <label for="in-phone">Phone Number *</label>
+        <input type="tel" id="in-phone" placeholder="e.g. 0771 234 567" autocomplete="tel" inputmode="tel">
+        <div class="hint" id="phone-hint">Enter a valid Ugandan number, e.g. 0771 234 567.</div>
+      </div>
+      <div class="field">
+        <label for="in-from">Where are you from? (optional)</label>
+        <input type="text" id="in-from" placeholder="e.g. Kitintale">
+      </div>
+      <button class="btn btn-gold" id="btn-submit">Start My 45-Min Session</button>
+    </div>
+
+    <p style="font-size:10px; color:var(--gray); line-height:1.6; text-align:center;">
+      By registering you agree we may contact you with church updates.
+      Your details are kept private and used for church registration only.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ SCREEN 3: SESSION ACTIVE ══════════════════════ -->
+<section class="screen" id="screen-active">
+  <div class="ph-header">
+    <div class="logo"><img src="assets/logo/logo.png" alt=""></div>
+    <div><h1>Session Active</h1><p id="active-greet">Welcome!</p></div>
+  </div>
+  <div class="ph-body" style="text-align:center;">
+    <span class="pill green">&#9679; Connected</span>
+    <div class="countdown">
+      <div class="time" id="cd-time">45:00 <small>left</small></div>
+      <div class="cd-label">of your 45-minute session</div>
+    </div>
+    <div class="progress"><div id="cd-bar" style="width:100%"></div></div>
+    <p style="font-size:11px; color:var(--gray); margin:12px 0 18px;">
+      When the timer reaches 0, your session ends.
+    </p>
+    <button class="btn btn-outline" id="btn-explore">Explore Church Activities</button>
+  </div>
+</section>
+
+<!-- ═══ SCREEN 4: ACTIVITIES ══════════════════════════ -->
+<section class="screen" id="screen-activities">
+  <div class="ph-header">
+    <div class="logo"><img src="assets/logo/logo.png" alt=""></div>
+    <div><h1>Explore</h1><p id="activities-greet">Welcome!</p></div>
+  </div>
+  <div class="ph-body">
+    <div class="ph-title">What's happening at church</div>
+    <div class="ph-sub">You're registered. Explore our ministries.</div>
+
+    <div class="activities">
+      <a class="activity" id="link-programs"><div class="ico">&#128197;</div><h4>Programs</h4></a>
+      <a class="activity" id="link-sermons"><div class="ico">&#128214;</div><h4>Sermons</h4></a>
+      <a class="activity" id="link-giving"><div class="ico">&#128591;</div><h4>Giving</h4></a>
+      <a class="activity" id="link-contact"><div class="ico">&#128205;</div><h4>Contact</h4></a>
+    </div>
+
+    <div class="card" style="margin-top:14px; text-align:center;">
+      <div style="font-size:26px; margin-bottom:6px;">&#9201;</div>
+      <p style="font-size:12px; color:var(--gray);">
+        <b style="color:var(--primary-blue);" id="activities-time">45:00</b> remaining in your session
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SCREEN 5: SESSION ENDED ══════════════════════ -->
+<section class="screen" id="screen-ended">
+  <div class="ph-header">
+    <div class="logo"><img src="assets/logo/logo.png" alt=""></div>
+    <div><h1>Grace of Jesus Christ<br>Ministries</h1></div>
+  </div>
+  <div class="ph-body" style="padding-top:26px;">
+    <div class="card">
+      <div class="expired" id="expired-block">
+        <div class="big">&#9200;</div>
+        <span class="pill red" id="ended-pill">&#9679; Session Ended</span>
+        <h2 id="ended-title">Your 45 minutes are up</h2>
+        <p id="ended-msg">Thanks for visiting Grace of Jesus Christ Ministries. We hope you enjoyed the service. Please see our welcome team if you'd like more access.</p>
+        <button class="btn btn-primary" id="btn-view-activities">View Church Activities</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footnote">
+  Guest Access Portal &bull; Grace of Jesus Christ Ministries, Kitintale<br>
+  45-minute session &bull; One per phone number per day
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

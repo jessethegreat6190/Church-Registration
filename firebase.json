@@ -1,18 +1,32 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**",
-      "churchregistration/**",
-      "netlify/**",
-      ".github/**",
-      "*.code-workspace",
-      "assets/logo/Banner.png",
-      "assets/logo/video.mp4"
-    ]
-  },
+  "hosting": [
+    {
+      "target": "main",
+      "public": ".",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**",
+        "guest-access/**",
+        "churchregistration/**",
+        "netlify/**",
+        ".github/**",
+        "*.code-workspace",
+        "assets/logo/Banner.png",
+        "assets/logo/video.mp4"
+      ]
+    },
+    {
+      "target": "guest",
+      "public": "guest-access",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "SRS.md",
+        "ui-mockup.html"
+      ]
+    }
+  ],
   "firestore": {
     "database": "(default)",
     "location": "africa-south1",

@@ -1,5 +1,12 @@
 {
   "projects": {
     "default": "church-registration-grace"
+  },
+  "targets": {
+    "church-registration-grace": {
+      "hosting": {
+        "main": "church-registration-grace"
+      }
+    }
   }
 }

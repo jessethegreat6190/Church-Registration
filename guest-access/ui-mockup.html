@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Access Portal — UI Mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --primary-blue: #2c3e50;
+    --secondary-blue: #3498db;
+    --accent: #d4a843;
+    --accent-hover: #c4972e;
+    --off-white: #f8f9fa;
+    --gray: #6c757d;
+    --success-green: #27ae60;
+    --light-gray: #f4f7f6;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Montserrat', sans-serif;
+    background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+    background-attachment: fixed;
+    min-height:100vh;
+    color: var(--primary-blue);
+  }
+
+  /* Phone frame so it looks like a real mobile screen */
+  .stage { display:flex; flex-wrap:wrap; gap:28px; justify-content:center; padding:40px 16px; align-items:flex-start; }
+  .phone {
+    width: 360px; border-radius: 36px; background: var(--off-white);
+    box-shadow: 0 20px 60px rgba(0,0,0,.35); overflow:hidden;
+    border: 8px solid #111;
+  }
+  .phone-screen { height: 700px; overflow-y:auto; position:relative; background: var(--off-white); }
+  .phone-screen::-webkit-scrollbar { width:4px; }
+  .phone-screen::-webkit-scrollbar-thumb { background:#ccc; border-radius:4px; }
+
+  .frame-label { text-align:center; color:#fff; font-weight:600; margin-bottom:10px; font-size:14px; letter-spacing:.5px; opacity:.9; }
+
+  /* Header strip */
+  .ph-header {
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+    color:#fff; padding:18px 18px; display:flex; align-items:center; gap:10px;
+  }
+  .ph-header .logo {
+    width:40px; height:40px; border-radius:12px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; font-size:13px; flex-shrink:0;
+  }
+  .ph-header h1 { font-size:14px; font-weight:700; line-height:1.2; }
+  .ph-header p { font-size:10px; opacity:.85; }
+
+  /* Screen content */
+  .ph-body { padding:18px; }
+  .ph-title { font-size:18px; font-weight:800; margin-bottom:4px; }
+  .ph-sub { font-size:12px; color:var(--gray); margin-bottom:16px; }
+
+  .card {
+    background:#fff; border-radius:14px; padding:16px; box-shadow:0 4px 18px rgba(0,0,0,.06); margin-bottom:14px;
+  }
+
+  /* Buttons */
+  .btn {
+    display:block; width:100%; padding:14px; border:none; border-radius:12px;
+    font-family:inherit; font-size:14px; font-weight:700; cursor:pointer; text-align:center;
+    transition:.2s; text-decoration:none;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue)); color:#fff; }
+  .btn-primary:hover { opacity:.92; }
+  .btn-gold { background: var(--accent); color:#fff; }
+  .btn-gold:hover { background: var(--accent-hover); }
+  .btn-outline { background:transparent; color:var(--primary-blue); border:2px solid var(--secondary-blue); }
+  .btn-outline:hover { background:rgba(52,152,219,.08); }
+
+  .field { margin-bottom:14px; }
+  .field label { display:block; font-size:11px; font-weight:600; color:var(--gray); margin-bottom:6px; }
+  .field input {
+    width:100%; padding:12px; border:1.5px solid #e0e0e0; border-radius:10px;
+    font-family:inherit; font-size:14px; transition:.2s;
+  }
+  .field input:focus { outline:none; border-color:var(--secondary-blue); box-shadow:0 0 0 3px rgba(52,152,219,.15); }
+
+  .privacy { font-size:10px; color:var(--gray); text-align:center; margin-top:12px; line-height:1.5; }
+
+  /* Countdown display */
+  .countdown { text-align:center; margin:8px 0 4px; }
+  .countdown .time { font-size:40px; font-weight:800; color:var(--primary-blue); letter-spacing:1px; }
+  .countdown .time small { font-size:14px; font-weight:600; color:var(--gray); }
+  .cd-label { font-size:12px; color:var(--gray); }
+  .progress { height:8px; border-radius:6px; background:#e0e0e0; overflow:hidden; margin:14px 0 4px; }
+  .progress > div { height:100%; background:linear-gradient(90deg, var(--secondary-blue), var(--accent)); width:80%; border-radius:6px; }
+
+  /* Activity tiles */
+  .activities { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .activity {
+    background:#fff; border-radius:14px; padding:16px; text-align:center; box-shadow:0 4px 14px rgba(0,0,0,.06);
+    cursor:pointer; transition:.2s; border:1px solid #f0f0f0;
+  }
+  .activity:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,.1); }
+  .activity .ico {
+    width:48px; height:48px; margin:0 auto 10px; border-radius:12px; background:var(--light-gray);
+    display:flex; align-items:center; justify-content:center; font-size:22px;
+  }
+  .activity h4 { font-size:12px; font-weight:700; }
+
+  /* Status pills */
+  .pill { display:inline-block; padding:4px 12px; border-radius:20px; font-size:11px; font-weight:700; margin-bottom:12px; }
+  .pill.green { background:#e7f7ee; color:var(--success-green); }
+  .pill.gold { background:#fdf3dd; color:var(--accent-hover); }
+  .pill.red { background:#fdecec; color:#e74c3c; }
+
+  .expired { text-align:center; padding:30px 10px; }
+  .expired .big { font-size:50px; margin-bottom:10px; }
+  .expired h2 { font-size:18px; margin-bottom:6px; }
+  .expired p { font-size:12px; color:var(--gray); margin-bottom:18px; }
+
+  .note { text-align:center; color:#fff; padding:6px 16px 30px; font-size:12px; opacity:.8; max-width:700px; margin:0 auto; }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- SCREEN 1: Welcome -->
+  <div>
+    <div class="frame-label">1. Welcome</div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ph-header">
+          <div class="logo">GJCM</div>
+          <div><h1>Grace of Jesus Christ<br>Ministries</h1><p>Kitintale</p></div>
+        </div>
+        <div class="ph-body" style="padding-top:34px; text-align:center;">
+          <div style="font-size:54px; margin-bottom:14px;">📶</div>
+          <div class="ph-title" style="font-size:20px;">Welcome!</div>
+          <p style="font-size:13px; color:var(--gray); margin-bottom:22px; line-height:1.6;">
+            You are connected to our guest WiFi.<br>
+            Register with us to get <b>45 minutes of free access</b> and explore what's happening at church.
+          </p>
+          <a class="btn btn-primary" href="#" onclick="return false;">Get 45-Min Access</a>
+          <div class="privacy">WiFi access is for new guests. One session per phone per day.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Registration -->
+  <div>
+    <div class="frame-label">2. Registration</div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ph-header">
+          <div class="logo">GJCM</div>
+          <div><h1>Register for WiFi</h1><p>Step 1 of 1</p></div>
+        </div>
+        <div class="ph-body">
+          <div class="ph-title">Tell us a little about you</div>
+          <div class="ph-sub">New guests get 45 minutes of free WiFi access.</div>
+
+          <div class="card">
+            <div class="field">
+              <label>Full Name *</label>
+              <input type="text" placeholder="e.g. John Smith">
+            </div>
+            <div class="field">
+              <label>Phone Number *</label>
+              <input type="tel" placeholder="e.g. 0771 234 567">
+            </div>
+            <div class="field">
+              <label>Where are you from? (optional)</label>
+              <input type="text" placeholder="e.g. Kitintale">
+            </div>
+            <a class="btn btn-gold" href="#" onclick="return false;">Start My 45-Min Session</a>
+          </div>
+
+          <p style="font-size:10px; color:var(--gray); line-height:1.6; text-align:center;">
+            By registering you agree we may contact you with church updates.
+            Your details are kept private and used for church registration only.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Session Countdown -->
+  <div>
+    <div class="frame-label">3. Session Active</div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ph-header">
+          <div class="logo">GJCM</div>
+          <div><h1>Session Active</h1><p>Welcome, John!</p></div>
+        </div>
+        <div class="ph-body" style="text-align:center;">
+          <div class="pill green">● Connected</div>
+          <div class="countdown">
+            <div class="time">33:<span>12</span> <small>left</small></div>
+            <div class="cd-label">of your 45-minute session</div>
+          </div>
+          <div class="progress"><div></div></div>
+          <p style="font-size:11px; color:var(--gray); margin:12px 0 18px;">
+            When the timer reaches 0, your session ends.
+          </p>
+          <a class="btn btn-outline" href="#" onclick="return false;">Explore Church Activities</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Activities -->
+  <div>
+    <div class="frame-label">4. Church Activities</div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ph-header">
+          <div class="logo">GJCM</div>
+          <div><h1>Explore</h1><p>Welcome, John!</p></div>
+        </div>
+        <div class="ph-body">
+          <div class="ph-title">What's happening at church</div>
+          <div class="ph-sub">You're registered. Explore our ministries.</div>
+
+          <div class="activities">
+            <div class="activity"><div class="ico">📅</div><h4>Programs</h4></div>
+            <div class="activity"><div class="ico">📖</div><h4>Sermons</h4></div>
+            <div class="activity"><div class="ico">🙏</div><h4>Giving</h4></div>
+            <div class="activity"><div class="ico">📍</div><h4>Contact</h4></div>
+          </div>
+
+          <div class="card" style="margin-top:14px; text-align:center;">
+            <div style="font-size:26px; margin-bottom:6px;">⏱️</div>
+            <p style="font-size:12px; color:var(--gray);">
+              <b style="color:var(--primary-blue);">28:40</b> remaining in your session
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Session Ended -->
+  <div>
+    <div class="frame-label">5. Session Ended / Returning</div>
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="ph-header">
+          <div class="logo">GJCM</div>
+          <div><h1>Grace of Jesus Christ<br>Ministries</h1></div>
+        </div>
+        <div class="ph-body" style="padding-top:26px;">
+          <div class="card">
+            <div class="expired">
+              <div class="big">⏰</div>
+              <div class="pill red">● Session Ended</div>
+              <h2>Your 45 minutes are up</h2>
+              <p>Thanks for visiting Grace of Jesus Christ Ministries. We hope you enjoyed the service. Please see our welcome team if you'd like more access.</p>
+              <a class="btn btn-primary" href="#" onclick="return false;">View Church Activities</a>
+            </div>
+          </div>
+
+          <div class="card" style="border-top:3px solid var(--success-green);">
+            <div style="text-align:center; padding:6px 0;">
+              <div class="pill gold">New Guests Only</div>
+              <p style="font-size:12px; color:var(--gray); line-height:1.6;">
+                This phone number has already used its session today.
+                WiFi is offered to <b>first-time guests</b>. Please speak to the welcome team.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note">
+  UI Mockup — Guest Access Portal • Items: Welcome → Register → 45-Min Countdown → Activities → Session Ended / Returning.
+  Open in your browser to preview. This is only a visual concept; the working app is not built yet.
+</div>
+
+</body>
+</html>
