@@ -36,30 +36,44 @@ def main():
     here = os.path.dirname(os.path.abspath(__file__))
     made = []
 
+    # Resolve the module grid first so we can pick a box_size that lands on
+    # the requested pixel width instead of guessing.
+    probe = qrcode.QRCode(error_correction=ERROR_CORRECT_M, border=2)
+    probe.add_data(url)
+    probe.make(fit=True)
+    total_modules = len(probe.get_matrix()) + 2 * probe.border
+
     for size in SIZES:
+        # Keep an integer module size: QR codes stay crisp only when every
+        # module is a whole number of pixels.
+        box_size = max(1, round(size / total_modules))
         qr = qrcode.QRCode(
             version=None,
             error_correction=ERROR_CORRECT_M,  # survives a bit of wear/smudge
-            box_size=10,
+            box_size=box_size,
             border=2,
         )
         qr.add_data(url)
         qr.make(fit=True)
-        img = qr.make_image(fill_color="#2c3e50", back_color="white")
+        img = qr.make_image(fill_color="#2c3e50", back_color="white").convert("RGB")
 
         path = os.path.join(here, f"wifi-qr-{size}.png")
-        img.save(path)
-        made.append((path, img.size))
+        img.save(path, dpi=(300, 300))
+        made.append((path, img.size, box_size))
 
-    print(f"QR target URL: {url}\n")
-    for path, dim in made:
-        print(f"  wrote {os.path.basename(path)}  ({dim[0]}x{dim[1]} px)")
+    print(f"QR target URL: {url}")
+    print(f"URL length: {len(url)} chars")
+    print()
+    for path, dim, box in made:
+        print(f"  wrote {os.path.basename(path)}  ({dim[0]}x{dim[1]} px, module={box}px)")
 
     print(
         "\nPrint tips:\n"
         "  - Use wifi-qr-1024.png for A4/poster printing.\n"
-        "  - Keep the white border (2 modules) — scanners need it.\n"
+        "  - Keep the white border (2 modules) - scanners need it.\n"
         "  - Print matte if possible; gloss causes screen glare.\n"
+        "  - Do NOT print or hand out until the site is deployed, or the\n"
+        "    scan will go nowhere.\n"
         "  - Test the printed code with 2-3 different phones before laminating."
     )
 
