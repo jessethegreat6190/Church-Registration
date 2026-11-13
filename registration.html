@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace of Jesus Christ Ministries - Registration</title>
+  <meta name="description" content="Grace of Jesus Christ Ministries – An encounter with the Holy Spirit. Register with us.">
+  <link rel="icon" href="assets/logo/New%20Logo%202026.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ═══ NAVBAR ══════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo/New%20Logo%202026.png" alt="Grace of Jesus Christ Ministries">
+    </a>
+  <ul class="nav-links" id="navLinks">
+     <li><a href="index.html"><i class="fas fa-house animated-icon"></i> Home</a></li>
+     <li><a href="#register" class="active"><i class="fas fa-pen-to-square animated-icon"></i> Register</a></li>
+     <li><a href="#giving"><i class="fas fa-hand-holding-heart animated-icon"></i> Give</a></li>
+     <li><a href="#contact"><i class="fas fa-headset animated-icon"></i> Contact</a></li>
+   </ul>
+  </div>
+</nav>
+
+<!-- ═══ REGISTRATION FORM ════════════════════════════════ -->
+<section class="section" id="register">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Get Connected</span>
+      <h2>Register with Us</h2>
+      <p class="section-desc">Fill in your details and we'll be in touch. Welcome to the family!</p>
+    </div>
+
+    <!-- Baptism announcement (hidden automatically when the baptism link is used) -->
+    <div id="baptismBanner" style="max-width:720px; margin:0 auto 22px; background:#fff; border-left:4px solid #8B0000; border-radius:12px; padding:16px 20px; box-shadow:0 6px 18px rgba(0,0,0,0.06); display:flex; gap:14px; align-items:flex-start; text-align:left;">
+      <i class="fas fa-droplet" style="color:#8B0000; font-size:1.25rem; margin-top:2px;"></i>
+      <div style="font-size:0.93rem; color:#2c3e50; line-height:1.55;">
+        <strong>Baptism is happening this month.</strong><br>
+        <span style="color:#5d6d7e;">The date will be announced soon. <a href="?type=baptism" style="color:#8B0000; font-weight:600; text-decoration:underline;">Register for baptism &rarr;</a></span>
+      </div>
+    </div>
+
+    <div class="form-wrapper">
+      <!-- Step Indicator -->
+      <nav class="step-indicator" aria-label="Registration steps">
+        <div class="step-item active" id="si-1">
+          <div class="step-item__circle" id="sc-1">1</div>
+          <span class="step-item__label">Your Info</span>
+        </div>
+        <div class="step-line" id="sl-1"></div>
+        <div class="step-item" id="si-2">
+          <div class="step-item__circle" id="sc-2">2</div>
+          <span class="step-item__label">How to Serve</span>
+        </div>
+        <div class="step-line" id="sl-2"></div>
+        <div class="step-item" id="si-3">
+          <div class="step-item__circle" id="sc-3">3</div>
+          <span class="step-item__label">Confirm</span>
+        </div>
+      </nav>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="card step active" id="step-1">
+        <h3>Your Information</h3>
+        <div class="form-group floating">
+          <input type="text" id="name" placeholder=" " required autocomplete="name">
+          <label for="name">Full Name <span class="required">*</span></label>
+          <span class="field-error" id="err-name" role="alert"></span>
+        </div>
+        <div class="form-group floating">
+          <input type="tel" id="phone" placeholder=" " required autocomplete="tel">
+          <label for="phone">Phone Number <span class="required">*</span></label>
+          <span class="field-error" id="err-phone" role="alert"></span>
+        </div>
+        <div class="form-group floating">
+          <input type="text" id="location" placeholder=" " required>
+          <label for="location">Residence <span class="required">*</span></label>
+          <span class="field-error" id="err-location" role="alert"></span>
+        </div>
+
+        <fieldset>
+          <legend>Are you registering for the first time online?</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="firstTime" value="yes" id="ft-yes" checked> First time online</label>
+            <label><input type="radio" name="firstTime" value="no" id="ft-no"> I have registered before</label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Registration Type</legend>
+          <div class="radio-group">
+            <label><input type="radio" name="registrationType" value="general" checked> General Church Registration</label>
+            <label><input type="radio" name="registrationType" value="baptism"> Baptism</label>
+          </div>
+        </fieldset>
+
+        <div id="eventFields" style="display:none;">
+          <div id="baptismFields" class="event-fields">
+            <div class="event-note" id="baptismNotice">
+              <i class="fas fa-circle-info"></i>
+              <span><strong>Baptism this month.</strong> The exact date will be announced soon. Register now and we will contact you with the date, time and what to bring.</span>
+            </div>
+            <div class="form-group"><label for="ageGroup">Age Group</label>
+              <select id="ageGroup"><option value="">Select age group</option><option value="child">Child (under 18)</option><option value="adult">Adult (18+)</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="nextBtn1">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="card step" id="step-2">
+        <h3>How You Can Serve</h3>
+        <div class="form-group">
+          <label>Your Birthday <span class="optional">(Optional)</span></label>
+          <div class="birthday-grid">
+            <input type="number" id="birthDay" placeholder="Day (e.g. 24)" min="1" max="31">
+            <select id="birthMonth"><option value="">Month</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>How can you serve? <span class="optional">(Optional)</span></legend>
+          <div class="checkbox-grid">
+            <label><input type="checkbox" id="vol-ushering" value="Ushering"> Ushering</label>
+            <label><input type="checkbox" id="vol-choir" value="Choir"> Choir</label>
+            <label><input type="checkbox" id="vol-instruments" value="Playing musical instruments"> Playing instruments: <input type="text" id="instrument-type" placeholder="Which instrument?" disabled></label>
+            <label><input type="checkbox" id="vol-venue" value="Venue Management"> Venue Management</label>
+            <label><input type="checkbox" id="vol-other" value="Other"> Other</label>
+          </div>
+        </fieldset>
+
+        <div class="consent-row">
+          <input type="checkbox" id="consent" checked>
+          <label for="consent">Would you like to be added to the WhatsApp group?</label>
+        </div>
+
+        <div class="form-group floating">
+          <input type="text" id="referredBy" placeholder=" ">
+          <label for="referredBy">How did you hear about us? <span class="optional">(Optional)</span></label>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="backBtn2">← Back</button>
+          <button type="button" class="btn btn-primary" id="nextBtn2">Next →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="card step" id="step-3">
+        <h3>Confirm Your Details</h3>
+        <p style="font-size:0.85rem; color:#7f8c8d; margin-bottom:1rem;">Please check your information before saving.</p>
+        <ul class="details-list" id="detailsList"></ul>
+        <div class="btn-row">
+          <button type="button" class="btn btn-outline" id="editBtn">← Back to Edit</button>
+          <button type="button" class="btn btn-primary" id="saveBtn">
+            <span id="saveBtnText">Save Registration</span>
+            <span class="spinner" id="saveSpinner" style="display:none;"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ONLINE GIVING ═════════════════════════════════════ -->
+<section class="section section-giving" id="giving">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-tag">Give Online</span>
+      <h2>Support the Ministry</h2>
+      <p class="section-desc">Your generous offerings help us spread the Gospel and serve the community. Thank you for your faithfulness.</p>
+      <p class="giving-scripture">"Give, and you will receive. Your gift will return to you in full—pressed down, shaken together to make room for more, running over, and poured into your lap. The amount you give will determine the amount you get back." — <em>Luke 6:38 (NLT)</em></p>
+    </div>
+    <div class="giving-content">
+      <img src="assets/media/Opffering moment.png" alt="Offering moment" class="giving-image">
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ══════════════════════════════════════════ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="section-header" style="text-align:left; margin-bottom:20px;">
+          <span class="section-tag">Get In Touch</span>
+          <h2>Contact Us</h2>
+        </div>
+        <div class="contact-items">
+          <a href="https://wa.me/256730938085" target="_blank" class="contact-item">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+              <span class="contact-label">WhatsApp / Calls</span>
+              <span class="contact-value">+256 730 938 085</span>
+            </div>
+          </a>
+          <a href="https://wa.me/256730909434" target="_blank" class="contact-item">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+              <span class="contact-label">WhatsApp / Calls</span>
+              <span class="contact-value">+256 730 909 434</span>
+            </div>
+          </a>
+          <div class="contact-item location-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <span class="contact-label">Location</span>
+              <span class="contact-value">Kitintale, Kampala</span>
+            </div>
+          </div>
+          <div class="contact-map">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.757!2d32.6289807!3d0.3176667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMMKwMTknMDMuNiJOIDMywrAzNyc1My42IkU!5e0!3m2!1sen!2sug!4v1700000000000!5m2!1sen!2sug" 
+              width="100%" 
+              height="180" 
+              style="border:0; border-radius: 12px;" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <a href="https://www.google.com/maps/place/0%C2%B019'03.6%22N+32%C2%B037'53.6%22E/@0.3176721,32.6289807,17z" target="_blank" class="directions-link">
+              <i class="fas fa-directions"></i> Get Directions
+            </a>
+          </div>
+          <a href="https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h" target="_blank" class="contact-item whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            <div>
+              <span class="contact-label">Community</span>
+              <span class="contact-value">Join our group</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-media">
+        <video class="contact-video" autoplay muted loop playsinline>
+          <source src="assets/media/Render.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FLOATING WHATSAPP ═══════════════════════════════ -->
+<a href="https://wa.me/256730938085" target="_blank" class="whatsapp-float">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ═══ BLESSING OVERLAY ════════════════════════════════ -->
+<div class="overlay" id="fullBlessingOverlay" style="display:none;">
+  <div class="overlay-card">
+    <img src="assets/logo/New%20Logo%202026.png" alt="Logo" class="overlay-logo">
+    <h2 id="thankYouNote">Thank You!</h2>
+    <p id="blessingText"></p>
+    <button class="btn btn-primary" onclick="closeBlessing()">Done</button>
+  </div>
+</div>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <img src="assets/logo/New%20Logo%202026.png" alt="Logo" class="footer-logo">
+    </div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About Us</a>
+      <a href="#register">Register</a>
+      <a href="#giving">Give Online</a>
+      <a href="index.html#sermons">Sermons</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="footer-social">
+      <a href="https://www.youtube.com/@encounter_GJM" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Grace of Jesus Christ Ministries. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ SCRIPTS ══════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+<script>
+// Firebase fallback for local XAMPP (Firebase Hosting auto-inits on production)
+try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "AIzaSyDyARd_4HXdx9gEOguMDvncPV17j7kum-s",
+      authDomain: "church-registration-grace.firebaseapp.com",
+      projectId: "church-registration-grace",
+      storageBucket: "church-registration-grace.firebasestorage.app",
+      messagingSenderId: "402796692999",
+      appId: "1:402796692999:web:15f01064b41197c4c9cca2",
+      measurementId: "G-L3CD5ZX957"
+    });
+  }
+} catch(e) { console.warn('Firebase init fallback:', e); }
+</script>
+<script type="module">
+import {
+  formatName,
+  getDaysUntilBirthday,
+  formatBirthday,
+  getWeeklyVerse,
+  WEEKLY_VERSES
+} from './js/utils.js';
+
+/* ── DOM refs ───────────────────────────────────────────── */
+const step1El         = document.getElementById('step-1');
+const step2El         = document.getElementById('step-2');
+const step3El         = document.getElementById('step-3');
+const nextBtn1        = document.getElementById('nextBtn1');
+const nextBtn2        = document.getElementById('nextBtn2');
+const backBtn2        = document.getElementById('backBtn2');
+const editBtn         = document.getElementById('editBtn');
+const saveBtn         = document.getElementById('saveBtn');
+const saveBtnText     = document.getElementById('saveBtnText');
+const saveSpinner     = document.getElementById('saveSpinner');
+const detailsList     = document.getElementById('detailsList');
+const blessingOverlay = document.getElementById('fullBlessingOverlay');
+const progressBar     = document.getElementById('progressBar');
+const instrCheckbox   = document.getElementById('vol-instruments');
+const instrInput      = document.getElementById('instrument-type');
+const nameInput       = document.getElementById('name');
+
+// Capitalise the name as soon as the person leaves the field, so they see
+// "John Doe" even if they typed "john doe" or "JOHN DOE".
+if (nameInput) {
+  nameInput.addEventListener('blur', () => {
+    if (nameInput.value.trim()) nameInput.value = formatName(nameInput.value);
+  });
+}
+
+/* ── State ──────────────────────────────────────────────── */
+let currentEntry       = null;
+let allRegistrations   = [];
+let pendingSubmissions = [];
+let db                 = null;
+let currentStep        = 1;
+let churchPrograms     = { sunday: "8:00 AM", monday: "6:00 AM - 7:00 AM", wednesday: "5:00 PM - 7:00 PM", tueThu: "7:00 AM - 3:00 PM", friday: "3:00 PM, 2:30 AM, 3:00 AM (Not overnight)", baptism: "Baptism: date to be announced", crossover: "31st Cross Over Night: 31 Dec 2026, 9:00 PM - 4:00 AM", contacts: "0730 938085 / 0730 909434", whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h" };
+
+/* ── Firebase init ──────────────────────────────────────── */
+window.addEventListener('load', () => {
+  try {
+    if (typeof firebase !== 'undefined' && !db) {
+      db = firebase.firestore();
+      setTimeout(prefetchData, 1000);
+    }
+  } catch (e) { console.warn('Firebase not initialised (running locally?):', e.message); }
+});
+
+/* ── Registration type handling ─────────────────────────── */
+function getRegistrationType() {
+  return document.querySelector('input[name="registrationType"]:checked')?.value || 'general';
+}
+
+document.querySelectorAll('input[name="registrationType"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const type = getRegistrationType();
+    const eventFields = document.getElementById('eventFields');
+    const banner = document.getElementById('baptismBanner');
+    if (type !== 'general') {
+      eventFields.style.display = 'block';
+      document.getElementById('baptismFields').style.display = type === 'baptism' ? 'block' : 'none';
+    } else {
+      eventFields.style.display = 'none';
+    }
+    if (banner) banner.style.display = type === 'baptism' ? 'none' : 'flex';
+  });
+});
+
+/* ── Deep link: registration.html?type=baptism ──────────── */
+function applyRegistrationPreset() {
+  const params = new URLSearchParams(window.location.search);
+  const type = (params.get('type') || params.get('register') || '').toLowerCase();
+  if (type !== 'baptism') return;
+
+  const baptismRadio = document.querySelector('input[name="registrationType"][value="baptism"]');
+  if (baptismRadio) {
+    baptismRadio.checked = true;
+    baptismRadio.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  const banner = document.getElementById('baptismBanner');
+  if (banner) banner.style.display = 'none';
+
+  const tag  = document.querySelector('#register .section-tag');
+  const h2   = document.querySelector('#register .section-header h2');
+  const desc = document.querySelector('#register .section-header .section-desc');
+  if (tag)  tag.textContent  = 'Baptism Registration';
+  if (h2)   h2.textContent   = 'Register for Baptism';
+  if (desc) desc.textContent = 'Baptism is happening this month. Fill in your details and we will contact you with the exact date, time and requirements.';
+}
+
+applyRegistrationPreset();
+
+/* ── Offline storage & sync ─────────────────────────────── */
+const OFFLINE_KEY = 'church_pending_registrations';
+
+function loadPendingSubmissions() {
+  try {
+    const stored = localStorage.getItem(OFFLINE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) { return []; }
+}
+
+function savePendingSubmission(data) {
+  pendingSubmissions = loadPendingSubmissions();
+  pendingSubmissions.push({ ...data, pendingTimestamp: Date.now() });
+  localStorage.setItem(OFFLINE_KEY, JSON.stringify(pendingSubmissions));
+}
+
+function clearPendingSubmission(phone) {
+  pendingSubmissions = pendingSubmissions.filter(p =>
+    String(p.phone || '').replace(/\D/g, '').slice(-9) !== String(phone || '').replace(/\D/g, '').slice(-9)
+  );
+  localStorage.setItem(OFFLINE_KEY, JSON.stringify(pendingSubmissions));
+}
+
+async function syncPendingSubmissions() {
+  if (!navigator.onLine || !db) return;
+  pendingSubmissions = loadPendingSubmissions();
+  if (pendingSubmissions.length === 0) return;
+  let synced = 0;
+  for (const submission of pendingSubmissions) {
+    try {
+      const cleanPhone = String(submission.phone || '').replace(/\D/g, '').slice(-9);
+      await db.collection('registrations').doc(cleanPhone).set({
+        ...submission,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        syncedFromOffline: true
+      });
+      clearPendingSubmission(submission.phone);
+      synced++;
+    } catch (e) { console.warn('Sync error:', e); }
+  }
+  if (synced > 0) { showSyncNotification(synced); prefetchData(); }
+}
+
+function showSyncNotification(count) {
+  const toast = document.createElement('div');
+  toast.className = 'toast toast--success';
+  toast.textContent = `✅ ${count} registration(s) synced from offline storage!`;
+  toast.style.position = 'fixed';
+  toast.style.top = '20px';
+  toast.style.right = '20px';
+  toast.style.zIndex = '9999';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 5000);
+}
+
+window.addEventListener('online', syncPendingSubmissions);
+window.addEventListener('load', () => {
+  pendingSubmissions = loadPendingSubmissions();
+  if (pendingSubmissions.length > 0 && navigator.onLine) syncPendingSubmissions();
+});
+
+/* ── Instrument checkbox toggle ─────────────────────────── */
+instrInput.disabled = true;
+instrCheckbox.addEventListener('change', () => {
+  instrInput.disabled = !instrCheckbox.checked;
+  if (!instrCheckbox.checked) instrInput.value = '';
+});
+
+/* ── Inline field errors ────────────────────────────────── */
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = msg; el.setAttribute('aria-live', 'polite'); }
+}
+
+function clearError(id) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = '';
+}
+
+/* ── Progress bar ───────────────────────────────────────── */
+function setProgress(step) {
+  if (!progressBar) return;
+  progressBar.style.width = Math.round((step / 3) * 100) + '%';
+}
+
+/* ── Step Navigation ────────────────────────────────────── */
+function showStep(n) {
+  [step1El, step2El, step3El].forEach(el => el.classList.remove('active', 'step--slide'));
+  const target = document.getElementById('step-' + n);
+  target.classList.add('active');
+  requestAnimationFrame(() => target.classList.add('step--slide'));
+  currentStep = n;
+  updateStepIndicator();
+  setProgress(n);
+  const registerSection = document.getElementById('register');
+  if (registerSection) {
+    registerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function updateStepIndicator() {
+  const isFirstTime = getFirstTimeValue() === 'yes';
+  [1, 2, 3].forEach(n => {
+    const si = document.getElementById('si-' + n);
+    const sc = document.getElementById('sc-' + n);
+    if (!si || !sc) return;
+    si.classList.remove('active', 'done');
+    if (n < currentStep && !(n === 2 && !isFirstTime)) {
+      si.classList.add('done');
+      sc.textContent = '✓';
+    } else if (n === currentStep) {
+      si.classList.add('active');
+      sc.textContent = n;
+    } else {
+      sc.textContent = n;
+    }
+  });
+  const sl1 = document.getElementById('sl-1');
+  const sl2 = document.getElementById('sl-2');
+  if (sl1) sl1.classList.toggle('done', currentStep > 1);
+  if (sl2) sl2.classList.toggle('done', currentStep > 2);
+}
+
+function getFirstTimeValue() {
+  return document.querySelector('input[name="firstTime"]:checked')?.value || 'yes';
+}
+
+/* ── Step 1 → Next ──────────────────────────────────────── */
+nextBtn1.addEventListener('click', () => {
+  const name     = document.getElementById('name').value.trim();
+  const phone    = document.getElementById('phone').value.trim().replace(/\s+/g, '');
+  const location = document.getElementById('location').value.trim();
+  let valid = true;
+
+  if (!name) { showError('err-name', 'Full name is required.'); valid = false; }
+  else { clearError('err-name'); }
+
+  if (!phone) { showError('err-phone', 'Phone number is required.'); valid = false; }
+  else { clearError('err-phone'); }
+
+  if (!location) { showError('err-location', 'Residence is required.'); valid = false; }
+  else { clearError('err-location'); }
+
+  if (!valid) return;
+
+  if (getFirstTimeValue() === 'yes') { showStep(2); }
+  else { buildEntry(); showStep(3); }
+});
+
+backBtn2.addEventListener('click', () => showStep(1));
+
+nextBtn2.addEventListener('click', () => { buildEntry(); showStep(3); });
+
+editBtn.addEventListener('click', () => { showStep(getFirstTimeValue() === 'yes' ? 2 : 1); });
+
+/* ── Build currentEntry ─────────────────────────────────── */
+function buildEntry() {
+  const firstTimeValue = getFirstTimeValue();
+  const registrationType = getRegistrationType();
+  const volunteering = [];
+
+  if (firstTimeValue === 'yes') {
+    document.querySelectorAll('#step-2 input[type="checkbox"]:checked')
+      .forEach(cb => {
+        if (cb.id === 'vol-instruments') {
+          const inst = instrInput.value.trim();
+          volunteering.push(`Instruments: ${inst || 'General'}`);
+        } else if (cb.value) {
+          volunteering.push(cb.value);
+        }
+      });
+  }
+
+  const eventData = {};
+  if (registrationType === 'baptism') {
+    eventData.ageGroup = document.getElementById('ageGroup')?.value || '';
+  }
+
+  currentEntry = {
+    name:       formatName(document.getElementById('name').value.trim()),
+    phone:      document.getElementById('phone').value.trim(),
+    location:   document.getElementById('location').value.trim(),
+    firstTime:  firstTimeValue,
+    birthDay:   firstTimeValue === 'yes' ? (document.getElementById('birthDay').value  || '') : '',
+    birthMonth: firstTimeValue === 'yes' ? (document.getElementById('birthMonth').value || '') : '',
+    referredBy: firstTimeValue === 'yes' ? (document.getElementById('referredBy').value.trim() || null) : null,
+    volunteering,
+    consent: firstTimeValue === 'yes' ? document.getElementById('consent').checked : false,
+    registrationType,
+    ...eventData
+  };
+
+  renderConfirmation(currentEntry);
+}
+
+/* ── Render Confirmation (Step 3) ───────────────────────── */
+function renderConfirmation(data) {
+  const birthdayStr = formatBirthday(data.birthMonth, data.birthDay);
+  let birthdayDisplay = birthdayStr;
+
+  if (data.birthDay && data.birthMonth) {
+    const daysUntil = getDaysUntilBirthday(Number(data.birthMonth), Number(data.birthDay));
+    if (daysUntil !== null && daysUntil <= 7) {
+      birthdayDisplay += daysUntil === 0 ? ' 🎂 <strong>Today!</strong>' : ` 🎂 in ${daysUntil} day${daysUntil === 1 ? '' : 's'}`;
+    }
+  }
+
+  const volStr = data.volunteering.length > 0 ? data.volunteering.join(', ') : 'Not interested';
+
+  const eventTypeLabels = {
+    general: 'General Registration', baptism: 'Baptism'
+  };
+  const eventTypeDisplay = eventTypeLabels[data.registrationType] || 'General Registration';
+
+  let eventDetails = '';
+  if (data.registrationType === 'baptism' && data.ageGroup) {
+    eventDetails += `<li><strong>Age Group</strong> ${data.ageGroup}</li>`;
+  }
+
+  if (data.firstTime === 'no') {
+    detailsList.innerHTML = `
+      <li><strong>Name</strong> ${data.name}</li>
+      <li><strong>Phone</strong> ${data.phone}</li>
+      <li><strong>Residence</strong> ${data.location}</li>
+      <li><strong>Type</strong> ${eventTypeDisplay}</li>
+      ${eventDetails}
+    `;
+  } else {
+    detailsList.innerHTML = `
+      <li><strong>Name</strong> ${data.name}</li>
+      <li><strong>Phone</strong> ${data.phone}</li>
+      <li><strong>Residence</strong> ${data.location}</li>
+      <li><strong>Registration Type</strong> ${eventTypeDisplay}</li>
+      ${eventDetails}
+      <li><strong>Birthday</strong> ${birthdayDisplay}</li>
+      <li><strong>Type</strong> First-time online</li>
+      <li><strong>Volunteer</strong> ${volStr}</li>
+      <li><strong>WhatsApp</strong> ${data.consent ? 'Yes – add me' : 'No thanks'}</li>
+    `;
+  }
+}
+
+/* ── Save Registration ──────────────────────────────────── */
+saveBtn.addEventListener('click', handleSave);
+
+async function handleSave() {
+  if (!currentEntry) return;
+
+  saveBtn.disabled = true;
+  saveBtnText.textContent = 'Saving…';
+  saveSpinner.style.display = 'inline-block';
+
+  const blessing = getWeeklyVerse(WEEKLY_VERSES);
+  const regType = currentEntry.registrationType || 'general';
+
+  const formData = {
+    name: currentEntry.name, phone: currentEntry.phone, location: currentEntry.location,
+    birthMonth: currentEntry.birthMonth || '', birthDay: currentEntry.birthDay || '',
+    registered: currentEntry.firstTime,
+    whatsapp: currentEntry.consent ? currentEntry.phone : '—',
+    volunteering: currentEntry.volunteering.join(', '),
+    referredBy: currentEntry.referredBy || '', registrationType: regType,
+    baptismDate: currentEntry.baptismDate || '',
+    ageGroup: currentEntry.ageGroup || '',
+    status: 'pending',
+    whatsappStatus: 'unknown'
+  };
+
+  const cleanInputPhone = (currentEntry.phone || '').replace(/\D/g, '').slice(-9);
+  let isReturning = false;
+
+  try {
+    if (db) {
+      const docSnap = await db.collection('registrations').doc(cleanInputPhone).get();
+      if (docSnap.exists) { isReturning = true; }
+      else {
+        const snap = await db.collection('registrations').where('phone', '==', currentEntry.phone).get();
+        isReturning = !snap.empty;
+      }
+    }
+    if (!isReturning) {
+      isReturning = allRegistrations.some(r =>
+        String(r.phone || '').replace(/\D/g, '').slice(-9) === cleanInputPhone
+      );
+    }
+  } catch (e) {
+    console.warn('Duplicate check fallback:', e.message);
+    isReturning = allRegistrations.some(r =>
+      String(r.phone || '').replace(/\D/g, '').slice(-9) === cleanInputPhone
+    );
+  }
+
+  try {
+    if (!isReturning) {
+      const isOnline = navigator.onLine;
+      if (db && isOnline) {
+        try {
+          await db.collection('registrations').doc(cleanInputPhone).set({
+            ...formData, cleanPhone: cleanInputPhone,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        } catch (fbError) {
+          console.warn('Firebase error, saving offline:', fbError);
+          isOnline = false;
+        }
+      }
+      if (!db || !isOnline) { savePendingSubmission(formData); console.log('Saved to offline storage'); }
+
+      if (isOnline) {
+        let tempForm = document.getElementById('temp_gas_form');
+        if (!tempForm) {
+          tempForm = document.createElement('form');
+          tempForm.id = 'temp_gas_form'; tempForm.style.display = 'none';
+          tempForm.method = 'POST'; tempForm.action = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec'; tempForm.target = 'hidden_iframe';
+          if (!document.getElementById('hidden_iframe')) {
+            const iframe = document.createElement('iframe');
+            iframe.id = 'hidden_iframe'; iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+          }
+          document.body.appendChild(tempForm);
+        }
+        tempForm.innerHTML = '';
+        Object.entries(formData).forEach(([k, v]) => {
+          const inp = document.createElement('input'); inp.type = 'hidden'; inp.name = k; inp.value = v;
+          tempForm.appendChild(inp);
+        });
+        tempForm.submit();
+      }
+    }
+
+    const thankYouNote = document.getElementById('thankYouNote');
+    const blessingPara = document.getElementById('blessingText');
+
+    if (isReturning) {
+      thankYouNote.textContent = 'Welcome Back!';
+      blessingPara.textContent = `You are already registered! "${blessing}"`;
+      blessingOverlay.dataset.waUrl = '';
+      blessingOverlay.dataset.cleanPhone = '';
+      blessingOverlay.style.display = 'flex';
+    } else {
+      thankYouNote.textContent = 'Thank You for Registering!';
+      blessingPara.textContent = `"${blessing}"`;
+
+      /* The church welcome / thank-you message (as it was before):
+         greeting, weekly blessing, programs, baptism + registration link,
+         31st Cross Over Night, WhatsApp group, YouTube and contacts. */
+      const rawPhone = (currentEntry.phone || '').replace(/\D/g, '');
+      const intlPhone = rawPhone.startsWith('0')
+        ? '256' + rawPhone.substring(1)
+        : (rawPhone.length === 9 ? '256' + rawPhone : rawPhone);
+
+      let programs = 'Church Programs:\n' +
+        '• Sunday Services: ' + churchPrograms.sunday + '\n' +
+        '• Monday Kyoto Prayers: ' + churchPrograms.monday + '\n' +
+        '• Wednesday Evening Glory: ' + churchPrograms.wednesday + '\n' +
+        '• Tue & Thu Counseling: ' + churchPrograms.tueThu + '\n' +
+        '• Friday Night Prayers: ' + churchPrograms.friday;
+      if (churchPrograms.baptism && churchPrograms.baptism.trim()) {
+        programs += '\n• ' + churchPrograms.baptism +
+          ' — register: https://church-registration-grace.web.app/baptism-registration.html';
+      }
+      if (churchPrograms.crossover && churchPrograms.crossover.trim()) programs += '\n• ' + churchPrograms.crossover;
+      if (churchPrograms.custom && churchPrograms.custom.trim()) programs += '\n• ' + churchPrograms.custom;
+
+      let welcome = `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
+        `*A Blessing for you:* "${blessing}"\n\n${programs}`;
+      if (currentEntry.consent) {
+        welcome += '\n\nJoin our WhatsApp Group: ' + (churchPrograms.whatsappLink || 'https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h');
+      }
+      welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
+      welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
+      welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+      welcome += '\n\n*An encounter with the Holy Spirit*';
+      const waUrl = `https://wa.me/${intlPhone}?text=${encodeURIComponent(welcome)}`;
+      blessingOverlay.dataset.waUrl = waUrl;
+      blessingOverlay.dataset.cleanPhone = cleanInputPhone;
+
+      // Auto-open WhatsApp with the thank-you message right after registration.
+      // (Browsers may block popups — if so, click the "Open WhatsApp" button below.)
+      let popupOpened = false;
+      try {
+        popupOpened = !!window.open(waUrl, '_blank');
+      } catch (e) {
+        console.warn('Auto WhatsApp open blocked:', e.message);
+      }
+
+      blessingOverlay.style.display = 'flex';
+
+      // Highlight the action button so it's unmissable if the popup was blocked.
+      const doneBtn = blessingOverlay.querySelector('button');
+      if (doneBtn) {
+        doneBtn.textContent = popupOpened ? 'Sent!' : 'Open WhatsApp';
+        doneBtn.style.background = popupOpened ? '#2ecc71' : '#d4a843';
+      }
+    }
+  } catch (error) {
+    console.error('Save error:', error);
+    alert('❌ Error saving registration. Please try again.');
+  } finally {
+    saveBtn.disabled = false;
+    saveBtnText.textContent = 'Save Registration';
+    saveSpinner.style.display = 'none';
+  }
+}
+
+// Record that the registrant tapped the WhatsApp button. This is click proof,
+// not delivery proof — the actual message appears in the church phone's WhatsApp.
+function markWhatsAppOpened(cleanPhone) {
+  if (!db || !cleanPhone) return;
+  try {
+    db.collection('registrations').doc(cleanPhone).set({
+      whatsappStatus: 'on',
+      whatsappCheckedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(err => console.warn('Could not record WhatsApp status:', err.message));
+  } catch (e) {
+    console.warn('Could not record WhatsApp status:', e.message);
+  }
+}
+
+window.closeBlessing = function () {
+  const waUrl = blessingOverlay.dataset.waUrl;
+  const cleanPhone = blessingOverlay.dataset.cleanPhone;
+  blessingOverlay.style.display = 'none';
+  blessingOverlay.dataset.waUrl = '';
+  blessingOverlay.dataset.cleanPhone = '';
+  resetForm();
+  // If WhatsApp wasn't auto-opened (popup blocked), open it now on button click.
+  if (waUrl) {
+    if (cleanPhone) markWhatsAppOpened(cleanPhone);
+    window.open(waUrl, '_blank');
+  }
+};
+
+function resetForm() {
+  ['name', 'phone', 'location', 'birthDay', 'instrument-type', 'referredBy']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['err-name', 'err-phone', 'err-location'].forEach(clearError);
+  document.getElementById('birthMonth').value = '';
+  document.getElementById('ft-yes').checked = true;
+  document.getElementById('consent').checked = true;
+  document.querySelectorAll('#step-2 input[type="checkbox"]').forEach(cb => { cb.checked = false; });
+  instrInput.disabled = true;
+  currentEntry = null;
+  showStep(1);
+  prefetchData();
+}
+
+async function prefetchData() {
+  try {
+    if (db) {
+      const snap = await db.collection('registrations').get();
+      allRegistrations = snap.docs.map(d => d.data());
+      const progDoc = await db.collection('settings').doc('programs').get();
+      if (progDoc.exists) churchPrograms = { ...churchPrograms, ...progDoc.data() };
+    }
+    const res = await fetch('https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec');
+    if (res.ok) {
+      const data = await res.json();
+      data.forEach(reg => {
+        if (reg.name !== 'SYSTEM_PROGRAMS') {
+          const ph = String(reg.phone || '').replace(/\D/g, '').slice(-9);
+          if (!allRegistrations.some(r => String(r.phone || '').replace(/\D/g, '').slice(-9) === ph))
+            allRegistrations.push(reg);
+        } else if (!churchPrograms.custom) {
+          try { const parsed = JSON.parse(reg.location); churchPrograms = { ...churchPrograms, ...parsed }; } catch (e) {}
+        }
+      });
+    }
+  } catch (e) { console.warn('Prefetch error:', e.message); }
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log('SW registered'))
+      .catch(e => console.warn('SW failed:', e));
+  });
+}
+
+updateStepIndicator();
+setProgress(1);
+</script>
+</body>
+</html>

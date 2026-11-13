@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Church Registration System – Flowchart</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+      padding: 32px 24px;
+      max-width: 720px;
+      width: 100%;
+    }
+    svg text { font-family: Arial, sans-serif; fill: #1a1a1a; }
+    .th { font-size: 14px; font-weight: 600; }
+    .ts { font-size: 12px; font-weight: 400; fill: #555; }
+  </style>
+</head>
+<body>
+  <h1>Church Registration System – Flowchart</h1>
+  <div class="card">
+    <svg width="100%" viewBox="0 0 680 1100" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>Church Registration System Flowchart</title>
+      <desc>A flowchart showing the complete flow of a church member registration system from start to finish.</desc>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </marker>
+      </defs>
+
+      <!-- START -->
+      <rect x="265" y="30" width="150" height="44" rx="22" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="th" x="340" y="52" text-anchor="middle" dominant-baseline="central">Start</text>
+      <line x1="340" y1="74" x2="340" y2="108" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Visit Registration Page -->
+      <rect x="210" y="108" width="260" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+      <text class="th" x="340" y="128" text-anchor="middle" dominant-baseline="central">Visit registration page</text>
+      <text class="ts" x="340" y="148" text-anchor="middle" dominant-baseline="central">User opens church system</text>
+      <line x1="340" y1="164" x2="340" y2="198" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Fill Registration Form -->
+      <rect x="210" y="198" width="260" height="56" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+      <text class="th" x="340" y="218" text-anchor="middle" dominant-baseline="central">Fill registration form</text>
+      <text class="ts" x="340" y="238" text-anchor="middle" dominant-baseline="central">Name, contact, department</text>
+      <line x1="340" y1="254" x2="340" y2="288" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Submit Form -->
+      <rect x="210" y="288" width="260" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+      <text class="th" x="340" y="310" text-anchor="middle" dominant-baseline="central">Submit form</text>
+      <line x1="340" y1="332" x2="340" y2="368" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- DECISION: Form valid? -->
+      <polygon points="340,368 460,418 340,468 220,418" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+      <text class="th" x="340" y="412" text-anchor="middle" dominant-baseline="central">Form valid?</text>
+      <text class="ts" x="340" y="430" text-anchor="middle" dominant-baseline="central">All fields checked</text>
+
+      <!-- NO branch back left -->
+      <line x1="220" y1="418" x2="120" y2="418" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text class="ts" x="168" y="410" text-anchor="middle" fill="#BA7517">No</text>
+      <line x1="120" y1="418" x2="120" y2="243" stroke="#BA7517" stroke-width="1.5"/>
+      <line x1="120" y1="226" x2="210" y2="226" stroke="#BA7517" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text class="ts" x="78" y="330" text-anchor="middle" fill="#BA7517">Show errors</text>
+
+      <!-- YES branch down -->
+      <line x1="340" y1="468" x2="340" y2="502" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text class="ts" x="358" y="490" fill="#3B6D11">Yes</text>
+
+      <!-- Member exists? -->
+      <polygon points="340,502 460,552 340,602 220,552" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+      <text class="th" x="340" y="546" text-anchor="middle" dominant-baseline="central">Member exists?</text>
+      <text class="ts" x="340" y="564" text-anchor="middle" dominant-baseline="central">Check database</text>
+
+      <!-- YES duplicate right -->
+      <line x1="460" y1="552" x2="560" y2="552" stroke="#A32D2D" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text class="ts" x="508" y="544" text-anchor="middle" fill="#A32D2D">Yes</text>
+      <rect x="560" y="528" width="90" height="48" rx="8" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+      <text class="th" x="605" y="548" text-anchor="middle" dominant-baseline="central" fill="#A32D2D">Show</text>
+      <text class="ts" x="605" y="564" text-anchor="middle" dominant-baseline="central" fill="#A32D2D">duplicate error</text>
+
+      <!-- NO - proceed -->
+      <line x1="340" y1="602" x2="340" y2="636" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text class="ts" x="358" y="624" fill="#3B6D11">No</text>
+
+      <!-- Save to database -->
+      <rect x="210" y="636" width="260" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="th" x="340" y="656" text-anchor="middle" dominant-baseline="central">Save to database</text>
+      <text class="ts" x="340" y="676" text-anchor="middle" dominant-baseline="central">Insert member record</text>
+      <line x1="340" y1="692" x2="340" y2="726" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Generate Member ID -->
+      <rect x="210" y="726" width="260" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="th" x="340" y="746" text-anchor="middle" dominant-baseline="central">Generate member ID</text>
+      <text class="ts" x="340" y="766" text-anchor="middle" dominant-baseline="central">Assign unique number</text>
+      <line x1="340" y1="782" x2="340" y2="816" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Send Confirmation -->
+      <rect x="210" y="816" width="260" height="56" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="th" x="340" y="836" text-anchor="middle" dominant-baseline="central">Send confirmation</text>
+      <text class="ts" x="340" y="856" text-anchor="middle" dominant-baseline="central">Email / SMS notification</text>
+      <line x1="340" y1="872" x2="340" y2="906" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Show success -->
+      <rect x="210" y="906" width="260" height="56" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+      <text class="th" x="340" y="926" text-anchor="middle" dominant-baseline="central">Show success message</text>
+      <text class="ts" x="340" y="946" text-anchor="middle" dominant-baseline="central">Registration complete</text>
+      <line x1="340" y1="962" x2="340" y2="1000" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- END -->
+      <rect x="265" y="1000" width="150" height="44" rx="22" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="th" x="340" y="1022" text-anchor="middle" dominant-baseline="central">End</text>
+
+      <!-- LEGEND -->
+      <rect x="40" y="940" width="148" height="130" rx="8" fill="#fafafa" stroke="#ccc" stroke-width="0.5"/>
+      <text class="th" x="114" y="960" text-anchor="middle">Legend</text>
+      <rect x="52" y="970" width="14" height="10" rx="2" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+      <text class="ts" x="74" y="980">Process / Terminal</text>
+      <rect x="52" y="988" width="14" height="10" rx="2" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+      <text class="ts" x="74" y="998">User action</text>
+      <polygon points="59,1013 66,1006 73,1013 66,1020" fill="#FAEEDA" stroke="#BA7517" stroke-width="0.5"/>
+      <text class="ts" x="74" y="1016">Decision</text>
+      <rect x="52" y="1028" width="14" height="10" rx="2" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.5"/>
+      <text class="ts" x="74" y="1038">Success</text>
+      <rect x="52" y="1046" width="14" height="10" rx="2" fill="#FCEBEB" stroke="#A32D2D" stroke-width="0.5"/>
+      <text class="ts" x="74" y="1056">Error</text>
+    </svg>
+  </div>
+</body>
+</html>

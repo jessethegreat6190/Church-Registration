@@ -1,0 +1,228 @@
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+def add_heading(document, text, level):
+    document.add_heading(text, level=level)
+
+def add_paragraph(document, text, style=None):
+    p = document.add_paragraph(text)
+    if style:
+        p.style = style
+    return p
+
+def main():
+    document = Document()
+    
+    # Set up styles for headings (optional)
+    # We'll just use the default
+    
+    # Cover Page (Maroon background, course name, project title, student details, supervisor, ISBAT branding)
+    # Note: Setting background color is not straightforward in python-docx. We'll skip for now and note.
+    add_heading(document, 'Cover Page', 0)
+    p = add_paragraph(document, '[Maroon Background]')
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    add_paragraph(document, 'Course Name: Diploma in Information Technology')
+    add_paragraph(document, 'Project Title: [Your Project Title]')
+    add_paragraph(document, 'Student Name: [Your Name]')
+    add_paragraph(document, 'Student ID: [Your ID]')
+    add_paragraph(document, 'Supervisor: [Supervisor Name]')
+    add_paragraph(document, 'Institute: ISBAT University')
+    add_paragraph(document, 'Date: [Month Year]')
+    document.add_page_break()
+    
+    # Title Page
+    add_heading(document, 'Title Page', 0)
+    add_paragraph(document, 'Project Title: [Your Project Title]')
+    add_paragraph(document, 'Submitted by: [Your Name]')
+    add_paragraph(document, 'In partial fulfillment of the requirements for the Diploma in Information Technology')
+    add_paragraph(document, 'Institute: ISBAT University')
+    add_paragraph(document, 'Date: [Month Year]')
+    document.add_page_break()
+    
+    # Bonafide Certificate
+    add_heading(document, 'Bonafide Certificate', 0)
+    add_paragraph(document, 'This is to certify that [Your Name] with ID [Your ID] has successfully completed the project entitled "[Your Project Title]" under my supervision.')
+    add_paragraph(document, 'Supervisor: ___________________')
+    add_paragraph(document, 'Date: ___________________')
+    document.add_page_break()
+    
+    # Student Declaration
+    add_heading(document, 'Student Declaration', 0)
+    add_paragraph(document, 'I, [Your Name], declare that this project report entitled "[Your Project Title]" is my original work and has not been submitted for any other award.')
+    add_paragraph(document, 'Student Signature: ___________________')
+    add_paragraph(document, 'Date: ___________________')
+    document.add_page_break()
+    
+    # Abstract & Keywords (2 pages)
+    add_heading(document, 'Abstract', 0)
+    add_paragraph(document, '[Write a concise summary of your project here. Approximately 250-300 words.]')
+    document.add_page_break()
+    
+    add_heading(document, 'Keywords', 0)
+    add_paragraph(document, 'Keyword1, Keyword2, Keyword3, Keyword4, Keyword5, Keyword6, Keyword7, Keyword8, Keyword9, Keyword10')
+    document.add_page_break()
+    
+    # 1. Introduction & Background (8–10 pages)
+    add_heading(document, '1. Introduction & Background', 0)
+    add_heading(document, '1.1 Problem Statement', 1)
+    add_paragraph(document, '[Describe the problem your project aims to solve.]')
+    add_heading(document, '1.2 Previous Work & Methods', 1)
+    add_paragraph(document, '[Discuss previous work and methods related to your project.]')
+    add_heading(document, '1.3 Background Context', 1)
+    add_paragraph(document, '[Provide background context.]')
+    add_heading(document, '1.4 Project Description', 1)
+    add_paragraph(document, '[Describe your project.]')
+    add_heading(document, '1.5 Objectives & Justification', 1)
+    add_paragraph(document, '[List objectives and justify the project.]')
+    # Add some space for diagrams or tables
+    add_paragraph(document, '[Insert Diagram or Table: Context Diagram]')
+    document.add_page_break()
+    
+    # 2. System Functional Specification (10–12 pages)
+    add_heading(document, '2. System Functional Specification', 0)
+    add_heading(document, '2.1 Functions Performed', 1)
+    add_paragraph(document, '[List the functions performed by the system.]')
+    add_heading(document, '2.2 User Interface Design', 1)
+    add_paragraph(document, '[Describe the user interface design.]')
+    add_paragraph(document, '[Insert Diagram: Wireframe or Mockup of Main Screen]')
+    add_heading(document, '2.3 Input/Output Previews', 1)
+    add_paragraph(document, '[Show examples of input and output.]')
+    add_heading(document, '2.4 Database/File Structure', 1)
+    add_paragraph(document, '[Describe the database or file structure.]')
+    add_paragraph(document, '[Insert Diagram: ER Diagram]')
+    add_heading(document, '2.5 Limitations & Restrictions', 1)
+    add_paragraph(document, '[List any limitations and restrictions.]')
+    add_heading(document, '2.6 Interface Specifications', 1)
+    add_paragraph(document, '[Detail screens, dialogs, reports, and error handling.]')
+    document.add_page_break()
+    
+    # 3. System Performance Requirements (8–10 pages)
+    add_heading(document, '3. System Performance Requirements', 0)
+    add_heading(document, '3.1 Efficiency', 1)
+    add_paragraph(document, '[Discuss efficiency considerations.]')
+    add_heading(document, '3.2 Reliability', 1)
+    add_paragraph(document, '[Discuss error detection, recovery, acceptable failure rate.]')
+    add_heading(document, '3.3 Security', 1)
+    add_paragraph(document, '[Discuss hardware, software, data, and execution security.]')
+    add_heading(document, '3.4 Maintainability', 1)
+    add_paragraph(document, '[Discuss maintainability.]')
+    add_heading(document, '3.5 Modifiability', 1)
+    add_paragraph(document, '[Discuss modifiability.]')
+    add_heading(document, '3.6 Portability', 1)
+    add_paragraph(document, '[Discuss portability.]')
+    document.add_page_break()
+    
+    # 4. System Design Overview (8–10 pages)
+    add_heading(document, '4. System Design Overview', 0)
+    add_heading(document, '4.1 Data Flow Diagrams', 1)
+    add_paragraph(document, '[Insert DFD: Context Diagram]')
+    add_paragraph(document, '[Insert DFD: Level 0]')
+    add_paragraph(document, '[Insert DFD: Level 1]')
+    add_heading(document, '4.2 Structure Charts', 1)
+    add_paragraph(document, '[Insert Structure Chart]')
+    add_heading(document, '4.3 Data Dictionary', 1)
+    add_paragraph(document, '[Provide data dictionary for key data items.]')
+    add_heading(document, '4.4 Internal Data Structures', 1)
+    add_paragraph(document, '[Describe internal data structures.]')
+    add_heading(document, '4.5 System Operation Description', 1)
+    add_paragraph(document, '[Describe how the system operates.]')
+    add_heading(document, '4.6 Equipment Configuration', 1)
+    add_paragraph(document, '[Describe hardware and equipment configuration.]')
+    add_heading(document, '4.7 Implementation Languages', 1)
+    add_paragraph(document, '[List programming languages, tools, and technologies used.]')
+    add_heading(document, '4.8 Support Software', 1)
+    add_paragraph(document, '[List any support software required.]')
+    document.add_page_break()
+    
+    # 5. System Data Structure Specifications (6–8 pages)
+    add_heading(document, '5. System Data Structure Specifications', 0)
+    add_heading(document, '5.1 Input Specifications', 1)
+    add_paragraph(document, '[Describe input sources, formats, and examples.]')
+    add_heading(document, '5.2 Output Specifications', 1)
+    add_paragraph(document, '[Describe output destinations, formats, and examples.]')
+    add_heading(document, '5.3 Database/File Structures', 1)
+    add_paragraph(document, '[Describe logical and physical database/file structures.]')
+    add_paragraph(document, '[Insert Diagram: Detailed ER Diagram or File Structure]')
+    add_heading(document, '5.4 Internal Data Structures', 1)
+    add_paragraph(document, '[Describe internal data structures used within the system.]')
+    document.add_page_break()
+    
+    # 6. Module Design Specifications (6–8 pages)
+    add_heading(document, '6. Module Design Specifications', 0)
+    add_heading(document, '6.1 Functional Specs', 1)
+    add_paragraph(document, '[For each module: functions, interfaces, limitations.]')
+    add_heading(document, '6.2 Operational Specs', 1)
+    add_paragraph(document, '[For each module: data dictionary, algorithms, pseudo code, flowcharts.]')
+    add_paragraph(document, '[Insert Flowchart for Module 1]')
+    add_paragraph(document, '[Insert Pseudo Code for Module 1]')
+    document.add_page_break()
+    
+    # 7. System Verification (6–8 pages)
+    add_heading(document, '7. System Verification', 0)
+    add_heading(document, '7.1 Items/Functions Tested', 1)
+    add_paragraph(document, '[List items and functions tested.]')
+    add_heading(document, '7.2 Test Cases & Justification', 1)
+    add_paragraph(document, '[Present test cases in a table: Test ID, Input, Expected Output, Actual Output, Pass/Fail.]')
+    add_paragraph(document, '[Insert Table of Test Cases]')
+    add_heading(document, '7.3 Test Procedures & Results', 1)
+    add_paragraph(document, '[Describe test procedures and summarize results.]')
+    add_heading(document, '7.4 User Evaluation', 1)
+    add_paragraph(document, '[Describe user evaluation: protocol study, surveys, monitoring, interviews.]')
+    add_paragraph(document, '[Insert Sample Survey Form]')
+    document.add_page_break()
+    
+    # 8. Conclusions (3–4 pages)
+    add_heading(document, '8. Conclusions', 0)
+    add_heading(document, '8.1 Summary', 1)
+    add_paragraph(document, '[Summarize the project.]')
+    add_heading(document, '8.2 Problems Encountered & Solved', 1)
+    add_paragraph(document, '[Discuss problems and how they were solved.]')
+    add_heading(document, '8.3 Suggestions for Better Approaches', 1)
+    add_paragraph(document, '[Provide suggestions for improvement.]')
+    add_heading(document, '8.4 Future Extensions', 1)
+    add_paragraph(document, '[Suggest future extensions.]') 
+    document.add_page_break()
+    
+    # 9. Bibliography (2 pages)
+    add_heading(document, '9. Bibliography', 0)
+    add_paragraph(document, '[List all references in APA or IEEE format.]')
+    document.add_page_break()
+    
+    # 10. Appendices (2–3 pages)
+    add_heading(document, '10. Appendices', 0)
+    add_heading(document, 'Appendix A: Supporting Documents', 1)
+    add_paragraph(document, '[Include any supporting documents.]')
+    add_heading(document, 'Appendix B: Charts and Graphs', 1)
+    add_paragraph(document, '[Include charts and graphs.]')
+    add_heading(document, 'Appendix C: Screenshots', 1)
+    add_paragraph(document, '[Include screenshots of the system.]')
+    document.add_page_break()
+    
+    # 11. Program Listings (3–4 pages)
+    add_heading(document, '11. Program Listings', 0)
+    add_paragraph(document, '[Include code samples, scripts, and configuration files. Use a monospaced font for code.]')
+    # Add a sample code block
+    p = add_paragraph(document, 'Sample Code:')
+    p.style = 'List Paragraph'
+    add_paragraph(document, 'def hello_world():')
+    add_paragraph(document, '    print("Hello, World!")')
+    document.add_page_break()
+    
+    # 12. User Manual (3–4 pages)
+    add_heading(document, '12. User Manual', 0)
+    add_heading(document, '12.1 Installation Steps', 1)
+    add_paragraph(document, '[Provide step-by-step installation instructions.]')
+    add_heading(document, '12.2 Usage Instructions', 1)
+    add_paragraph(document, '[Provide instructions on how to use the system.]')
+    add_paragraph(document, '[Insert Screenshot: Main Interface]')
+    add_heading(document, '12.3 Troubleshooting Notes', 1)
+    add_paragraph(document, '[Provide common issues and solutions.]')
+    document.add_page_break()
+    
+    # Save the document
+    document.save('DIT_Project_Report_Template.docx')
+    print('Document saved as DIT_Project_Report_Template.docx')
+
+if __name__ == '__main__':
+    main()

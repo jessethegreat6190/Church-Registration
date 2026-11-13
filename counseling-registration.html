@@ -418,10 +418,10 @@ button:hover {
         <label>Registered?</label>
         <div class="checkbox-group" style="gap: 20px;">
           <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="yes"> First time registering online
+            <input type="radio" name="firstTime" value="yes" checked> First time registering online
           </label>
           <label style="cursor: pointer;">
-            <input type="radio" name="firstTime" value="no" checked> I have registered before
+            <input type="radio" name="firstTime" value="no"> I have registered before
           </label>
         </div>
       </div>
@@ -530,6 +530,15 @@ button:hover {
     const saveBtn = document.getElementById('saveBtn');
     const editBtn = document.getElementById('editBtn');
     const fullBlessingOverlay = document.getElementById('fullBlessingOverlay');
+
+    // Capitalise the name when the person leaves the field, so the confirmation
+    // and saved record show "John Doe" even if they typed "john doe" or "JOHN DOE".
+    const nameField = document.getElementById('name');
+    if (nameField) {
+      nameField.addEventListener('blur', () => {
+        if (nameField.value.trim()) nameField.value = formatName(nameField.value);
+      });
+    }
     
     let currentEntry = null;
     let allRegistrations = [];
@@ -603,7 +612,7 @@ button:hover {
       const rawName = document.getElementById('name').value.trim();
       const formattedName = formatName(rawName);
 
-      const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "no";
+      const firstTimeValue = document.querySelector('input[name="firstTime"]:checked')?.value || "yes";
 
       // Get volunteer interests
       const volunteering = [];
@@ -668,7 +677,7 @@ button:hover {
     });
 
     // Initialize UI based on default selection
-    const initialFirst = document.querySelector('input[name="firstTime"]:checked')?.value || 'no';
+    const initialFirst = document.querySelector('input[name="firstTime"]:checked')?.value || 'yes';
     updateFirstTimeUI(initialFirst);
 
     function showBlessing(verse) {
@@ -682,6 +691,19 @@ button:hover {
     }
     // Expose closeBlessing to window for onclick handler
     window.closeBlessing = closeBlessing;
+
+    // Record the WhatsApp status for this number.
+    function markWhatsAppOpened(cleanPhone) {
+      if (!db || !cleanPhone) return;
+      try {
+        db.collection('registrations').doc(cleanPhone).set({
+          whatsappStatus: 'on',
+          whatsappCheckedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch(err => console.warn('Could not record WhatsApp status:', err.message));
+      } catch (e) {
+        console.warn('Could not record WhatsApp status:', e.message);
+      }
+    }
 
     async function handleSave() {
       if (!currentEntry) return;
@@ -701,7 +723,8 @@ button:hover {
         registered: currentEntry.firstTime,
         whatsapp: currentEntry.consent ? currentEntry.phone : "—",
         volunteering: currentEntry.volunteering.join(", "),
-        referredBy: currentEntry.referredBy || ""
+        referredBy: currentEntry.referredBy || "",
+        whatsappStatus: 'unknown'
       };
 
       // 2. Determine if returning user (Check if phone already exists)
@@ -798,44 +821,7 @@ button:hover {
           tempForm.submit();
         }
 
-        // 4. Prepare WhatsApp URL if needed
-        let whatsappUrl = null;
-        if (!isReturning) {
-          let rawNumber = currentEntry.phone.replace(/\D/g, '');
-          if (rawNumber.startsWith('0')) {
-            rawNumber = '256' + rawNumber.substring(1);
-          } else if (rawNumber.length === 9 && (rawNumber.startsWith('7') || rawNumber.startsWith('3'))) {
-            rawNumber = '256' + rawNumber;
-          }
-
-          let programMessage = 
-            "Church Programs:\n" +
-            "• Sunday Services: " + churchPrograms.sunday + "\n" +
-            "• Monday Kyoto Prayers: " + churchPrograms.monday + "\n" +
-            "• Wednesday Evening Glory: " + churchPrograms.wednesday + "\n" +
-            "• Tue & Thu Counseling: " + churchPrograms.tueThu + "\n" +
-            "• Friday Night Prayers: " + churchPrograms.friday;
-          
-          if (churchPrograms.custom && churchPrograms.custom.trim()) {
-            programMessage += "\n• " + churchPrograms.custom;
-          }
-
-          let messageText = "Hello " + currentEntry.name + "! Thank you for registering at Grace of Jesus Christ Ministries.\n\n" +
-            "🕊 *A Blessing for you:* \"" + blessing + "\"\n\n" +
-            programMessage;
-
-          if (currentEntry.consent) {
-            messageText += "\n\nJoin our WhatsApp Group: https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h";
-          }
-
-          messageText += "\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n" +
-            "*An encounter with the Holy Spirit*";
-
-          const message = encodeURIComponent(messageText);
-          whatsappUrl = `https://wa.me/${rawNumber}?text=${message}`;
-        }
-
-        // 5. Show blessing and open WhatsApp
+        // 4. Show the blessing. The church contacts the person from its own WhatsApp.
         setTimeout(() => {
           const thankYouNote = document.querySelector('.thank-you-note');
           const blessingPara = document.getElementById('blessingText');
@@ -845,14 +831,35 @@ button:hover {
             blessingPara.textContent = `You are already registered! "${blessing}"`;
           } else {
             if (thankYouNote) thankYouNote.textContent = "Thank You for Registering!";
-            if (whatsappUrl) {
-              window.open(whatsappUrl, "_blank");
-              blessingPara.innerHTML = `"${blessing}"<br><br><a href="${whatsappUrl}" target="_blank" style="color:#25D366; font-size:1rem; font-weight:bold; text-decoration:none;">Click here to join WhatsApp if it didn't open!</a>`;
-            } else {
-              blessingPara.textContent = `"${blessing}"`;
+            const details = [
+              'Hello Grace of Jesus Christ Ministries! I have just registered for counseling on your website.',
+              '',
+              '*Name:* ' + currentEntry.name,
+              '*Phone:* ' + currentEntry.phone,
+              '*Residence:* ' + currentEntry.location
+            ];
+            if (currentEntry.birthDay && currentEntry.birthMonth) {
+              details.push('*Birthday:* ' + formatBirthday(currentEntry.birthMonth, currentEntry.birthDay));
             }
+            details.push('', 'Please contact me about my counseling registration. Thank you!');
+            const message = encodeURIComponent(details.join('\n'));
+            const whatsappUrl = `https://wa.me/256730938085?text=${message}`;
+            blessingPara.innerHTML = `"${blessing}"<br><br>` +
+              `<span style="display:block;font-size:0.9rem;color:#6c757d;margin-bottom:12px;">` +
+              `Your registration is saved. Tap the button below to send your details to the church on WhatsApp.</span>` +
+              `<a id="waSendBtn" href="${whatsappUrl}" target="_blank" rel="noopener" ` +
+              `style="display:inline-block;background:#25D366;color:#fff;font-size:1rem;font-weight:bold;` +
+              `text-decoration:none;padding:14px 26px;border-radius:50px;box-shadow:0 6px 18px rgba(37,211,102,0.35);">` +
+              `Send my details to the church</a>` +
+              `<span style="display:block;font-size:0.8rem;color:#6c757d;margin-top:12px;">` +
+              `After you press Send in WhatsApp, the church receives it on +256 730 938085.</span>` +
+              `<span style="display:block;font-size:0.8rem;color:#6c757d;margin-top:8px;line-height:1.6;">` +
+              `Church WhatsApp: <strong>0730 938085</strong> / <strong>0730 909434</strong><br>` +
+              `Baptism: date to be announced &nbsp;•&nbsp; Cross Over Night: 31 Dec 2026, 9:00 PM – 4:00 AM</span>`;
+            const waBtn = document.getElementById('waSendBtn');
+            if (waBtn) waBtn.addEventListener('click', () => markWhatsAppOpened(cleanInputPhone));
           }
-          showBlessing(blessing);
+          fullBlessingOverlay.style.display = 'flex';
         }, 800);
 
       } catch (error) {

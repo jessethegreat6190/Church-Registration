@@ -1,8 +1,9 @@
-const CACHE_NAME = 'grace-church-v5';
+const CACHE_NAME = 'grace-church-v17';
 const ASSETS = [
   '/',
   '/index.html',
   '/dashboard.html',
+  '/baptism-registration.html',
   '/css/style.css',
   '/js/utils.js',
   '/assets/logo/New Logo 2026.png',
@@ -41,6 +42,13 @@ self.addEventListener('fetch', (e) => {
 
   if (e.request.method !== 'GET') return;
 
+  // Always try the network first for HTML pages so updates appear immediately,
+  // falling back to the cache only when offline.
+  if (e.request.mode === 'navigate' || e.request.destination === 'document') {
+    e.respondWith(networkFirst(e.request));
+    return;
+  }
+
   if (url.href.startsWith('https://script.google.com')) {
     e.respondWith(networkFirst(e.request));
     return;
@@ -53,8 +61,15 @@ self.addEventListener('fetch', (e) => {
   }
 
   const isStaticAsset = STATIC_ASSETS.some(regex => regex.test(url.href));
-  if (isStaticAsset || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname.endsWith('.png') || url.pathname.endsWith('.jpg')) {
+  if (isStaticAsset || url.pathname.endsWith('.png') || url.pathname.endsWith('.jpg')) {
     e.respondWith(cacheFirst(e.request));
+    return;
+  }
+
+  // Scripts and styles change when the site is updated, so try the network
+  // first and fall back to the cache when offline.
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+    e.respondWith(networkFirst(e.request));
     return;
   }
 

@@ -410,11 +410,14 @@ async function handleSave() {
         '• Wednesday Evening Glory: ' + churchPrograms.wednesday + '\n' +
         '• Tue & Thu Counseling: ' + churchPrograms.tueThu + '\n' +
         '• Friday Night Prayers: ' + churchPrograms.friday;
+      if (churchPrograms.baptism?.trim()) prog += '\n• ' + churchPrograms.baptism;
+      if (churchPrograms.crossover?.trim()) prog += '\n• ' + churchPrograms.crossover;
       if (churchPrograms.custom?.trim()) prog += '\n• ' + churchPrograms.custom;
 
       let msg = `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
-        `🕊 *A Blessing for you:* "${blessing}"\n\n${prog}`;
+        `*A Blessing for you:* "${blessing}"\n\n${prog}`;
       if (currentEntry.consent) msg += '\n\nJoin our WhatsApp Group: ' + (churchPrograms.whatsappLink || 'https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h');
+      msg += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
       msg += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n*An encounter with the Holy Spirit*';
       whatsappUrl = `https://wa.me/${raw}?text=${encodeURIComponent(msg)}`;
     }

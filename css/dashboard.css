@@ -78,6 +78,8 @@ body { font-family: var(--font); background: var(--light); color: var(--text); m
 .status-badge.new { background: rgba(212,168,67,0.15); color: #d4a843; }
 .status-badge.active { background: rgba(39,174,96,0.15); color: var(--success); }
 .status-badge.pending { background: rgba(192,57,43,0.15); color: var(--danger); }
+.status-badge.off { background: rgba(192,57,43,0.15); color: var(--danger); }
+.status-badge.unknown { background: rgba(108,117,125,0.15); color: #6c757d; }
 
 /* FORMS */
 .form-section { display: none; }
@@ -116,3 +118,114 @@ body { font-family: var(--font); background: var(--light); color: var(--text); m
 .action-btn.view { background: rgba(212,168,67,0.1); color: #d4a843; }
 .action-btn.edit { background: rgba(212,168,67,0.1); color: #d4a843; }
 .action-btn.delete { background: rgba(231,76,60,0.1); color: var(--danger); }
+
+/* MEMBER ACTION CELL */
+.member-actions { white-space: nowrap; font-size: 13px; }
+.member-actions .btn-icon {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px;
+  border: none; border-radius: var(--radius-xs); font-size: 12px; font-weight: 500;
+  cursor: pointer; margin-right: 5px; white-space: nowrap;
+}
+.member-actions .btn-edit { background: rgba(212,168,67,0.1); color: #d4a843; }
+.member-actions .btn-edit:hover { background: rgba(212,168,67,0.2); }
+.member-actions .btn-delete { background: rgba(231,76,60,0.1); color: var(--danger); }
+.member-actions .btn-delete:hover { background: rgba(231,76,60,0.2); }
+.member-actions .btn-wa { background: rgba(37,211,102,0.12); color: #1e8e5b; }
+.member-actions .btn-wa:hover { background: rgba(37,211,102,0.2); }
+.member-actions .btn-wa.sent { background: rgba(108,117,125,0.12); color: #6c757d; cursor: default; }
+.member-actions .btn-wa.sent:hover { background: rgba(108,117,125,0.12); }
+
+/* ─── WHATSAPP PENDING HIGHLIGHTS ─── */
+.stat-icon.wa { background: rgba(37,211,102,0.14); color: #1e8e5b; }
+
+.data-table tr.row-pending-wa { background: #fff9e8; }
+.data-table tr.row-pending-wa:hover { background: #fff3cd; }
+.data-table tr.row-pending-wa td:first-child { box-shadow: inset 4px 0 0 #d4a843; }
+.data-table tr.row-imported td:first-child { box-shadow: inset 4px 0 0 #2ecc71; }
+
+.wa-badge {
+  display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;
+  padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: uppercase; vertical-align: middle;
+  white-space: nowrap;
+}
+.wa-badge.pending { background: rgba(212,168,67,0.20); color: #8a6d1f; }
+.wa-badge.sent { background: rgba(37,211,102,0.16); color: #1e8e5b; }
+
+.tag-new {
+  display: inline-block; margin-left: 6px; padding: 2px 7px; border-radius: 4px;
+  background: #2ecc71; color: #fff; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; vertical-align: middle;
+}
+
+.wa-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  margin-top: 22px; padding: 14px 18px; border-radius: 12px;
+  background: linear-gradient(90deg, #fff9e8 0%, #ffffff 100%);
+  border: 1px solid #f0d98c; border-left: 5px solid #d4a843;
+  font-size: 14px; color: var(--text);
+}
+.wa-banner-text { display: flex; align-items: center; gap: 10px; }
+.wa-banner-text .fa-whatsapp { color: #25D366; font-size: 22px; }
+.wa-banner-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.wa-banner-btn { background: #2ecc71; padding: 9px 16px; white-space: nowrap; }
+.wa-banner-btn:hover { background: #27ae60; }
+.wa-banner-btn-import { background: #2980b9; }
+.wa-banner-btn-import:hover { background: #2471a3; }
+
+.pending-filter {
+  display: inline-flex; align-items: center; gap: 7px; padding: 10px 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--text-muted); cursor: pointer;
+  background: var(--white); white-space: nowrap;
+}
+.pending-filter input { width: auto; cursor: pointer; }
+.pending-filter:has(input:checked) { border-color: #d4a843; color: #8a6d1f; background: #fff9e8; }
+
+/* ─── IMPORT MODAL ─── */
+.import-modal {
+  max-width: 800px; max-height: 88vh; overflow-y: auto;
+  text-align: left; position: relative;
+}
+.import-modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+}
+.import-help { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px; }
+.import-help code { background: var(--gray-100); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+.import-file-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.import-file-row .pending-filter { padding: 9px 14px; }
+.import-file-row input[type="file"] { max-width: 190px; font-size: 11px; }
+.import-summary {
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--gray-100); font-size: 13px; line-height: 1.6;
+}
+.import-summary .import-counts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
+.import-summary .ok { color: #1e8e5b; font-weight: 600; }
+.import-summary .warn { color: #b8912e; font-weight: 600; }
+.import-summary .bad { color: #c0392b; font-weight: 600; }
+.import-error { color: #c0392b; font-weight: 600; }
+
+.import-preview {
+  max-height: 40vh; overflow-y: auto; margin-top: 12px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+}
+.import-preview table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.import-preview th {
+  position: sticky; top: 0; background: var(--gray-100); text-align: left;
+  padding: 8px 10px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--text-muted); border-bottom: 1px solid var(--border);
+}
+.import-preview td { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; }
+.import-preview tr.import-row-skip td { background: #fafafa; color: #9aa0a6; }
+.import-status { font-size: 11px; font-weight: 600; }
+.import-status.ok { color: #1e8e5b; }
+.import-status.warn { color: #b8912e; }
+.import-status.skip { color: #c0392b; }
+
+.import-result { margin-top: 12px; font-size: 13px; }
+.import-result .ok { color: #1e8e5b; font-weight: 600; }
+.import-result .bad { color: #c0392b; font-weight: 600; }
+.import-actions { display: flex; gap: 10px; margin-top: 16px; }
+.import-actions .btn-primary, .import-actions .btn-secondary { flex: 1; }

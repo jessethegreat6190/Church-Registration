@@ -4,7 +4,12 @@ service cloud.firestore {
     match /registrations/{document} {
       allow read: if true;
       allow create: if true;
-      allow update, delete: if request.auth.uid == 'Bi68Kqd5jBPun5bIgXo0u5yTNmj2';
+      // Admins can change anything. A registrant may only mark that they
+      // opened the WhatsApp chat (click proof for the dashboard).
+      allow update: if request.auth.uid == 'Bi68Kqd5jBPun5bIgXo0u5yTNmj2'
+                    || request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly(['whatsappOpened', 'whatsappOpenedAt', 'whatsappStatus', 'whatsappCheckedAt']);
+      allow delete: if request.auth.uid == 'Bi68Kqd5jBPun5bIgXo0u5yTNmj2';
     }
 
     // Guest WiFi sessions (guest-access-portal).

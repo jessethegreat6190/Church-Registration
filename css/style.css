@@ -786,6 +786,27 @@ legend {
    border: 1px dashed var(--border);
 }
 
+.event-note {
+   display: flex;
+   align-items: flex-start;
+   gap: 10px;
+   margin-bottom: 16px;
+   padding: 12px 14px;
+   background: #fff4f4;
+   border-left: 3px solid #8B0000;
+   border-radius: 8px;
+   font-size: 0.86rem;
+   line-height: 1.55;
+   color: #5d6d7e;
+}
+.event-note i {
+   color: #8B0000;
+   margin-top: 2px;
+}
+.event-note strong {
+   color: #2c3e50;
+}
+
 /* Consent */
 .consent-row {
    display: flex;

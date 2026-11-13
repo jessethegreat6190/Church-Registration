@@ -2,7 +2,9 @@ from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
+from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR_TYPE
+from pptx.oxml.ns import qn
+from lxml import etree
 import os
 
 prs = Presentation()
@@ -30,7 +32,6 @@ def add_shape(slide, left, top, width, height, color, alpha=None):
     shape.fill.fore_color.rgb = color
     shape.line.fill.background()
     if alpha is not None:
-        from lxml import etree
         solidFill = shape.fill._fill
         srgbClr = solidFill.find('.//{http://schemas.openxmlformats.org/drawingml/2006/main}srgbClr')
         if srgbClr is not None:
@@ -299,13 +300,216 @@ for left, top, width, height, text, color in boxes:
     p.alignment = PP_ALIGN.CENTER
     tf.paragraphs[0].space_before = Pt(10)
 
-# Arrows (simplified as lines)
-add_text_box(slide, Inches(3.9), Inches(2.6), Inches(1.2), Inches(0.5), "→", 24, DARK_GRAY, True, PP_ALIGN.CENTER)
-add_text_box(slide, Inches(8.3), Inches(2.6), Inches(1.2), Inches(0.5), "→", 24, DARK_GRAY, True, PP_ALIGN.CENTER)
-add_text_box(slide, Inches(3.9), Inches(4.6), Inches(1.2), Inches(0.5), "→", 24, DARK_GRAY, True, PP_ALIGN.CENTER)
-add_text_box(slide, Inches(8.3), Inches(4.6), Inches(1.2), Inches(0.5), "→", 24, DARK_GRAY, True, PP_ALIGN.CENTER)
+# Arrows – proper connector lines with arrowheads
+def add_connector_arrow(slide, x1, y1, x2, y2, color=DARK_GRAY, width=Pt(2)):
+    conn = slide.shapes.add_connector(MSO_CONNECTOR_TYPE.STRAIGHT, x1, y1, x2, y2)
+    conn.line.color.rgb = color
+    conn.line.width = width
+    ln = conn.line._ln
+    tail = etree.SubElement(ln, qn('a:tailEnd'))
+    tail.set('type', 'triangle')
+    tail.set('w', 'med')
+    tail.set('len', 'med')
+    return conn
 
-# SLIDE 11: Conclusion
+# Row 1 arrows (UI → Firebase, Firebase → Sheets)
+add_connector_arrow(slide, Inches(3.8), Inches(2.8), Inches(5.2), Inches(2.8))
+add_connector_arrow(slide, Inches(8.2), Inches(2.8), Inches(9.5), Inches(2.8))
+
+# Row 2 arrows (Admin → WhatsApp, WhatsApp → Service Worker)
+add_connector_arrow(slide, Inches(3.8), Inches(4.8), Inches(5.2), Inches(4.8))
+add_connector_arrow(slide, Inches(8.2), Inches(4.8), Inches(9.5), Inches(4.8))
+
+# ── Flowchart helpers ──
+FC_FILLS = {
+    'terminal': RGBColor(0xAE, 0xD6, 0xF1),
+    'process':  RGBColor(0xD4, 0xE6, 0xF1),
+    'decision': RGBColor(0xF9, 0xE7, 0x9F),
+}
+FC_EDGE = DARK_BLUE
+
+def fc_shape(slide, shape_type, left, top, width, height, fill_key):
+    s = slide.shapes.add_shape(shape_type, left, top, width, height)
+    s.fill.solid()
+    s.fill.fore_color.rgb = FC_FILLS[fill_key]
+    s.line.color.rgb = FC_EDGE
+    s.line.width = Pt(1.5)
+    return s
+
+def fc_text(shape, text, size=10, bold=True):
+    tf = shape.text_frame
+    tf.word_wrap = True
+    p = tf.paragraphs[0]
+    p.text = text
+    p.font.size = Pt(size)
+    p.font.bold = bold
+    p.font.color.rgb = DARK_BLUE
+    p.font.name = 'Calibri'
+    p.alignment = PP_ALIGN.CENTER
+    return tf
+
+def fc_arrow(slide, x1, y1, x2, y2, color=DARK_BLUE, width=Pt(1.5)):
+    conn = slide.shapes.add_connector(MSO_CONNECTOR_TYPE.STRAIGHT, x1, y1, x2, y2)
+    conn.line.color.rgb = color
+    conn.line.width = width
+    ln = conn.line._ln
+    tail = etree.SubElement(ln, qn('a:tailEnd'))
+    tail.set('type', 'triangle')
+    tail.set('w', 'med')
+    tail.set('len', 'med')
+    return conn
+
+def fc_label(slide, x, y, text, color=RGBColor(0xC0, 0x39, 0x2B)):
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(0.6), Inches(0.3))
+    p = tb.text_frame.paragraphs[0]
+    p.text = text
+    p.font.size = Pt(9)
+    p.font.bold = True
+    p.font.color.rgb = color
+    p.font.name = 'Calibri'
+    p.alignment = PP_ALIGN.CENTER
+
+def new_fc_slide(prs, title, fig_num):
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+    add_background(slide, WHITE)
+    add_shape(slide, Inches(0), Inches(0), Inches(13.333), Inches(1.0), DARK_BLUE)
+    add_text_box(slide, Inches(0.8), Inches(0.15), Inches(11), Inches(0.7), title, 32, WHITE, True)
+    add_shape(slide, Inches(0.8), Inches(1.2), Inches(0.08), Inches(0.5), GOLD)
+    add_text_box(slide, Inches(1.2), Inches(1.2), Inches(11), Inches(0.5),
+                 f"Figure {fig_num}: {title}", 18, DARK_BLUE, False)
+    return slide
+
+# SLIDE 11: Registration Process Flowchart
+slide = new_fc_slide(prs, "Registration Process Flowchart", "6.1")
+# Coordinates (center-x=6.67)
+FC = 6.67  # center
+# Row 1: START
+s1 = fc_shape(slide, MSO_SHAPE.OVAL, Inches(FC-0.9), Inches(1.9), Inches(1.8), Inches(0.5), 'terminal')
+fc_text(s1, "START", 10)
+# Row 2: Fill Step 1
+s2 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(FC-1.2), Inches(2.65), Inches(2.4), Inches(0.5), 'process')
+fc_text(s2, "Fill Step 1:\nName, Phone, Location", 9)
+# Row 3: Valid?
+s3 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.8), Inches(3.45), Inches(1.6), Inches(0.6), 'decision')
+fc_text(s3, "Valid?", 10)
+# No branch: Show errors
+s_no = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(2.5), Inches(3.45), Inches(1.8), Inches(0.5), 'process')
+fc_text(s_no, "Show inline\nerrors", 9)
+# Row 4: First Time?
+s4 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.8), Inches(4.35), Inches(1.6), Inches(0.6), 'decision')
+fc_text(s4, "First\nTime?", 10)
+# Yes -> Step 2 / No -> Review
+s5 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(3.8), Inches(5.2), Inches(2.0), Inches(0.5), 'process')
+fc_text(s5, "Fill Step 2:\nPreferences", 9)
+s6 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(7.5), Inches(5.2), Inches(2.0), Inches(0.5), 'process')
+fc_text(s6, "Review Step 3:\nConfirm Details", 9)
+# Row 5: Save
+s7 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(FC-1.3), Inches(6.0), Inches(2.6), Inches(0.5), 'process')
+fc_text(s7, "Save to Firestore\n+ Google Sheets", 9)
+# Row 6: Open WhatsApp + Oval END (compressed)
+s8 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(FC-1.1), Inches(6.7), Inches(2.2), Inches(0.4), 'process')
+fc_text(s8, "Open WhatsApp", 8)
+
+# Arrows
+fc_arrow(slide, Inches(FC), Inches(2.4), Inches(FC), Inches(2.65))
+fc_arrow(slide, Inches(FC), Inches(3.15), Inches(FC), Inches(3.45))
+fc_arrow(slide, Inches(FC), Inches(4.05), Inches(FC), Inches(4.35))
+fc_arrow(slide, Inches(FC), Inches(4.95), Inches(3.8), Inches(5.2))
+fc_arrow(slide, Inches(FC), Inches(4.95), Inches(7.5), Inches(5.2))
+fc_arrow(slide, Inches(FC-4.17), Inches(3.7), Inches(FC-4.17+0.6), Inches(3.55))
+fc_arrow(slide, Inches(4.8), Inches(5.7), Inches(FC-1.3+0.3), Inches(6.0))
+fc_arrow(slide, Inches(8.5), Inches(5.7), Inches(FC+1.3-0.3), Inches(6.0))
+fc_arrow(slide, Inches(FC), Inches(6.5), Inches(FC), Inches(6.7))
+# Labels
+fc_label(slide, FC+0.5, 3.7, "Yes", RGBColor(0x27, 0xAE, 0x60))
+fc_label(slide, FC-2.8, 3.4, "No", RGBColor(0xC0, 0x39, 0x2B))
+fc_label(slide, FC-1.5, 4.7, "Yes", RGBColor(0x27, 0xAE, 0x60))
+fc_label(slide, FC+1.2, 4.65, "No", RGBColor(0xC0, 0x39, 0x2B))
+
+# SLIDE 12: Offline Sync Flowchart
+slide = new_fc_slide(prs, "Offline Sync Flowchart", "6.2")
+# Row 1
+s1 = fc_shape(slide, MSO_SHAPE.OVAL, Inches(FC-1.0), Inches(1.9), Inches(2.0), Inches(0.5), 'terminal')
+fc_text(s1, "User submits\nregistration", 9)
+# Row 2
+s2 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.9), Inches(2.7), Inches(1.8), Inches(0.6), 'decision')
+fc_text(s2, "Internet\nAvailable?", 9)
+# Row 3 branches
+s3a = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(2.8), Inches(3.6), Inches(2.2), Inches(0.55), 'process')
+fc_text(s3a, "Save to\nlocalStorage Queue", 9)
+s3b = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.3), Inches(3.6), Inches(2.2), Inches(0.55), 'process')
+fc_text(s3b, "Save to Firestore\n+ Google Sheets", 9)
+# Row 4
+s4 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.9), Inches(4.55), Inches(1.8), Inches(0.6), 'decision')
+fc_text(s4, "Online\nEvent Fired?", 8)
+# Row 5
+s5 = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(FC-1.2), Inches(5.45), Inches(2.4), Inches(0.5), 'process')
+fc_text(s5, "Read queue\nfrom localStorage", 9)
+# Row 6
+s6 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.9), Inches(6.2), Inches(1.8), Inches(0.55), 'decision')
+fc_text(s6, "Queue\nEmpty?", 9)
+# END
+s7 = fc_shape(slide, MSO_SHAPE.OVAL, Inches(FC-0.9), Inches(6.95), Inches(1.8), Inches(0.4), 'terminal')
+fc_text(s7, "Sync Complete", 9)
+
+# Arrows
+fc_arrow(slide, Inches(FC), Inches(2.4), Inches(FC), Inches(2.7))
+fc_arrow(slide, Inches(FC), Inches(3.3), Inches(3.9), Inches(3.6))
+fc_arrow(slide, Inches(FC), Inches(3.3), Inches(9.4), Inches(3.6))
+fc_arrow(slide, Inches(3.9), Inches(4.15), Inches(FC-0.9), Inches(4.55))
+fc_arrow(slide, Inches(9.4), Inches(4.15), Inches(FC+0.9), Inches(4.55))
+fc_arrow(slide, Inches(FC), Inches(5.15), Inches(FC), Inches(5.45))
+fc_arrow(slide, Inches(FC), Inches(5.95), Inches(FC), Inches(6.2))
+fc_arrow(slide, Inches(FC), Inches(6.75), Inches(FC), Inches(6.95))
+# Labels
+fc_label(slide, FC-1.8, 3.0, "No", RGBColor(0xC0, 0x39, 0x2B))
+fc_label(slide, FC+1.0, 3.0, "Yes", RGBColor(0x27, 0xAE, 0x60))
+fc_label(slide, FC-1.8, 4.75, "Yes", RGBColor(0x27, 0xAE, 0x60))
+fc_label(slide, FC-1.8, 6.35, "Yes", RGBColor(0x27, 0xAE, 0x60))
+
+# SLIDE 13: Admin Auth Flowchart
+slide = new_fc_slide(prs, "Admin Authentication Flowchart", "6.3")
+# Row 1
+s1 = fc_shape(slide, MSO_SHAPE.OVAL, Inches(FC-1.0), Inches(1.9), Inches(2.0), Inches(0.5), 'terminal')
+fc_text(s1, "Admin opens\nDashboard", 9)
+# Row 2
+s2 = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(FC-0.9), Inches(2.7), Inches(1.8), Inches(0.6), 'decision')
+fc_text(s2, "Logged\nIn?", 10)
+# Yes branch
+s3y = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(FC-1.2), Inches(3.6), Inches(2.4), Inches(0.5), 'process')
+fc_text(s3y, "Show Dashboard\nwith Member Data", 9)
+s4y = fc_shape(slide, MSO_SHAPE.OVAL, Inches(FC-0.8), Inches(4.35), Inches(1.6), Inches(0.45), 'terminal')
+fc_text(s4y, "End", 9)
+# No branch
+s3n = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(3.2), Inches(3.6), Inches(1.8), Inches(0.5), 'process')
+fc_text(s3n, "Show\nLogin Modal", 9)
+s4n = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(3.2), Inches(4.4), Inches(1.8), Inches(0.5), 'process')
+fc_text(s4n, "Enter\nCredentials", 9)
+s5n = fc_shape(slide, MSO_SHAPE.DIAMOND, Inches(3.2), Inches(5.2), Inches(1.6), Inches(0.6), 'decision')
+fc_text(s5n, "Valid?", 10)
+s6n = fc_shape(slide, MSO_SHAPE.ROUNDED_RECTANGLE, Inches(3.2), Inches(6.1), Inches(1.8), Inches(0.5), 'process')
+fc_text(s6n, "Store Session\nin localStorage", 9)
+s7n = fc_shape(slide, MSO_SHAPE.OVAL, Inches(3.2), Inches(6.85), Inches(1.6), Inches(0.4), 'terminal')
+fc_text(s7n, "Redirect to\nDashboard", 8)
+
+# Arrows
+fc_arrow(slide, Inches(FC), Inches(2.4), Inches(FC), Inches(2.7))
+fc_arrow(slide, Inches(FC), Inches(3.3), Inches(FC-1.2+0.3), Inches(3.6))
+fc_arrow(slide, Inches(FC), Inches(3.3), Inches(3.2+1.8-0.3), Inches(3.6))
+fc_arrow(slide, Inches(FC), Inches(4.1), Inches(FC), Inches(4.35))
+fc_arrow(slide, Inches(4.1), Inches(4.1), Inches(4.1), Inches(4.4))
+fc_arrow(slide, Inches(4.1), Inches(4.9), Inches(3.2+0.8), Inches(5.2))
+fc_arrow(slide, Inches(3.2+0.8), Inches(5.8), Inches(3.2+0.8), Inches(6.1))
+fc_arrow(slide, Inches(4.1), Inches(6.6), Inches(4.0), Inches(6.85))
+# No loop
+fc_arrow(slide, Inches(3.2-0.5), Inches(5.2), Inches(2.2), Inches(4.7))
+# Labels
+fc_label(slide, FC+0.8, 3.05, "No", RGBColor(0xC0, 0x39, 0x2B))
+fc_label(slide, FC-1.5, 3.1, "Yes", RGBColor(0x27, 0xAE, 0x60))
+fc_label(slide, 2.7, 5.4, "No", RGBColor(0xC0, 0x39, 0x2B))
+fc_label(slide, 3.8, 5.4, "Yes", RGBColor(0x27, 0xAE, 0x60))
+
+# SLIDE 14: Conclusion
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_background(slide, WHITE)
 add_shape(slide, Inches(0), Inches(0), Inches(13.333), Inches(1.2), DARK_BLUE)
@@ -327,7 +531,7 @@ conclusion_text = (
 add_text_box(slide, Inches(1.2), Inches(2.4), Inches(10.5), Inches(4.5),
              conclusion_text, 18, DARK_GRAY, False, PP_ALIGN.LEFT)
 
-# SLIDE 12: Future Work
+# SLIDE 15: Future Work
 slide = prs.slides.add_slide(prs.slide_layouts[6])
 add_background(slide, WHITE)
 add_shape(slide, Inches(0), Inches(0), Inches(13.333), Inches(1.2), DARK_BLUE)

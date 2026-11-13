@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baptism Registration — Grace of Jesus Christ Ministries</title>
+<meta name="description" content="Register for baptism at Grace of Jesus Christ Ministries, Kitintale, Kampala.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    background: #f6f1ea;
+    color: #2c3e50;
+    line-height: 1.6;
+    padding: 28px 14px 60px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  .banner {
+    background: linear-gradient(135deg, #8B0000 0%, #b31217 100%);
+    border-radius: 20px 20px 0 0;
+    padding: 34px 30px 28px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner::after {
+    content: "";
+    position: absolute;
+    right: -50px; top: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .banner .church {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.9;
+    font-weight: 600;
+  }
+  .banner h1 {
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin: 8px 0 10px;
+    font-weight: 700;
+  }
+  .banner p { font-size: 0.92rem; opacity: 0.94; max-width: 520px; }
+
+  .card {
+    background: #fff;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 18px 50px rgba(44,62,80,0.12);
+    overflow: hidden;
+  }
+  .intro {
+    padding: 24px 30px 8px;
+    font-size: 0.9rem;
+    color: #5b6b7b;
+  }
+  .intro strong { color: #8B0000; }
+
+  .section { padding: 8px 30px 22px; }
+  .section + .section { border-top: 1px solid #f0e9e0; padding-top: 24px; }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8B0000;
+    margin: 18px 0 4px;
+  }
+  .section-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #fbeaea;
+    color: #8B0000;
+    font-size: 0.72rem;
+  }
+
+  .field { margin-top: 18px; }
+  .field label.q {
+    display: block;
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 7px;
+  }
+  .req { color: #b31217; margin-left: 3px; }
+  .hint { display: block; font-size: 0.78rem; color: #8a97a3; margin-bottom: 8px; font-weight: 400; }
+  input[type="text"], input[type="tel"], input[type="number"], textarea {
+    width: 100%;
+    border: 1.5px solid #e3dcd3;
+    border-radius: 11px;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #2c3e50;
+    background: #fffdfb;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #8B0000;
+    box-shadow: 0 0 0 4px rgba(139,0,0,0.09);
+  }
+  input.invalid, textarea.invalid {
+    border-color: #b31217;
+    box-shadow: 0 0 0 4px rgba(179,18,23,0.08);
+  }
+  textarea { min-height: 92px; resize: vertical; }
+
+  .error {
+    display: none;
+    color: #b31217;
+    font-size: 0.78rem;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .error.show { display: block; }
+
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; }
+  .pill {
+    flex: 1 1 100px;
+    border: 1.5px solid #e3dcd3;
+    border-radius: 11px;
+    padding: 11px 14px;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #5b6b7b;
+    cursor: pointer;
+    background: #fffdfb;
+    transition: all .18s;
+  }
+  .pill:hover { border-color: #d9a3a3; }
+  .pill input { display: none; }
+  .pill.sel {
+    border-color: #8B0000;
+    background: #fbeaea;
+    color: #8B0000;
+    font-weight: 600;
+  }
+
+  .check {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    margin-top: 14px;
+    font-size: 0.88rem;
+    color: #4a5a6a;
+    cursor: pointer;
+  }
+  .check input {
+    width: 19px; height: 19px;
+    accent-color: #8B0000;
+    margin-top: 2px;
+    flex: 0 0 auto;
+  }
+
+  .info-box {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-top: 22px;
+    padding: 18px 18px 16px;
+    background: #fffaf4;
+    border: 1px solid #f0e0cf;
+    border-radius: 14px;
+    box-shadow: 0 10px 26px rgba(139,0,0,0.10);
+  }
+  .info-icon {
+    flex: 0 0 auto;
+    width: 0;
+    height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-bottom: 20px solid #8a97a3;
+    margin-top: 4px;
+  }
+  .info-text strong {
+    display: block;
+    color: #8B0000;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+  .info-text p {
+    font-size: 0.85rem;
+    color: #5b6b7b;
+    margin: 0;
+  }
+  .info-text .info-sub {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: #7a8794;
+  }
+
+  .submit-wrap { padding: 6px 30px 30px; }
+  button.submit {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #8B0000 0%, #b31217 100%);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(139,0,0,0.25);
+    transition: transform .15s, box-shadow .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  button.submit:hover { transform: translateY(-1px); box-shadow: 0 14px 30px rgba(139,0,0,0.3); }
+  button.submit:disabled { opacity: 0.75; cursor: not-allowed; transform: none; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    display: none;
+  }
+  .spinner.show { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .success { padding: 40px 30px 34px; text-align: center; }
+  .success-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: #e8f7ee;
+    color: #1e9e57;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .success h2 { font-size: 1.4rem; color: #2c3e50; margin-bottom: 10px; }
+  .success .verse {
+    font-style: italic;
+    color: #5b6b7b;
+    background: #fbf7f1;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 0 auto 18px;
+    max-width: 520px;
+    font-size: 0.9rem;
+  }
+  .success p { font-size: 0.9rem; color: #5b6b7b; margin-bottom: 10px; }
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 14px 26px;
+    border-radius: 50px;
+    box-shadow: 0 8px 20px rgba(37,211,102,0.35);
+    margin: 8px 0 12px;
+    transition: background .18s, transform .15s;
+  }
+  .wa-btn:hover { background: #1ebe5b; transform: translateY(-1px); }
+  .wa-btn svg { width: 20px; height: 20px; flex: 0 0 auto; }
+  .success .small { font-size: 0.78rem; color: #8a97a3; }
+  .link-btn {
+    background: none;
+    border: none;
+    color: #8B0000;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 14px;
+    text-decoration: underline;
+  }
+
+  .note {
+    margin: 22px auto 0;
+    max-width: 720px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: #8a97a3;
+  }
+  .note strong { color: #8B0000; }
+  .note a { color: #8B0000; font-weight: 600; text-decoration: none; }
+  .note a:hover { text-decoration: underline; }
+
+  .toast {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: #1e9e57;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 9999;
+  }
+
+  @media (max-width: 480px) {
+    .banner { padding: 26px 20px 22px; }
+    .banner h1 { font-size: 1.45rem; }
+    .section, .intro, .submit-wrap, .success { padding-left: 20px; padding-right: 20px; }
+    .pill { flex: 1 1 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="banner">
+    <div class="church">Grace of Jesus Christ Ministries</div>
+    <h1>Baptism Registration</h1>
+    <p>Would you love to be baptized? Fill in this form and our pastoral team will contact you with the date, venue and requirements.</p>
+  </header>
+
+  <main class="card">
+    <form id="baptismForm" novalidate>
+      <section class="section">
+        <div class="section-title"><span class="num">1</span> Your Details</div>
+
+        <div class="field">
+          <label class="q" for="names">Full names <span class="req">*</span></label>
+          <span class="hint">Please enter your first and last name.</span>
+          <input id="names" name="names" type="text" autocomplete="name">
+          <div class="error" id="err-names" aria-live="polite"></div>
+        </div>
+
+        <div class="field">
+          <label class="q" for="phone">Phone number <span class="req">*</span></label>
+          <span class="hint">Use the number that has WhatsApp.</span>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel">
+          <div class="error" id="err-phone" aria-live="polite"></div>
+        </div>
+
+        <div class="field">
+          <label class="q" for="residence">Location / residence <span class="req">*</span></label>
+          <span class="hint">Where do you live?</span>
+          <input id="residence" name="residence" type="text" autocomplete="address-level2">
+          <div class="error" id="err-residence" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><span class="num">2</span> Baptism Details</div>
+
+        <div class="field">
+          <label class="q">Have you been baptized before? <span class="req">*</span></label>
+          <div class="pills" id="baptizedPills">
+            <label class="pill"><input type="radio" name="baptized" value="Yes"> Yes</label>
+            <label class="pill"><input type="radio" name="baptized" value="No"> No</label>
+            <label class="pill"><input type="radio" name="baptized" value="I want to be rebaptized"> I want to be rebaptized</label>
+          </div>
+          <div class="error" id="err-baptized" aria-live="polite"></div>
+        </div>
+
+        <div class="info-box">
+          <div class="info-icon" aria-hidden="true"></div>
+          <div class="info-text">
+            <strong>Please note before you register</strong>
+            <p>Baptism is offered at a small cost, paid at the venue. You will also need to cover your own transport to the venue. Please plan for both as you prepare.</p>
+            <p class="info-sub">If you have any questions, contact the church on WhatsApp: <strong>0730 938085</strong> / <strong>0730 909434</strong>.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="q" for="prayer">Prayer request or message <span class="hint" style="display:inline;margin:0;">(optional)</span></label>
+          <textarea id="prayer" name="prayer" placeholder="Share anything you would like us to pray about..."></textarea>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title"><span class="num">3</span> Stay Connected</div>
+
+        <label class="check">
+          <input type="checkbox" id="consent" checked>
+          <span>Yes, contact me on WhatsApp about my baptism.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="joinGroup">
+          <span>Add me to the church WhatsApp group for announcements and encouragement.</span>
+        </label>
+      </section>
+
+      <div class="submit-wrap">
+        <button class="submit" type="submit" id="submitBtn">
+          <span id="submitText">Submit registration</span>
+          <span class="spinner" id="submitSpinner" aria-hidden="true"></span>
+        </button>
+      </div>
+    </form>
+
+    <div class="success" id="successPanel" hidden>
+      <div class="success-icon">✓</div>
+      <h2 id="successTitle">Thank you for registering!</h2>
+      <p class="verse" id="successVerse"></p>
+      <p id="successMessage">Your baptism registration has been saved. Tap the button below to send your details to the church on WhatsApp.</p>
+      <a class="wa-btn" id="waSendBtn" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Send my details to the church
+      </a>
+      <p class="small">After you press Send in WhatsApp, the church receives it on +256 730 938085.</p>
+      <p class="small">Church WhatsApp: <strong>0730 938085</strong> / <strong>0730 909434</strong></p>
+      <button type="button" class="link-btn" id="registerAnother">Register another person</button>
+    </div>
+  </main>
+
+  <p class="note">
+    Church WhatsApp: <strong>0730 938085</strong> / <strong>0730 909434</strong><br>
+    An encounter with the Holy Spirit &nbsp;•&nbsp; <a href="index.html">Back to church website</a>
+  </p>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<iframe id="hidden_iframe" name="hidden_iframe" style="display:none" title="background"></iframe>
+<form id="temp_gas_form" style="display:none" method="POST" target="hidden_iframe"></form>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script>
+// Firebase fallback for local XAMPP (Firebase Hosting auto-inits on production)
+try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey: "AIzaSyDyARd_4HXdx9gEOguMDvncPV17j7kum-s",
+      authDomain: "church-registration-grace.firebaseapp.com",
+      projectId: "church-registration-grace",
+      storageBucket: "church-registration-grace.firebasestorage.app",
+      messagingSenderId: "402796692999",
+      appId: "1:402796692999:web:15f01064b41197c4c9cca2",
+      measurementId: "G-L3CD5ZX957"
+    });
+  }
+} catch (e) { console.warn('Firebase init fallback:', e); }
+</script>
+<script type="module">
+import { formatName, getWeeklyVerse, WEEKLY_VERSES } from './js/utils.js';
+
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxep7hhQKPfuPBG9q9oig8D892E2d4bdBdPvGct48jlAFIUP6bmSu06tIbbl-6pmISsOQ/exec';
+const CHURCH_WHATSAPP = '256730938085';
+const OFFLINE_KEY = 'church_pending_registrations';
+
+const form          = document.getElementById('baptismForm');
+const namesInput    = document.getElementById('names');
+const phoneInput    = document.getElementById('phone');
+const residenceInput= document.getElementById('residence');
+const prayerInput   = document.getElementById('prayer');
+const consentInput  = document.getElementById('consent');
+const joinGroupInput= document.getElementById('joinGroup');
+const submitBtn     = document.getElementById('submitBtn');
+const submitText    = document.getElementById('submitText');
+const submitSpinner = document.getElementById('submitSpinner');
+const successPanel  = document.getElementById('successPanel');
+const successTitle  = document.getElementById('successTitle');
+const successVerse  = document.getElementById('successVerse');
+const successMessage= document.getElementById('successMessage');
+const waSendBtn     = document.getElementById('waSendBtn');
+const registerAnother = document.getElementById('registerAnother');
+const toast         = document.getElementById('toast');
+const tempForm      = document.getElementById('temp_gas_form');
+
+let db = null;
+let submitting = false;
+let lastCleanPhone = '';
+
+try {
+  if (typeof firebase !== 'undefined') db = firebase.firestore();
+} catch (e) { console.warn('Firebase not available:', e.message); }
+
+/* ── Helpers ────────────────────────────────────────────── */
+function cleanPhone(raw) {
+  let d = String(raw || '').replace(/\D/g, '');
+  if (d.startsWith('256')) d = d.slice(3);
+  else if (d.startsWith('0')) d = d.slice(1);
+  return d.slice(-9);
+}
+
+function isValidPhone(raw) {
+  return /^\d{9}$/.test(cleanPhone(raw));
+}
+
+function setError(id, message) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = message; el.classList.add('show'); }
+}
+function clearError(id) {
+  const el = document.getElementById(id);
+  if (el) { el.textContent = ''; el.classList.remove('show'); }
+}
+function markInvalid(input, invalid) {
+  if (!input) return;
+  input.classList.toggle('invalid', !!invalid);
+}
+
+function getBaptizedBefore() {
+  const checked = document.querySelector('input[name="baptized"]:checked');
+  return checked ? checked.value : '';
+}
+
+function showToast(message) {
+  toast.textContent = message;
+  toast.hidden = false;
+  setTimeout(() => { toast.hidden = true; }, 5000);
+}
+
+/* ── Offline storage ────────────────────────────────────── */
+function loadPending() {
+  try {
+    const stored = localStorage.getItem(OFFLINE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch (e) { return []; }
+}
+function savePending(entry) {
+  const pending = loadPending();
+  pending.push({ ...entry, pendingTimestamp: Date.now() });
+  localStorage.setItem(OFFLINE_KEY, JSON.stringify(pending));
+}
+function removePending(phone) {
+  const target = cleanPhone(phone);
+  const pending = loadPending().filter(p => cleanPhone(p.phone) !== target);
+  localStorage.setItem(OFFLINE_KEY, JSON.stringify(pending));
+}
+
+async function syncPending() {
+  if (!navigator.onLine || !db) return;
+  const pending = loadPending();
+  if (!pending.length) return;
+  let synced = 0;
+  for (const entry of pending) {
+    try {
+      const id = cleanPhone(entry.phone);
+      const existing = await db.collection('registrations').doc(id).get();
+      if (!existing.exists) {
+        await db.collection('registrations').doc(id).set({
+          ...entry,
+          cleanPhone: id,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          syncedFromOffline: true
+        });
+      }
+      removePending(entry.phone);
+      synced++;
+    } catch (e) { console.warn('Sync error:', e); }
+  }
+  if (synced) showToast(`✅ ${synced} baptism registration(s) synced.`);
+}
+
+/* ── Google Sheets backup ───────────────────────────────── */
+function postToSheet(entry) {
+  if (!navigator.onLine) return;
+  tempForm.innerHTML = '';
+  const fields = {
+    name: entry.name,
+    phone: entry.phone,
+    location: entry.location,
+    birthMonth: '',
+    birthDay: '',
+    registered: 'yes',
+    whatsapp: entry.consent ? entry.phone : '',
+    volunteering: '',
+    referredBy: '',
+    registrationType: 'baptism',
+    baptismDate: 'To be announced',
+    ageGroup: '',
+    baptismBefore: entry.baptismBefore,
+    prayerRequest: entry.prayerRequest,
+    joinGroup: entry.joinGroup ? 'Yes' : 'No',
+    status: 'pending',
+    whatsappOpened: 'false',
+    source: 'baptism-registration.html'
+  };
+  Object.entries(fields).forEach(([k, v]) => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden';
+    inp.name = k;
+    inp.value = v;
+    tempForm.appendChild(inp);
+  });
+  tempForm.action = GAS_URL;
+  tempForm.submit();
+}
+
+/* ── WhatsApp message ───────────────────────────────────── */
+function buildWhatsAppUrl(entry) {
+  const lines = [
+    'Hello Grace of Jesus Christ Ministries! I have just registered for baptism on your website.',
+    '',
+    '*Name:* ' + entry.name,
+    '*Phone:* ' + entry.phone,
+    '*Residence:* ' + entry.location,
+    '*Registration Type:* Baptism',
+    '*Baptized before:* ' + entry.baptismBefore
+  ];
+  if (entry.prayerRequest) lines.push('*Prayer request:* ' + entry.prayerRequest);
+  lines.push('*Add to WhatsApp group:* ' + (entry.joinGroup ? 'Yes' : 'No'));
+  lines.push('', 'Please send me the baptism date, venue and requirements. Thank you!');
+  return `https://wa.me/${CHURCH_WHATSAPP}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+/* ── WhatsApp status ────────────────────────────────────── */
+// Optional verification endpoint. When configured it should accept
+// POST { phone: "2567XXXXXXXX" } and reply { onWhatsApp: true|false }.
+// Without it, the status stays "unknown" until an admin checks it.
+const WHATSAPP_VERIFY_ENDPOINT = window.WHATSAPP_VERIFY_ENDPOINT || '';
+
+async function checkWhatsAppStatus(phone) {
+  if (!WHATSAPP_VERIFY_ENDPOINT) return 'unknown';
+  try {
+    const res = await fetch(WHATSAPP_VERIFY_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: '256' + cleanPhone(phone) })
+    });
+    const data = await res.json();
+    if (data && data.onWhatsApp === true) return 'on';
+    if (data && data.onWhatsApp === false) return 'off';
+  } catch (e) { console.warn('WhatsApp check failed:', e.message); }
+  return 'unknown';
+}
+
+async function saveWhatsAppStatus(id, phone, status) {
+  if (status === 'unknown' || !db) return;
+  db.collection('registrations').doc(id).set({
+    whatsappStatus: status,
+    whatsappCheckedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }, { merge: true }).catch(err => console.warn('Could not save WhatsApp status:', err.message));
+}
+
+// Record that the registrant tapped the WhatsApp send button.
+// Opening WhatsApp to the church is proof the number is on WhatsApp.
+function markWhatsAppOpened(cleanPhone) {
+  if (!db || !cleanPhone) return;
+  try {
+    db.collection('registrations').doc(cleanPhone).set({
+      whatsappStatus: 'on',
+      whatsappCheckedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(err => console.warn('Could not record WhatsApp status:', err.message));
+  } catch (e) {
+    console.warn('Could not record WhatsApp status:', e.message);
+  }
+}
+
+/* ── UI behaviour ───────────────────────────────────────── */
+namesInput.addEventListener('blur', () => {
+  if (namesInput.value.trim()) namesInput.value = formatName(namesInput.value);
+});
+phoneInput.addEventListener('input', () => {
+  if (phoneInput.value.trim()) { clearError('err-phone'); markInvalid(phoneInput, false); }
+});
+namesInput.addEventListener('input', () => {
+  if (namesInput.value.trim()) { clearError('err-names'); markInvalid(namesInput, false); }
+});
+residenceInput.addEventListener('input', () => {
+  if (residenceInput.value.trim()) { clearError('err-residence'); markInvalid(residenceInput, false); }
+});
+
+// Highlight the selected "baptized before" pill.
+document.querySelectorAll('.pill input').forEach(function (input) {
+  input.addEventListener('change', function () {
+    document.querySelectorAll('input[name="' + input.name + '"]').forEach(function (i) {
+      i.closest('.pill').classList.toggle('sel', i.checked);
+    });
+    clearError('err-baptized');
+  });
+});
+
+/* ── Submit ─────────────────────────────────────────────── */
+form.addEventListener('submit', async function (event) {
+  event.preventDefault();
+  if (submitting) return;
+
+  const name      = formatName(namesInput.value.trim());
+  const phone     = phoneInput.value.trim();
+  const residence = residenceInput.value.trim();
+  const baptized  = getBaptizedBefore();
+  const prayer    = prayerInput.value.trim();
+
+  let valid = true;
+
+  if (!name) {
+    setError('err-names', 'Please enter your full names.'); markInvalid(namesInput, true); valid = false;
+  } else { clearError('err-names'); markInvalid(namesInput, false); }
+
+  if (!phone) {
+    setError('err-phone', 'Please enter your phone number.'); markInvalid(phoneInput, true); valid = false;
+  } else if (!isValidPhone(phone)) {
+    setError('err-phone', 'Enter a valid phone number.'); markInvalid(phoneInput, true); valid = false;
+  } else { clearError('err-phone'); markInvalid(phoneInput, false); }
+
+  if (!residence) {
+    setError('err-residence', 'Please enter where you live.'); markInvalid(residenceInput, true); valid = false;
+  } else { clearError('err-residence'); markInvalid(residenceInput, false); }
+
+  if (!baptized) {
+    setError('err-baptized', 'Please choose one option.'); valid = false;
+  } else { clearError('err-baptized'); }
+
+  if (!valid) {
+    const firstError = document.querySelector('.error.show');
+    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  namesInput.value = name;
+
+  const id = cleanPhone(phone);
+  const entry = {
+    name: name,
+    phone: phone,
+    location: residence,
+    registrationType: 'baptism',
+    baptismBefore: baptized,
+    prayerRequest: prayer,
+    whatsapp: phone,
+    consent: !!consentInput.checked,
+    joinGroup: !!joinGroupInput.checked,
+    status: 'pending',
+    whatsappStatus: 'unknown',
+    registered: 'yes',
+    volunteering: '',
+    referredBy: '',
+    birthMonth: '',
+    birthDay: '',
+    baptismDate: 'To be announced',
+    source: 'baptism-registration.html'
+  };
+
+  submitting = true;
+  submitBtn.disabled = true;
+  submitText.textContent = 'Saving…';
+  submitSpinner.classList.add('show');
+
+  let isReturning = false;
+
+  try {
+    if (db && navigator.onLine) {
+      try {
+        const existing = await db.collection('registrations').doc(id).get();
+        isReturning = existing.exists;
+        if (!isReturning) {
+          await db.collection('registrations').doc(id).set({
+            ...entry,
+            cleanPhone: id,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+      } catch (fbError) {
+        console.warn('Firebase save failed, storing offline:', fbError);
+        savePending(entry);
+      }
+    } else {
+      savePending(entry);
+    }
+
+    if (!isReturning) postToSheet(entry);
+
+    const waUrl = buildWhatsAppUrl(entry);
+    showSuccess(waUrl, id, isReturning);
+    if (!isReturning) saveWhatsAppStatus(id, phone, 'unknown');
+  } catch (error) {
+    console.error('Save error:', error);
+    savePending(entry);
+    showSuccess(buildWhatsAppUrl(entry), id, false);
+  } finally {
+    submitting = false;
+    submitBtn.disabled = false;
+    submitText.textContent = 'Submit registration';
+    submitSpinner.classList.remove('show');
+  }
+});
+
+/* ── Success panel ──────────────────────────────────────── */
+function showSuccess(waUrl, cleanId, isReturning) {
+  lastCleanPhone = cleanId;
+  form.hidden = true;
+  successPanel.hidden = false;
+  successTitle.textContent = isReturning ? 'You are already registered' : 'Thank you for registering!';
+  successMessage.textContent = isReturning
+    ? 'This phone number is already registered for baptism. You can still send your details to the church on WhatsApp below.'
+    : 'Your baptism registration has been saved. Tap the button below to send your details to the church on WhatsApp.';
+  successVerse.textContent = '"' + getWeeklyVerse(WEEKLY_VERSES) + '"';
+  waSendBtn.href = waUrl;
+  waSendBtn.onclick = function () { markWhatsAppOpened(cleanId); };
+  successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+registerAnother.addEventListener('click', function () {
+  form.reset();
+  form.hidden = false;
+  successPanel.hidden = true;
+  lastCleanPhone = '';
+  ['err-names', 'err-phone', 'err-residence', 'err-baptized'].forEach(clearError);
+  [namesInput, phoneInput, residenceInput].forEach(i => markInvalid(i, false));
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('sel'));
+  namesInput.focus();
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+/* ── Init ───────────────────────────────────────────────── */
+window.addEventListener('load', () => {
+  if (!db) {
+    try { if (typeof firebase !== 'undefined') db = firebase.firestore(); } catch (e) {}
+  }
+  syncPending();
+});
+window.addEventListener('online', syncPending);
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW failed:', e));
+  });
+}
+
+// Expose the message builder for quick verification without submitting.
+window.buildBaptismWhatsAppUrl = buildWhatsAppUrl;
+</script>
+</body>
+</html>
