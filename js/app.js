@@ -418,7 +418,9 @@ async function handleSave() {
         `*A Blessing for you:* "${blessing}"\n\n${prog}`;
       if (currentEntry.consent) msg += '\n\nJoin our WhatsApp Group: ' + (churchPrograms.whatsappLink || 'https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h');
       msg += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
-      msg += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM\n\n*An encounter with the Holy Spirit*';
+      msg += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+      msg += '\n\nWatch our latest message: ' + (churchPrograms.youtubeVideo || 'https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG');
+      msg += '\n\n*An encounter with the Holy Spirit*';
       whatsappUrl = `https://wa.me/${raw}?text=${encodeURIComponent(msg)}`;
     }
 

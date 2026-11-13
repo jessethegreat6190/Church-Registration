@@ -30,7 +30,8 @@ const churchPrograms = {
   baptism: "Baptism: date to be announced",
   crossover: "31st Cross Over Night: 31 Dec 2026, 9:00 PM - 4:00 AM",
   contacts: "0730 938085 / 0730 909434",
-  whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h"
+  whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h",
+  youtubeVideo: "https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG"
 };
 
 const WEEKLY_VERSES = [
@@ -445,6 +446,7 @@ async function sendMemberWelcome(id) {
   welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
   // Open before awaiting so the browser treats it as a user gesture.
@@ -530,6 +532,7 @@ function showBulkWaModal(members) {
     welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
     welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
     welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
     welcome += '\n\n*An encounter with the Holy Spirit*';
 
     const waUrl = 'https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome);
@@ -581,6 +584,7 @@ async function sendBulkWa(id, name, phone) {
   welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
   window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome), '_blank');
