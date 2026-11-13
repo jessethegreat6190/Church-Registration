@@ -123,26 +123,96 @@ function namesMatch(a, b) {
 
 /* ─── FILE PARSING ─── */
 
-function parseJsonRecords(text) {
-  const cleaned = String(text || '')
+function cleanJsonText(text) {
+  return String(text || '')
     .replace(/^\uFEFF/, '')
     .replace(/[\u00A0\u2007\u202F]/g, ' ')
     .replace(/[\u200B-\u200D]/g, '');
-  const data = JSON.parse(cleaned);
-  let list;
-  if (Array.isArray(data)) list = data;
-  else if (Array.isArray(data.records)) list = data.records;
-  else if (Array.isArray(data.data)) list = data.data;
-  else if (Array.isArray(data.members)) list = data.members;
-  else throw new Error('JSON must be an array or contain a "records" array.');
+}
 
-  return list.map(function (r) {
+// Exported files are sometimes pasted together, producing several JSON values
+// in one file: "[ {...} ][ {...} ]" or one value per line (NDJSON). JSON.parse
+// only accepts the first value, so collect every complete top-level value.
+function splitJsonValues(text) {
+  const values = [];
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let start = -1;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text.charAt(i);
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === '\\') escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') { inString = true; continue; }
+    if (ch === '[' || ch === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (ch === ']' || ch === '}') {
+      if (depth > 0) depth--;
+      if (depth === 0 && start !== -1) {
+        values.push(text.slice(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+  return values;
+}
+
+function jsonRecordsFromValue(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.records)) return data.records;
+  if (Array.isArray(data.data)) return data.data;
+  if (Array.isArray(data.members)) return data.members;
+  // A single record exported on its own (common in line-by-line JSON).
+  if (data && typeof data === 'object' &&
+      (data.name || data.fullName || data.full_name || data.names ||
+       data.contact || data.phone || data.mobile || data.telephone || data.whatsapp || data.number)) {
+    return [data];
+  }
+  throw new Error('JSON must be an array or contain a "records" array.');
+}
+
+function parseJsonRecords(text) {
+  const cleaned = cleanJsonText(text);
+  let blocks;
+
+  try {
+    blocks = [JSON.parse(cleaned)];
+  } catch (firstError) {
+    const chunks = splitJsonValues(cleaned);
+    if (!chunks.length) {
+      throw new Error('This does not look like valid JSON. ' + firstError.message);
+    }
+    blocks = chunks.map(function (chunk, i) {
+      try {
+        return JSON.parse(chunk);
+      } catch (err) {
+        throw new Error('Block ' + (i + 1) + ' of ' + chunks.length +
+          ' is not valid JSON (' + err.message + '). Check for a missing comma or bracket near the top of that block.');
+      }
+    });
+  }
+
+  let list = [];
+  blocks.forEach(function (data) {
+    list = list.concat(jsonRecordsFromValue(data));
+  });
+  if (!list.length) throw new Error('No records were found in the JSON.');
+
+  const records = list.map(function (r) {
     return {
       name: r.name || r.fullName || r.full_name || r.names || '',
       contact: r.contact || r.phone || r.mobile || r.telephone || r.whatsapp || r.number || '',
       residence: r.residence || r.location || r.address || r.area || r.village || ''
     };
   });
+  records.jsonBlocks = blocks.length;
+  return records;
 }
 
 function detectDelimiter(text) {
@@ -413,9 +483,13 @@ async function handleRecords(records, label) {
     sourceLabel = label || 'file';
 
     const info = document.getElementById('fileInfo');
+    const blocks = records.jsonBlocks || 1;
     info.style.display = 'block';
     info.innerHTML = '<i class="fas fa-file-circle-check"></i> Loaded <strong>' + records.length +
-      '</strong> row(s) from <strong>' + escapeHtml(sourceLabel) + '</strong>.';
+      '</strong> row(s) from <strong>' + escapeHtml(sourceLabel) + '</strong>.' +
+      (blocks > 1
+        ? ' The file contained <strong>' + blocks + '</strong> separate JSON blocks, which were combined.'
+        : '');
 
     document.getElementById('reviewSection').style.display = 'block';
     document.getElementById('bulkResult').style.display = 'none';

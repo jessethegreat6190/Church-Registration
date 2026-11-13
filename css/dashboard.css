@@ -202,6 +202,11 @@ body { font-family: var(--font); background: var(--light); color: var(--text); m
   background: var(--gray-100); font-size: 13px; line-height: 1.6;
 }
 .import-summary .import-counts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 6px; }
+.import-summary .import-note {
+  margin-top: 6px; padding: 7px 10px; border-radius: var(--radius-sm);
+  background: #eef6ff; border: 1px solid #c6ddf5; color: #2c5f8a; font-size: 12px;
+}
+.import-summary .import-note i { margin-right: 6px; }
 .import-summary .ok { color: #1e8e5b; font-weight: 600; }
 .import-summary .warn { color: #b8912e; font-weight: 600; }
 .import-summary .bad { color: #c0392b; font-weight: 600; }

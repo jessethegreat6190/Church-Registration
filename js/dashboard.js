@@ -17,6 +17,7 @@ let allMembers = [];
 let allRegistrations = [];
 let isLoggedIn = false;
 let importCandidates = [];
+let importBlockCount = 1;
 let currentBulkWaMembers = [];
 
 // Church details used to build the WhatsApp thank-you / welcome message.
@@ -826,14 +827,85 @@ function saveAttendance() {
 
 // Some exported JSON files contain non-breaking spaces that make JSON.parse
 // fail. Normalise them before parsing.
-function parseImportJson(text) {
-  const cleaned = String(text || '')
+function cleanJsonText(text) {
+  return String(text || '')
     .replace(/^\uFEFF/, '')
     .replace(/[\u00A0\u2007\u202F]/g, ' ')
     .replace(/[\u200B-\u200D]/g, '');
-  const data = JSON.parse(cleaned);
-  const records = Array.isArray(data) ? data : (data.records || []);
-  if (!Array.isArray(records)) throw new Error('Expected a "records" array.');
+}
+
+// Files pasted together can contain several JSON values in one file, e.g.
+// "[ {...} ][ {...} ]" or one value per line. Collect every top-level value.
+function splitJsonValues(text) {
+  const values = [];
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let start = -1;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text.charAt(i);
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === '\\') escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') { inString = true; continue; }
+    if (ch === '[' || ch === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (ch === ']' || ch === '}') {
+      if (depth > 0) depth--;
+      if (depth === 0 && start !== -1) {
+        values.push(text.slice(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+  return values;
+}
+
+function importRecordsFromValue(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.records)) return data.records;
+  if (Array.isArray(data.data)) return data.data;
+  if (Array.isArray(data.members)) return data.members;
+  // A single record exported on its own (common in line-by-line JSON).
+  if (data && typeof data === 'object' &&
+      (data.name || data.fullName || data.full_name || data.names ||
+       data.contact || data.phone || data.mobile || data.telephone || data.whatsapp || data.number)) {
+    return [data];
+  }
+  throw new Error('Expected a "records" array.');
+}
+
+function parseImportJson(text) {
+  const cleaned = cleanJsonText(text);
+  let blocks;
+
+  try {
+    blocks = [JSON.parse(cleaned)];
+  } catch (firstError) {
+    const chunks = splitJsonValues(cleaned);
+    if (!chunks.length) {
+      throw new Error('This does not look like valid JSON. ' + firstError.message);
+    }
+    blocks = chunks.map(function (chunk, i) {
+      try {
+        return JSON.parse(chunk);
+      } catch (err) {
+        throw new Error('Block ' + (i + 1) + ' of ' + chunks.length +
+          ' is not valid JSON (' + err.message + '). Check for a missing comma or bracket near the top of that block.');
+      }
+    });
+  }
+
+  let records = [];
+  blocks.forEach(function (data) {
+    records = records.concat(importRecordsFromValue(data));
+  });
+  records.jsonBlocks = blocks.length;
   return records;
 }
 
@@ -861,6 +933,7 @@ async function loadImportFile() {
     if (!res.ok) throw new Error('HTTP ' + res.status + ' — make sure imports/new.json exists.');
     const text = await res.text();
     const records = parseImportJson(text);
+    importBlockCount = records.jsonBlocks || 1;
     await prepareImport(records);
   } catch (err) {
     console.error('Import load error:', err);
@@ -875,6 +948,7 @@ function handleImportFileInput(ev) {
   reader.onload = async function() {
     try {
       const records = parseImportJson(reader.result);
+      importBlockCount = records.jsonBlocks || 1;
       document.getElementById('importResult').innerHTML = '';
       await prepareImport(records);
     } catch (err) {
@@ -1013,6 +1087,9 @@ function renderImportPreview() {
 
   summaryEl.innerHTML =
     '<strong>Found ' + total + ' row(s) in imports/new.json</strong>' +
+    (importBlockCount > 1
+      ? '<div class="import-note"><i class="fas fa-layer-group"></i> The file contained ' + importBlockCount + ' separate JSON blocks, which were combined.</div>'
+      : '') +
     '<div class="import-counts">' +
       '<span class="ok">✅ ' + ready.length + ' ready to import</span>' +
       '<span class="warn">⏭ ' + duplicates + ' skipped (same name or contact)</span>' +
