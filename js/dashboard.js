@@ -31,8 +31,7 @@ const churchPrograms = {
   crossover: "31st Cross Over Night: 31 Dec 2026, 9:00 PM - 4:00 AM",
   contacts: "0730 938085 / 0730 909434",
   whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h",
-  youtubeVideo: "https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG",
-  mapsLink: "https://maps.google.com/?q=Grace+of+Jesus+Christ+Ministries,+Kitintale,+Luzira,+Kampala"
+  youtubeVideo: "https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG"
 };
 
 const WEEKLY_VERSES = [
@@ -151,8 +150,8 @@ function isValidWhatsAppPhone(phone) {
 
 function waBadge(m) {
   return isWhatsAppPending(m)
-    ? '<span class="wa-badge pending"><i class="fab fa-whatsapp"></i> WhatsApp pending</span>'
-    : '<span class="wa-badge sent"><i class="fab fa-whatsapp"></i> Sent</span>';
+    ? '<span class="wa-badge pending"><i class="fab fa-whatsapp"></i> Not sent</span>'
+    : '<span class="wa-badge sent"><i class="fas fa-check"></i> Got WhatsApp</span>';
 }
 
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -317,7 +316,7 @@ function renderMembers(members) {
       const id = escapeHtml(m.id);
       const pending = isWhatsAppPending(m);
       const imported = isImportedMember(m);
-      const rowClass = (pending ? 'row-pending-wa' : '') + (imported ? ' row-imported' : '');
+      const rowClass = (pending ? 'row-pending-wa' : 'row-sent-wa') + (imported ? ' row-imported' : '');
       const phoneWarning = isValidWhatsAppPhone(m.phone)
         ? ''
         : ' <span style="color:#c0392b;font-size:11px;" title="This is not a valid Uganda mobile number for WhatsApp">&#9888;</span>';
@@ -532,7 +531,6 @@ async function sendMemberWelcome(id) {
   welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
   welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-  welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
@@ -587,6 +585,7 @@ function showBulkWaModal(members) {
   const list = document.getElementById('bulkWaList');
   if (!list) return;
   list.innerHTML = '';
+  members = sortMembersForWork(members);
   currentBulkWaMembers = members.slice();
 
   if (members.length === 0) {
@@ -602,8 +601,8 @@ function showBulkWaModal(members) {
   header.style.cssText = 'display:flex; justify-content:space-between; padding:6px 8px; background:var(--gray-100); border-radius:var(--radius-sm); margin-bottom:10px; font-size:13px; font-weight:600;';
   header.innerHTML =
     '<span>Total: ' + members.length + ' members</span>' +
-    '<span style="color:var(--success);">✅ ' + welcomed + ' Sent</span>' +
-    '<span style="color:var(--danger);">⏳ ' + unwelcomed + ' Pending</span>';
+    '<span style="color:var(--success);">✅ ' + welcomed + ' got WhatsApp</span>' +
+    '<span style="color:var(--danger);">⏳ ' + unwelcomed + ' not sent</span>';
   list.appendChild(header);
 
   members.forEach(m => {
@@ -618,7 +617,6 @@ function showBulkWaModal(members) {
     welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
     welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
     welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-  welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
     welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
     welcome += '\n\n*An encounter with the Holy Spirit*';
 
@@ -638,7 +636,7 @@ function showBulkWaModal(members) {
       '</div>' +
       '<div style="display:flex; align-items:center; gap:6px;">' +
       (isSent
-        ? '<span style="font-size:11px;color:var(--success); font-weight:600;">Sent</span>'
+        ? '<span style="font-size:11px;color:var(--success); font-weight:600;">✓ Got WhatsApp</span>'
         : '<button onclick="sendBulkWa(\'' + escapeJs(m.id) + '\', \'' + escapeJs(formatName(m.name) || '-') + '\', \'' + escapeJs(m.phone || '-') + '\')" class="btn-icon btn-wa" style="padding:5px 10px;font-size:11px;"><i class="fab fa-whatsapp"></i> Send</button>') +
       '</div>';
 
@@ -670,7 +668,6 @@ async function sendBulkWa(id, name, phone) {
   welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
   welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-  welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
@@ -700,6 +697,49 @@ async function sendBulkWa(id, name, phone) {
   }
 }
 
+// Update welcomeSent for a list of members in batches (400 writes per commit).
+async function setWelcomedBatch(members, welcomed) {
+  const now = firebase.firestore.FieldValue.serverTimestamp();
+  let done = 0;
+  let failed = 0;
+  for (let i = 0; i < members.length; i += 400) {
+    const chunk = members.slice(i, i + 400);
+    const batch = db.batch();
+    chunk.forEach(function (m) {
+      const ref = db.collection('registrations').doc(m.id);
+      batch.update(ref, welcomed
+        ? { welcomeSent: true, welcomeSentAt: now, whatsappStatus: 'on' }
+        : { welcomeSent: false, whatsappStatus: 'unknown' });
+    });
+    try {
+      await batch.commit();
+      done += chunk.length;
+    } catch (err) {
+      failed += chunk.length;
+      console.warn('Could not update ' + chunk.length + ' member(s):', err.message);
+    }
+  }
+  return { done: done, failed: failed };
+}
+
+// Mark every member currently visible in the table as "got WhatsApp" so they
+// move to the bottom. Undo from Bulk WhatsApp Sender -> Reset all.
+async function markShownAsWelcomed() {
+  if (!isLoggedIn) { showLoginModal(); return; }
+  const targets = getFilteredMembers().filter(isWhatsAppPending);
+  if (!targets.length) {
+    alert('Everyone shown here is already marked as got WhatsApp.');
+    return;
+  }
+  if (!confirm('Mark ' + targets.length + ' shown member(s) as having got the WhatsApp message?\n\nThey will move to the bottom of the list. You can undo this from Bulk WhatsApp Sender -> Reset all.')) return;
+
+  const result = await setWelcomedBatch(targets, true);
+  await loadDashboard();
+  await loadMembers();
+  showToast(result.done + ' member(s) marked as got WhatsApp');
+  if (result.failed) alert(result.failed + ' member(s) could not be updated. Check your connection and try again.');
+}
+
 // Mark all pending members as welcomed without opening WhatsApp.
 async function markAllWelcomed() {
   if (!isLoggedIn) { showLoginModal(); return; }
@@ -709,47 +749,32 @@ async function markAllWelcomed() {
     hideBulkWaModal();
     return;
   }
-  if (!confirm('Mark all ' + pending.length + ' member(s) as welcomed without opening WhatsApp?')) return;
+  if (!confirm('Mark all ' + pending.length + ' member(s) as got WhatsApp without opening WhatsApp?')) return;
 
-  for (const m of pending) {
-    try {
-      await db.collection('registrations').doc(m.id).update({
-        welcomeSent: true,
-        welcomeSentAt: firebase.firestore.FieldValue.serverTimestamp(),
-        whatsappStatus: 'on'
-      });
-      m.welcomeSent = true;
-    } catch (err) { console.warn('Could not mark ' + m.id, err.message); }
-  }
-  applyMemberFilters();
-  updateWelcomePendingCount();
+  const result = await setWelcomedBatch(pending, true);
+  await loadDashboard();
+  await loadMembers();
   hideBulkWaModal();
-  alert('All ' + pending.length + ' members marked as welcomed.');
+  showToast(result.done + ' member(s) marked as got WhatsApp');
+  if (result.failed) alert(result.failed + ' member(s) could not be updated. Check your connection and try again.');
 }
 
-// Reset all members to unwelcomed so you can send welcome messages again.
+// Reset all members to not-sent so you can send welcome messages again.
 async function resetAllWelcomes() {
   if (!isLoggedIn) { showLoginModal(); return; }
-  const allWelcomed = allMembers.filter(m => m.welcomeSent);
+  const allWelcomed = allMembers.filter(m => !isWhatsAppPending(m));
   if (!allWelcomed.length) {
-    alert('No members are marked as welcomed.');
+    alert('No members are marked as got WhatsApp.');
     return;
   }
-  if (!confirm('Reset ALL ' + allWelcomed.length + ' member(s) to unwelcomed? You can then send welcome messages again.')) return;
+  if (!confirm('Reset ALL ' + allWelcomed.length + ' member(s) to not sent? You can then send welcome messages again.')) return;
 
-  for (const m of allWelcomed) {
-    try {
-      await db.collection('registrations').doc(m.id).update({
-        welcomeSent: false,
-        whatsappStatus: 'unknown'
-      });
-      m.welcomeSent = false;
-    } catch (err) { console.warn('Could not reset ' + m.id, err.message); }
-  }
-  applyMemberFilters();
-  updateWelcomePendingCount();
+  const result = await setWelcomedBatch(allWelcomed, false);
+  await loadDashboard();
+  await loadMembers();
   hideBulkWaModal();
-  alert('All ' + allWelcomed.length + ' members reset to unwelcomed. Open Bulk WhatsApp Sender to send messages.');
+  showToast(result.done + ' member(s) reset to not sent');
+  if (result.failed) alert(result.failed + ' member(s) could not be updated. Check your connection and try again.');
 }
 
 function updateWelcomePendingCount() {
@@ -787,6 +812,23 @@ function updateWelcomePendingCount() {
 }
 
 function applyMemberFilters() {
+  renderMembers(getFilteredMembers());
+}
+
+// Members who have not received the WhatsApp message come first so the admin
+// can work straight down the list. Sending a message moves that member to the
+// bottom, and the next person waiting moves up.
+function sortMembersForWork(list) {
+  return list.slice().sort(function (a, b) {
+    const ap = isWhatsAppPending(a) ? 0 : 1;
+    const bp = isWhatsAppPending(b) ? 0 : 1;
+    if (ap !== bp) return ap - bp;
+    return regTime(b) - regTime(a);
+  });
+}
+
+// The members currently visible in the table, honouring search + filters.
+function getFilteredMembers() {
   const q = (document.getElementById('memberSearch').value || '').trim().toLowerCase();
   const d = document.getElementById('departmentFilter').value;
   const pendingOnly = document.getElementById('pendingOnlyFilter') && document.getElementById('pendingOnlyFilter').checked;
@@ -802,7 +844,7 @@ function applyMemberFilters() {
   if (d) list = list.filter(m => m.department === d);
   if (pendingOnly) list = list.filter(isWhatsAppPending);
 
-  renderMembers(list);
+  return sortMembersForWork(list);
 }
 
 function searchMembers() { applyMemberFilters(); }

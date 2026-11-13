@@ -108,8 +108,7 @@ export const DEFAULT_CHURCH_PROGRAMS = {
    crossover: "31st Cross Over Night: 31 Dec 2026, 9:00 PM - 4:00 AM",
    contacts: "0730 938085 / 0730 909434",
    whatsappLink: "https://chat.whatsapp.com/Bd2AT6h45KgKMTUwCod89h",
-   youtubeVideo: "https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG",
-   mapsLink: "https://maps.google.com/?q=Grace+of+Jesus+Christ+Ministries,+Kitintale,+Luzira,+Kampala"
+   youtubeVideo: "https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG"
 };
 
 export const DEFAULT_UPCOMING_PROGRAMS = [

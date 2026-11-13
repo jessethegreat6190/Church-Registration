@@ -142,6 +142,9 @@ body { font-family: var(--font); background: var(--light); color: var(--text); m
 .data-table tr.row-pending-wa:hover { background: #fff3cd; }
 .data-table tr.row-pending-wa td:first-child { box-shadow: inset 4px 0 0 #d4a843; }
 .data-table tr.row-imported td:first-child { box-shadow: inset 4px 0 0 #2ecc71; }
+/* Already received the WhatsApp message: dimmed so the waiting rows stand out. */
+.data-table tr.row-sent-wa { opacity: 0.55; }
+.data-table tr.row-sent-wa:hover { opacity: 1; background: #f7f9fa; }
 
 .wa-badge {
   display: inline-flex; align-items: center; gap: 4px; margin-left: 8px;
