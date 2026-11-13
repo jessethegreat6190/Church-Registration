@@ -90,6 +90,7 @@ function buildProgramsText() {
     '• Friday Night Prayers: ' + churchPrograms.friday;
   text += '\n• ' + churchPrograms.baptism + ' — register: https://church-registration-grace.web.app/baptism-registration.html';
   text += '\n• ' + churchPrograms.crossover;
+  text += '\n' + churchPrograms.youtubeVideo;
   return text;
 }
 
@@ -448,7 +449,6 @@ async function sendMemberWelcome(id) {
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
   welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
   // Open before awaiting so the browser treats it as a user gesture.
@@ -535,7 +535,6 @@ function showBulkWaModal(members) {
     welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
   welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
     welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
     welcome += '\n\n*An encounter with the Holy Spirit*';
 
     const waUrl = 'https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome);
@@ -588,7 +587,6 @@ async function sendBulkWa(id, name, phone) {
   welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
   welcome += '\nOpen in Google Maps: ' + churchPrograms.mapsLink;
   welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-  welcome += '\n\nWatch our latest message: ' + churchPrograms.youtubeVideo;
   welcome += '\n\n*An encounter with the Holy Spirit*';
 
   window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome), '_blank');

@@ -412,6 +412,7 @@ async function handleSave() {
         '• Friday Night Prayers: ' + churchPrograms.friday;
       if (churchPrograms.baptism?.trim()) prog += '\n• ' + churchPrograms.baptism;
       if (churchPrograms.crossover?.trim()) prog += '\n• ' + churchPrograms.crossover;
+      if (churchPrograms.youtubeVideo?.trim()) prog += '\n' + churchPrograms.youtubeVideo;
       if (churchPrograms.custom?.trim()) prog += '\n• ' + churchPrograms.custom;
 
       let msg = `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
@@ -421,7 +422,6 @@ async function handleSave() {
       msg += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
       msg += '\nOpen in Google Maps: ' + (churchPrograms.mapsLink || 'https://maps.google.com/?q=Grace+of+Jesus+Christ+Ministries,+Kitintale,+Luzira,+Kampala');
       msg += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-      msg += '\n\nWatch our latest message: ' + (churchPrograms.youtubeVideo || 'https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG');
       msg += '\n\n*An encounter with the Holy Spirit*';
       whatsappUrl = `https://wa.me/${raw}?text=${encodeURIComponent(msg)}`;
     }

@@ -776,6 +776,7 @@ async function handleSave() {
           ' — register: https://church-registration-grace.web.app/baptism-registration.html';
       }
       if (churchPrograms.crossover && churchPrograms.crossover.trim()) programs += '\n• ' + churchPrograms.crossover;
+      if (churchPrograms.youtubeVideo && churchPrograms.youtubeVideo.trim()) programs += '\n' + churchPrograms.youtubeVideo;
       if (churchPrograms.custom && churchPrograms.custom.trim()) programs += '\n• ' + churchPrograms.custom;
 
       let welcome = `Hello ${currentEntry.name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
@@ -787,7 +788,6 @@ async function handleSave() {
       welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
       welcome += '\nOpen in Google Maps: ' + (churchPrograms.mapsLink || 'https://maps.google.com/?q=Grace+of+Jesus+Christ+Ministries,+Kitintale,+Luzira,+Kampala');
       welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-      welcome += '\n\nWatch our latest message: ' + (churchPrograms.youtubeVideo || 'https://youtu.be/NfUe8Z7xj6U?si=aYQc4RO2O9vNDloG');
       welcome += '\n\n*An encounter with the Holy Spirit*';
       const waUrl = `https://wa.me/${intlPhone}?text=${encodeURIComponent(welcome)}`;
       blessingOverlay.dataset.waUrl = waUrl;
