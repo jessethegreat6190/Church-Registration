@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Duplicate Review — Grace of Jesus Christ Ministries</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/dashboard.css?v=17">
+<link rel="stylesheet" href="css/duplicates.css?v=1">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-section">
+    <img src="assets/logo/New%20Logo%202026.png" alt="Logo" class="dashboard-logo">
+    <div>
+      <div class="church-name">Grace of Jesus Christ Ministries</div>
+      <div class="church-sub">Church Management System</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="hdr-btn" id="adminBtn" onclick="handleAdminBtn()">Admin Login</button>
+    <div class="hdr-date" id="currentDate"></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-container">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</li>
+      <li class="sidebar-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-users"></i> Members</li>
+      <li class="sidebar-item" onclick="window.location.href='bulk-import.html'"><i class="fas fa-file-import"></i> Bulk Import</li>
+      <li class="sidebar-item active"><i class="fas fa-clone"></i> Duplicates</li>
+    </ul>
+    <div class="sidebar-tip">
+      <i class="fas fa-shield-halved"></i>
+      <p>Nothing is deleted until you untick it and press <strong>Delete unchecked</strong>.</p>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <div class="content-header">
+      <div>
+        <h1 class="content-title">Duplicate Review</h1>
+        <p class="content-subtitle">Members who share a name or a phone number. Keep one, delete the rest.</p>
+      </div>
+      <a class="btn-secondary dup-back" href="dashboard.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <!-- AUTH NOTICE -->
+    <div id="authNotice" class="auth-card">
+      <i class="fas fa-lock"></i>
+      <div class="auth-copy">
+        <strong>Admin login required to delete</strong>
+        <p>You can scan and review now, but you must sign in as admin before removing anything.</p>
+      </div>
+      <button class="btn-primary" onclick="showLoginModal()">Admin Login</button>
+    </div>
+
+    <section class="step-card">
+      <div class="step-head">
+        <span class="step-num"><i class="fas fa-clone"></i></span>
+        <div>
+          <h2>Scan the church database</h2>
+          <p>A record is a duplicate when its <strong>name</strong> OR <strong>contact</strong> matches another member.</p>
+        </div>
+      </div>
+
+      <div class="dup-toolbar">
+        <button id="scanBtn" class="btn-primary" onclick="scanDuplicates()">
+          <i class="fas fa-magnifying-glass"></i> Scan for duplicates
+        </button>
+        <button class="btn-secondary" onclick="selectBestAll()" title="Untick every extra record, keeping the most complete one per group">
+          <i class="fas fa-wand-magic-sparkles"></i> Auto-select keepers
+        </button>
+        <button class="btn-secondary" onclick="keepAll()" title="Tick every record so nothing is deleted">
+          <i class="fas fa-check-double"></i> Keep all
+        </button>
+        <input id="dupSearch" class="search-input" placeholder="Search name or phone..." oninput="renderGroups()">
+      </div>
+
+      <div class="summary-tiles">
+        <div class="tile"><span id="statRecords">0</span><small>Members scanned</small></div>
+        <div class="tile warn"><span id="statGroups">0</span><small>Duplicate groups</small></div>
+        <div class="tile bad"><span id="statDelete">0</span><small>Marked for deletion</small></div>
+        <div class="tile ok"><span id="statKeep">0</span><small>Will be kept</small></div>
+      </div>
+
+      <div id="dupList" class="dup-list">
+        <div class="dup-empty">
+          <i class="fas fa-circle-info"></i>
+          <p>Press <strong>Scan for duplicates</strong> to look through the church database.</p>
+        </div>
+      </div>
+
+      <div class="dup-actions">
+        <button id="deleteBtn" class="btn-danger" onclick="deleteUnchecked()" disabled>
+          <i class="fas fa-trash-can"></i> Delete unchecked
+        </button>
+        <button id="backupBtn" class="btn-secondary" onclick="downloadBackup()" disabled>
+          <i class="fas fa-download"></i> Download backup
+        </button>
+      </div>
+
+      <div id="dupProgressWrap" class="progress-wrap" style="display:none;">
+        <div class="progress"><div id="dupProgress" class="progress-bar"></div></div>
+        <div id="dupProgressText" class="progress-text"></div>
+      </div>
+
+      <div id="dupResult" class="result-box" style="display:none;"></div>
+    </section>
+
+    <section class="step-card rules-card">
+      <div class="step-head">
+        <span class="step-num"><i class="fas fa-shield-halved"></i></span>
+        <div>
+          <h2>Safety rules</h2>
+          <p>This tool cannot delete a whole group by accident.</p>
+        </div>
+      </div>
+      <ul class="rules-list">
+        <li>Every group must keep at least one record. The delete button refuses to empty a group.</li>
+        <li>Names are compared ignoring case, spacing, punctuation and leading list numbers.</li>
+        <li>Truncated names match their full form, including middle cuts like <code>Sse...ongo</code> → <code>Ssentongo</code>.</li>
+        <li>Contacts are compared using the last 9 digits, so <code>+256 700 123456</code> matches <code>0700123456</code>.</li>
+        <li>A backup file is downloaded automatically before anything is deleted.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="text-align:center;">
+    <img src="assets/logo/New%20Logo%202026.png" alt="Church Logo" style="width:70px;height:70px;border-radius:50%;margin:0 auto 12px;display:block;object-fit:cover;">
+    <div class="modal-title">Admin Login</div>
+    <p style="font-size:13px;color:#7f8c8d;margin-bottom:16px;">Grace of Jesus Christ Ministries</p>
+    <form id="loginForm">
+      <div class="form-group" style="text-align:left;"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" value="admin@gracechristministries.com" required></div>
+      <div class="form-group" style="text-align:left;"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required></div>
+      <div class="form-group" style="text-align:left;display:flex;align-items:center;gap:8px;margin:-4px 0 12px;">
+        <input type="checkbox" id="rememberEmail" checked style="width:auto;">
+        <label for="rememberEmail" style="font-size:13px;font-weight:400;color:#555;margin:0;cursor:pointer;">Remember Email</label>
+      </div>
+      <div id="loginError" style="color:#e74c3c;font-size:13px;margin-top:8px;text-align:center;display:none;"></div>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top: 4px;">Access Dashboard</button>
+    </form>
+    <button class="btn-secondary" style="width:100%; margin-top: 10px;font-size:13px;" onclick="hideLoginModal()">Cancel</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="js/duplicates.js?v=1"></script>
+</body>
+</html>
