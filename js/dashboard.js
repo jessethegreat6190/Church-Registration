@@ -892,8 +892,9 @@ function normalizeNameForMatch(name) {
   return String(name || '')
     .toLowerCase()
     .replace(/^\s*\d{1,3}\s*[.)-]\s*/, '') // "01. ", "3. ", "06. "
-    .replace(/\.{2,}/g, '')                // "Sse...ongo" -> "sseongo"
-    .replace(/[^a-z0-9 ]/g, ' ')
+    .replace(/([a-z0-9])\.{2,}([a-z0-9])/g, '$1*$2') // "Sse...ongo" -> "sse*ongo"
+    .replace(/\.{2,}/g, '*')                          // "Nam..." -> "nam*"
+    .replace(/[^a-z0-9 *]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -903,8 +904,27 @@ function nameTokensForMatch(name) {
   return normalized ? normalized.split(' ') : [];
 }
 
+// An ellipsis marks missing middle letters: "sse*ongo" matches "ssentongo".
+function wildcardTokenRegExp(token) {
+  const literals = token.replace(/\*/g, '').length;
+  if (literals < 2) return null;
+  const escaped = token
+    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*');
+  return new RegExp('^' + escaped + '$');
+}
+
 function nameTokenMatches(a, b) {
   if (a === b) return true;
+  // A truncated token with an ellipsis is matched as a wildcard.
+  if (a.indexOf('*') !== -1) {
+    const re = wildcardTokenRegExp(a);
+    return re ? re.test(b) : false;
+  }
+  if (b.indexOf('*') !== -1) {
+    const re = wildcardTokenRegExp(b);
+    return re ? re.test(a) : false;
+  }
   // A single letter is treated as an initial: "M" matches "Mary", "N" matches "Nabirye".
   if (a.length === 1 && b.charAt(0) === a) return true;
   if (b.length === 1 && a.charAt(0) === b) return true;

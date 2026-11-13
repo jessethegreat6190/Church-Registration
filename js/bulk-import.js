@@ -63,8 +63,9 @@ function normalizeNameForMatch(name) {
   return String(name || '')
     .toLowerCase()
     .replace(/^\s*\d{1,3}\s*[.)-]\s*/, '')
-    .replace(/\.{2,}/g, '')
-    .replace(/[^a-z0-9 ]/g, ' ')
+    .replace(/([a-z0-9])\.{2,}([a-z0-9])/g, '$1*$2') // "sse...ongo" -> "sse*ongo"
+    .replace(/\.{2,}/g, '*')                          // "nam..." -> "nam*"
+    .replace(/[^a-z0-9 *]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -74,8 +75,26 @@ function nameTokensForMatch(name) {
   return normalized ? normalized.split(' ') : [];
 }
 
+// An ellipsis marks missing middle letters: "sse*ongo" matches "ssentongo".
+function wildcardTokenRegExp(token) {
+  const literals = token.replace(/\*/g, '').length;
+  if (literals < 2) return null;
+  const escaped = token
+    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+    .replace(/\*/g, '.*');
+  return new RegExp('^' + escaped + '$');
+}
+
 function nameTokenMatches(a, b) {
   if (a === b) return true;
+  if (a.indexOf('*') !== -1) {
+    const re = wildcardTokenRegExp(a);
+    return re ? re.test(b) : false;
+  }
+  if (b.indexOf('*') !== -1) {
+    const re = wildcardTokenRegExp(b);
+    return re ? re.test(a) : false;
+  }
   if (a.length === 1 && b.charAt(0) === a) return true;
   if (b.length === 1 && a.charAt(0) === b) return true;
   if (a.length >= 3 && b.startsWith(a)) return true;
