@@ -29,6 +29,8 @@
         "archive/**",
         "report_screenshots/**",
         "scripts/**",
+        "imports/**",
+        "~$*",
         "*.docx",
         "*.pptx",
         "*.rar",

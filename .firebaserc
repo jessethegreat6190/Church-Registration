@@ -5,8 +5,11 @@
   "targets": {
     "church-registration-grace": {
       "hosting": {
-        "main": "church-registration-grace"
+        "main": [
+          "church-registration-grace"
+        ]
       }
     }
-  }
+  },
+  "etags": {}
 }
