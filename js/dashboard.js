@@ -369,7 +369,17 @@ function editMember(id) {
   document.getElementById('editMemberId').value = id;
   document.getElementById('editMemberName').value = m.name || '';
   document.getElementById('editMemberPhone').value = m.phone || '';
-  document.getElementById('editMemberDepartment').value = m.department || '';
+  // Keep departments that are not in the dropdown (e.g. older free-text
+  // values) instead of silently clearing them on save.
+  const deptSelect = document.getElementById('editMemberDepartment');
+  const dept = m.department || '';
+  if (dept && !Array.from(deptSelect.options).some(o => o.value === dept)) {
+    const opt = document.createElement('option');
+    opt.value = dept;
+    opt.textContent = dept;
+    deptSelect.appendChild(opt);
+  }
+  deptSelect.value = dept;
   document.getElementById('editMemberLocation').value = m.location || '';
   document.getElementById('editMemberModal').classList.add('show');
 }
@@ -378,34 +388,109 @@ function hideEditMemberModal() {
   document.getElementById('editMemberModal').classList.remove('show');
 }
 
+// Reject after `ms` so a write that Firestore keeps queued (offline / unstable
+// connection) can never look like it saved. The modal stays open in that case.
+function withTimeout(promise, ms, message) {
+  var timer;
+  var timeout = new Promise(function (_, reject) {
+    timer = setTimeout(function () { reject(new Error(message)); }, ms);
+  });
+  return Promise.race([promise, timeout]).finally(function () { clearTimeout(timer); });
+}
+
+function showToast(message) {
+  var toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);' +
+    'background:#2ecc71;color:#fff;padding:12px 22px;border-radius:10px;font-size:14px;' +
+    'font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.2);z-index:9999;opacity:0;' +
+    'transition:opacity .25s ease;';
+  document.body.appendChild(toast);
+  requestAnimationFrame(function () { toast.style.opacity = '1'; });
+  setTimeout(function () {
+    toast.style.opacity = '0';
+    setTimeout(function () { toast.remove(); }, 300);
+  }, 3200);
+}
+
 document.getElementById('editMemberForm').onsubmit = async function(e) {
   e.preventDefault();
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const submitHtml = submitBtn ? submitBtn.innerHTML : '';
   const id = document.getElementById('editMemberId').value;
   const name = formatName(document.getElementById('editMemberName').value);
   const phone = document.getElementById('editMemberPhone').value.trim();
   const department = document.getElementById('editMemberDepartment').value;
   const location = document.getElementById('editMemberLocation').value.trim();
   if (!name || !phone) { alert('Name and phone are required.'); return; }
+
+  const newId = cleanPhone(phone);
+  if (!newId) { alert('Please enter a valid phone number (at least 9 digits).'); return; }
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+  }
+
   try {
-    const newId = cleanPhone(phone);
-    if (newId && newId !== id) {
+    if (!navigator.onLine) {
+      throw new Error('You appear to be offline. Reconnect to the internet and try again.');
+    }
+
+    const targetRef = db.collection('registrations').doc(newId);
+    const oldRef = db.collection('registrations').doc(id);
+
+    if (newId !== id) {
       // Phone changed: move the record to the new phone-based document ID.
-      const oldDoc = await db.collection('registrations').doc(id).get();
-      const data = oldDoc.exists ? oldDoc.data() : {};
-      await db.collection('registrations').doc(newId).set({
+      const [oldSnap, targetSnap] = await Promise.all([oldRef.get(), targetRef.get()]);
+      if (!oldSnap.exists && !targetSnap.exists) {
+        throw new Error('This member no longer exists. Refresh the page and try again.');
+      }
+      if (targetSnap.exists) {
+        const other = targetSnap.data();
+        if (formatName(other.name) !== name) {
+          throw new Error('Another member already uses that phone number (' +
+            (formatName(other.name) || newId) + '). Open that record instead of creating a duplicate.');
+        }
+      }
+      const data = oldSnap.exists ? oldSnap.data() : {};
+      const batch = db.batch();
+      batch.set(targetRef, {
         ...data, name, phone, department, location, whatsapp: phone, cleanPhone: newId
       });
-      await db.collection('registrations').doc(id).delete();
+      if (oldSnap.exists) batch.delete(oldRef);
+      await withTimeout(batch.commit(), 20000,
+        'The server did not confirm the save. Check your internet connection and try again.');
     } else {
-      await db.collection('registrations').doc(id).update({
+      await withTimeout(targetRef.update({
         name, phone, department, location, whatsapp: phone, cleanPhone: newId
-      });
+      }), 20000, 'The server did not confirm the save. Check your internet connection and try again.');
     }
+
+    // Read the saved record back from the server. This is what guarantees the
+    // dashboard can never show an edit that only exists in the local cache.
+    const saved = await withTimeout(targetRef.get({ source: 'server' }), 15000,
+      'Saved locally but could not be confirmed by the server. Check your connection and try again.');
+    if (!saved.exists) {
+      throw new Error('The change did not reach the server. Please try again.');
+    }
+    const s = saved.data();
+    if (s.name !== name || s.phone !== phone ||
+        (s.department || '') !== department || (s.location || '') !== location) {
+      throw new Error('The server still has the old details. Please try again.');
+    }
+
     hideEditMemberModal();
+    showToast('Saved — ' + name);
     await loadMembers();
     await loadDashboard();
   } catch (err) {
     alert('Could not save changes: ' + err.message);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = submitHtml;
+    }
   }
 };
 
