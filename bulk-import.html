@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bulk Import — Grace of Jesus Christ Ministries</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/dashboard.css?v=17">
+<link rel="stylesheet" href="css/bulk-import.css?v=1">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-section">
+    <img src="assets/logo/New%20Logo%202026.png" alt="Logo" class="dashboard-logo">
+    <div>
+      <div class="church-name">Grace of Jesus Christ Ministries</div>
+      <div class="church-sub">Church Management System</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="hdr-btn" id="adminBtn" onclick="handleAdminBtn()">Admin Login</button>
+    <div class="hdr-date" id="currentDate"></div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="main-container">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="sidebar-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-home"></i> Dashboard</li>
+      <li class="sidebar-item" onclick="window.location.href='dashboard.html'"><i class="fas fa-users"></i> Members</li>
+      <li class="sidebar-item active"><i class="fas fa-file-import"></i> Bulk Import</li>
+    </ul>
+    <div class="sidebar-tip">
+      <i class="fas fa-circle-info"></i>
+      <p>Imports are checked against every member already in the system before anything is saved.</p>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+    <div class="content-header">
+      <div>
+        <h1 class="content-title">Bulk Import</h1>
+        <p class="content-subtitle">Add many members at once. Duplicates are skipped automatically.</p>
+      </div>
+      <a class="btn-secondary bulk-back" href="dashboard.html"><i class="fas fa-arrow-left"></i> Dashboard</a>
+    </div>
+
+    <!-- AUTH NOTICE -->
+    <div id="authNotice" class="auth-card">
+      <i class="fas fa-lock"></i>
+      <div class="auth-copy">
+        <strong>Admin login required to save</strong>
+        <p>You can preview a file now, but you must sign in as admin before importing.</p>
+      </div>
+      <button class="btn-primary" onclick="showLoginModal()">Admin Login</button>
+    </div>
+
+    <!-- STEP 1 -->
+    <section class="step-card">
+      <div class="step-head">
+        <span class="step-num">1</span>
+        <div>
+          <h2>Select your data file</h2>
+          <p>Upload a JSON or CSV file. Required columns: <strong>name</strong> and <strong>contact</strong>.</p>
+        </div>
+      </div>
+
+      <div id="dropZone" class="drop-zone" role="button" tabindex="0">
+        <i class="fas fa-cloud-arrow-up"></i>
+        <strong>Drag &amp; drop your file here</strong>
+        <span>or click to browse — .json, .csv, .txt</span>
+        <input type="file" id="bulkFileInput" accept=".json,.csv,.txt,application/json,text/csv,text/plain" hidden>
+      </div>
+
+      <div class="file-actions">
+        <button class="btn-secondary" onclick="loadServerFile()"><i class="fas fa-server"></i> Load imports/new.json</button>
+        <button class="btn-secondary" onclick="downloadSample('csv')"><i class="fas fa-download"></i> Sample CSV</button>
+        <button class="btn-secondary" onclick="downloadSample('json')"><i class="fas fa-download"></i> Sample JSON</button>
+      </div>
+
+      <div class="format-help">
+        <div>
+          <strong>CSV columns</strong>
+          <code>name, contact, residence</code>
+        </div>
+        <div>
+          <strong>JSON format</strong>
+          <code>[{"name":"Jane Nakato","contact":"0700123456","residence":"Luzira"}]</code>
+        </div>
+      </div>
+
+      <div id="fileInfo" class="file-info" style="display:none;"></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section id="reviewSection" class="step-card" style="display:none;">
+      <div class="step-head">
+        <span class="step-num">2</span>
+        <div>
+          <h2>Review before importing</h2>
+          <p>Rows whose name <em>or</em> contact already exists are skipped automatically.</p>
+        </div>
+      </div>
+
+      <div class="summary-tiles">
+        <div class="tile"><span id="tileTotal">0</span><small>Total rows</small></div>
+        <div class="tile ok"><span id="tileReady">0</span><small>Ready</small></div>
+        <div class="tile warn"><span id="tileDup">0</span><small>Duplicates skipped</small></div>
+        <div class="tile bad"><span id="tileInvalid">0</span><small>Invalid WhatsApp</small></div>
+      </div>
+
+      <div class="preview-toolbar">
+        <input id="bulkSearch" class="search-input" placeholder="Search name, contact or residence..." oninput="renderPreview()">
+        <select id="bulkFilter" class="form-select" onchange="renderPreview()">
+          <option value="all">All rows</option>
+          <option value="ready">Ready only</option>
+          <option value="duplicate">Skipped only</option>
+          <option value="invalid">Invalid phone only</option>
+        </select>
+        <label class="pending-filter" title="Select every row that is safe to import">
+          <input type="checkbox" id="selectAllReady" onchange="toggleAllReady(this.checked)"> Select all ready
+        </label>
+        <label class="pending-filter" title="Do not import rows whose number is not a Uganda mobile number">
+          <input type="checkbox" id="skipInvalid" onchange="toggleSkipInvalid(this.checked)"> Skip invalid numbers
+        </label>
+      </div>
+
+      <div class="table-container bulk-table-wrap">
+        <table class="data-table bulk-table">
+          <thead>
+            <tr>
+              <th class="col-include">Include</th>
+              <th class="col-num">#</th>
+              <th>Name</th>
+              <th>Contact</th>
+              <th>Residence</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bulkTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="import-actions">
+        <button id="bulkImportBtn" class="btn-primary" onclick="runImport()" disabled>
+          <i class="fas fa-file-import"></i> Import
+        </button>
+        <button class="btn-secondary" onclick="resetImport()"><i class="fas fa-rotate-left"></i> Start over</button>
+      </div>
+
+      <div id="bulkProgressWrap" class="progress-wrap" style="display:none;">
+        <div class="progress"><div id="bulkProgress" class="progress-bar"></div></div>
+        <div id="bulkProgressText" class="progress-text"></div>
+      </div>
+
+      <div id="bulkResult" class="result-box" style="display:none;"></div>
+    </section>
+
+    <!-- RULES -->
+    <section class="step-card rules-card">
+      <div class="step-head">
+        <span class="step-num"><i class="fas fa-shield-halved"></i></span>
+        <div>
+          <h2>How duplicates are detected</h2>
+          <p>A row is skipped if its <strong>name</strong> OR <strong>contact</strong> already exists — in the uploaded file or in the church database.</p>
+        </div>
+      </div>
+      <ul class="rules-list">
+        <li>Names are compared ignoring capitalisation, spacing, punctuation and leading list numbers.</li>
+        <li>Truncated names such as <code>Nam... Gideon</code> match <code>Namutamba Gideon</code>.</li>
+        <li>Names are saved with the first letter of every word capitalised.</li>
+        <li>Contacts are compared using the last 9 digits, so <code>+256 700 123456</code> matches <code>0700123456</code>.</li>
+        <li>Writes are done in safe chunks and never overwrite an existing record.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" style="text-align:center;">
+    <img src="assets/logo/New%20Logo%202026.png" alt="Church Logo" style="width:70px;height:70px;border-radius:50%;margin:0 auto 12px;display:block;object-fit:cover;">
+    <div class="modal-title">Admin Login</div>
+    <p style="font-size:13px;color:#7f8c8d;margin-bottom:16px;">Grace of Jesus Christ Ministries</p>
+    <form id="loginForm">
+      <div class="form-group" style="text-align:left;"><label class="form-label">Email</label><input type="email" class="form-input" id="loginEmail" value="admin@gracechristministries.com" required></div>
+      <div class="form-group" style="text-align:left;"><label class="form-label">Password</label><input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" required></div>
+      <div class="form-group" style="text-align:left;display:flex;align-items:center;gap:8px;margin:-4px 0 12px;">
+        <input type="checkbox" id="rememberEmail" checked style="width:auto;">
+        <label for="rememberEmail" style="font-size:13px;font-weight:400;color:#555;margin:0;cursor:pointer;">Remember Email</label>
+      </div>
+      <div id="loginError" style="color:#e74c3c;font-size:13px;margin-top:8px;text-align:center;display:none;"></div>
+      <button type="submit" class="btn-primary" style="width:100%; margin-top: 4px;">Access Dashboard</button>
+    </form>
+    <button class="btn-secondary" style="width:100%; margin-top: 10px;font-size:13px;" onclick="hideLoginModal()">Cancel</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+<script src="js/bulk-import.js?v=1"></script>
+</body>
+</html>

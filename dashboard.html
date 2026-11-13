@@ -6,7 +6,7 @@
 <title>Grace of Jesus Christ Ministries — Admin Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/dashboard.css?v=17">
 </head>
 <body>
 
@@ -31,12 +31,11 @@
   <nav class="sidebar">
     <ul class="sidebar-menu">
       <li class="sidebar-item active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</li>
-      <li class="sidebar-item" data-section="reports"><i class="fas fa-file-alt"></i> Reports</li>
       <li class="sidebar-item" data-section="members"><i class="fas fa-users"></i> Members</li>
       <li class="sidebar-item" data-section="programs"><i class="fas fa-calendar-alt"></i> Programs</li>
       <li class="sidebar-item" data-section="events"><i class="fas fa-church"></i> Events</li>
-      <li class="sidebar-item" data-section="pastoral"><i class="fas fa-hands-praying"></i> Pastoral Care</li>
       <li class="sidebar-item" data-section="communications"><i class="fas fa-comments"></i> Communications</li>
+      <li class="sidebar-item" onclick="window.location.href='bulk-import.html'"><i class="fas fa-file-import"></i> Bulk Import</li>
     </ul>
   </nav>
 
@@ -72,6 +71,22 @@
           <div class="stat-value" id="attendanceRate">0%</div>
           <div class="stat-label">Attendance Rate</div>
         </div>
+        <div class="stat-card">
+          <div class="stat-icon wa"><i class="fab fa-whatsapp"></i></div>
+          <div class="stat-value" id="whatsappPending">0</div>
+          <div class="stat-label">WhatsApp Pending</div>
+        </div>
+      </div>
+
+      <div id="waPendingBanner" class="wa-banner" style="display:none;">
+        <div class="wa-banner-text">
+          <i class="fab fa-whatsapp"></i>
+          <span id="waPendingBannerText">Some members have not received a WhatsApp message yet.</span>
+        </div>
+        <div class="wa-banner-actions">
+          <button id="waNewBtn" class="btn-primary wa-banner-btn wa-banner-btn-import" onclick="sendPendingWelcomes(true)" style="display:none;"><i class="fas fa-file-import"></i> Send New Imports</button>
+          <button class="btn-primary wa-banner-btn" onclick="reviewPendingWhatsApp()"><i class="fab fa-whatsapp"></i> Review &amp; Send</button>
+        </div>
       </div>
 
       <h3 style="margin-top: 32px; margin-bottom: 16px;">Recent Registrations</h3>
@@ -83,7 +98,7 @@
               <th>Phone</th>
               <th>Department</th>
               <th>Date</th>
-              <th>Status</th>
+              <th>WhatsApp</th>
             </tr>
           </thead>
           <tbody id="recentRegistrations">
@@ -93,86 +108,11 @@
       </div>
     </div>
 
-    <!-- REPORTS SECTION -->
-    <div id="section-reports" class="form-section">
-      <div class="content-header">
-        <h2 class="content-title">Registration Reports</h2>
-        <div style="display:flex;gap:10px;">
-          <button class="btn-primary" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
-          <button class="btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
-        </div>
-      </div>
-
-      <div class="cards-grid" style="margin-bottom:20px;">
-        <div class="stat-card">
-          <div class="stat-icon maroon"><i class="fas fa-users"></i></div>
-          <div class="stat-value" id="reportTotalReg">0</div>
-          <div class="stat-label">Total Registrations</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon gold"><i class="fas fa-clock"></i></div>
-          <div class="stat-value" id="reportPending">0</div>
-          <div class="stat-label">Pending</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-          <div class="stat-value" id="reportActive">0</div>
-          <div class="stat-label">Active Members</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon red"><i class="fas fa-layer-group"></i></div>
-          <div class="stat-value" id="reportDepartments">0</div>
-          <div class="stat-label">Departments</div>
-        </div>
-      </div>
-
-      <div class="search-bar">
-        <input type="text" class="search-input" id="reportSearch" placeholder="Search by name, phone, department..." onkeyup="filterReports()">
-        <select class="form-select" id="reportDeptFilter" onchange="filterReports()" style="width:auto;">
-          <option value="">All Departments</option>
-          <option value="Ushering">Ushering</option>
-          <option value="Choir">Choir</option>
-          <option value="Instruments">Instruments</option>
-          <option value="Venue Management">Venue Management</option>
-          <option value="Intercessory">Intercessory</option>
-          <option value="Media">Media</option>
-          <option value="Protocol">Protocol</option>
-          <option value="Other">Other</option>
-        </select>
-        <select class="form-select" id="reportStatusFilter" onchange="filterReports()" style="width:auto;">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="new">New</option>
-        </select>
-      </div>
-
-      <div class="table-container">
-        <table class="data-table" id="reportTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Phone</th>
-              <th>Department</th>
-              <th>Location</th>
-              <th>Referred By</th>
-              <th>Registered</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="reportsTableBody">
-            <tr><td colspan="8" style="text-align:center;color:#6c757d">Loading...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
     <!-- MEMBERS SECTION -->
     <div id="section-members" class="form-section">
       <div class="content-header" style="margin-bottom: 20px;">
         <h2 class="content-title">Members Directory</h2>
-        <div class="search-bar">
+        <div class="search-bar" style="flex-wrap:wrap;align-items:center;">
           <input type="text" class="search-input" id="memberSearch" placeholder="Search members..." onkeyup="searchMembers()">
           <select class="form-select" id="departmentFilter" onchange="filterMembers()" style="width:auto;">
             <option value="">All Departments</option>
@@ -182,6 +122,15 @@
             <option value="Venue Management">Venue Management</option>
             <option value="Other">Other</option>
           </select>
+          <label class="pending-filter" title="Show only members who have not received a WhatsApp message">
+            <input type="checkbox" id="pendingOnlyFilter" onchange="filterMembers()"> WhatsApp pending only
+          </label>
+          <a class="btn-primary" href="bulk-import.html" style="background:#8e44ad;text-decoration:none;display:inline-flex;align-items:center;gap:7px;"><i class="fas fa-layer-group"></i> Bulk Import</a>
+          <button class="btn-primary" onclick="openImportModal()" style="background:#2980b9;"><i class="fas fa-file-import"></i> Import New</button>
+          <button class="btn-primary" onclick="sendPendingWelcomes()" style="background:#2ecc71;"><i class="fab fa-whatsapp"></i> Send Pending</button>
+          <button class="btn-primary" onclick="sendWelcomeToAll()"><i class="fab fa-whatsapp"></i> Send Welcome to All</button>
+          <button class="btn-primary" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
+          <span id="welcomePendingCount" style="font-size:13px;color:#6c757d;"></span>
         </div>
       </div>
       <div class="table-container">
@@ -192,12 +141,11 @@
               <th>Phone</th>
               <th>Department</th>
               <th>Registered</th>
-              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="membersTable">
-            <tr><td colspan="6" style="text-align:center;color:#6c757d">Loading...</td></tr>
+            <tr><td colspan="5" style="text-align:center;color:#6c757d">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -237,38 +185,24 @@
         </div>
         <div class="stat-card">
           <div class="stat-value">Monday Kyoto</div>
-          <div class="stat-label">7:00-9:00 AM</div>
+          <div class="stat-label">6:00-7:00 AM</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">Wednesday Glory</div>
-          <div class="stat-label">6:00-7:00 PM</div>
+          <div class="stat-label">5:00-7:00 PM</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">Friday Prayers</div>
-          <div class="stat-label">9:00 PM - 2:00 AM</div>
+          <div class="stat-label">3PM, 2:30AM, 3AM</div>
         </div>
-      </div>
-    </div>
-
-    <!-- PASTORAL CARE SECTION -->
-    <div id="section-pastoral" class="form-section">
-      <div class="content-header" style="margin-bottom: 20px;">
-        <h2 class="content-title">Pastoral Care</h2>
-      </div>
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Need</th>
-              <th>Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="careTable">
-            <tr><td colspan="4" style="text-align:center;color:#6c757d">No care requests</td></tr>
-          </tbody>
-        </table>
+        <div class="stat-card">
+          <div class="stat-value">Baptism</div>
+          <div class="stat-label">Date to be announced</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">Cross Over Night</div>
+          <div class="stat-label">31 Dec 2026, 9PM-4AM</div>
+        </div>
       </div>
     </div>
 
@@ -301,10 +235,9 @@
       </div>
       <div id="com-messages" style="display:none;">
         <div class="content-header" style="margin-bottom: 20px;">
-          <h3>WhatsApp Integration</h3>
+          <h3>Registration Data</h3>
         </div>
-        <p>Send messages to registered members via WhatsApp.</p>
-        <button class="btn-primary" onclick="sendWhatsApp()"><i class="fab fa-whatsapp"></i> Send Message</button>
+        <p>Registration data is available in the Members section. Use Export CSV to download it.</p>
       </div>
     </div>
   </main>
@@ -324,6 +257,82 @@
       <button type="submit" class="btn-primary" style="width:100%; margin-top: 8px;">Save Program</button>
     </form>
     <button class="btn-secondary" style="width:100%; margin-top: 12px;" onclick="hideProgramModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- BULK WHATSAPP SENDER MODAL -->
+<div class="modal-overlay" id="bulkWaModal">
+  <div class="modal" style="max-width:700px; max-height:85vh; text-align:left; display:flex; flex-direction:column;">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:12px; border-bottom:1px solid var(--border); margin-bottom:12px;">
+      <div class="modal-title">Bulk WhatsApp Sender</div>
+      <button class="modal-close" onclick="hideBulkWaModal()">&times;</button>
+    </div>
+    <p style="font-size:13px;color:#6c757d;margin:0 0 12px 0;">
+      Click <strong>Send</strong> next to each member. Each click opens one WhatsApp tab with their personal thank-you message.<br>
+      <strong>Note:</strong> Browsers block automatic multi-tab opening, so you click each one individually.
+    </p>
+    <div style="overflow-y:auto; max-height:55vh; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; margin-bottom:12px;" id="bulkWaList">
+      <div style="text-align:center;color:#6c757d;">Loading members...</div>
+    </div>
+    <button class="btn-secondary" onclick="hideBulkWaModal()" style="width:100%;">Close</button>
+  </div>
+</div>
+
+<!-- IMPORT NEW MEMBERS MODAL -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal import-modal">
+    <div class="import-modal-head">
+      <div class="modal-title" style="margin:0;text-align:left;">Import New Members</div>
+      <button class="modal-close" style="position:static;" onclick="hideImportModal()">&times;</button>
+    </div>
+    <p class="import-help">
+      Reads <code>imports/new.json</code> and adds the new entries to the church database.
+      Duplicate names or phone numbers (in the file or already in the database) are skipped.
+      Imported members are marked as <strong>WhatsApp pending</strong> so you can send their welcome messages.
+    </p>
+    <div class="import-file-row">
+      <label class="pending-filter">
+        <i class="fas fa-folder-open"></i> Choose a JSON file
+        <input type="file" id="importFileInput" accept=".json,application/json" onchange="handleImportFileInput(event)">
+      </label>
+      <button class="btn-secondary" style="padding:10px 14px;font-size:13px;" onclick="loadImportFile()"><i class="fas fa-rotate"></i> Reload imports/new.json</button>
+    </div>
+    <div id="importSummary" class="import-summary">Loading imports/new.json…</div>
+    <div id="importPreview" class="import-preview"></div>
+    <div id="importResult" class="import-result"></div>
+    <div class="import-actions">
+      <button id="importConfirmBtn" class="btn-primary" onclick="confirmImport()" disabled><i class="fas fa-file-import"></i> Import</button>
+      <button class="btn-secondary" onclick="hideImportModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MEMBER MODAL -->
+<div class="modal-overlay" id="editMemberModal">
+  <div class="modal" style="max-width:460px;text-align:left;">
+    <div class="modal-title">Edit Member</div>
+    <form id="editMemberForm">
+      <input type="hidden" id="editMemberId">
+      <div class="form-group"><label class="form-label">Full name</label><input type="text" class="form-input" id="editMemberName" required></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-input" id="editMemberPhone" required></div>
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-select" id="editMemberDepartment">
+          <option value="">— None —</option>
+          <option value="Ushering">Ushering</option>
+          <option value="Choir">Choir</option>
+          <option value="Instruments">Instruments</option>
+          <option value="Venue Management">Venue Management</option>
+          <option value="Intercessory">Intercessory</option>
+          <option value="Media">Media</option>
+          <option value="Protocol">Protocol</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Location / residence</label><input type="text" class="form-input" id="editMemberLocation"></div>
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:8px;">Save Changes</button>
+    </form>
+    <button class="btn-secondary" style="width:100%;margin-top:12px;" onclick="hideEditMemberModal()">Cancel</button>
   </div>
 </div>
 
@@ -350,6 +359,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="js/dashboard.js"></script>
+<script src="js/dashboard.js?v=19"></script>
 </body>
 </html>
