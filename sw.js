@@ -1,4 +1,4 @@
-const CACHE_NAME = 'grace-church-v17';
+const CACHE_NAME = 'grace-church-v18';
 const ASSETS = [
   '/',
   '/index.html',

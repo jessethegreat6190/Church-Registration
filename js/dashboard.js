@@ -19,6 +19,8 @@ let isLoggedIn = false;
 let importCandidates = [];
 let importBlockCount = 1;
 let currentBulkWaMembers = [];
+let bulkWaIndex = 0;
+let bulkWaOpened = new Set();
 
 // Church details used to build the WhatsApp thank-you / welcome message.
 const churchPrograms = {
@@ -152,6 +154,41 @@ function waBadge(m) {
   return isWhatsAppPending(m)
     ? '<span class="wa-badge pending"><i class="fab fa-whatsapp"></i> Not sent</span>'
     : '<span class="wa-badge sent"><i class="fas fa-check"></i> Got WhatsApp</span>';
+}
+
+// One place builds the welcome message so every sending path stays identical.
+function buildWelcomeMessage(member) {
+  const name = typeof member === 'string'
+    ? (formatName(member) || 'friend')
+    : ((member && formatName(member.name)) || 'friend');
+  const blessing = getWeeklyVerse();
+  let welcome = `Hello ${name}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
+    `*A Blessing for you:* "${blessing}"\n\n${buildProgramsText()}`;
+  welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
+  welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
+  welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
+  welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
+  welcome += '\n\n*An encounter with the Holy Spirit*';
+  return welcome;
+}
+
+function toIntlPhone(phone) {
+  const raw = String(phone == null ? '' : phone).replace(/\D/g, '');
+  if (!raw) return '';
+  if (raw.startsWith('0')) return '256' + raw.substring(1);
+  return raw.length === 9 ? '256' + raw : raw;
+}
+
+function waMeUrl(member) {
+  const intl = toIntlPhone(member && member.phone);
+  return intl ? 'https://wa.me/' + intl + '?text=' + encodeURIComponent(buildWelcomeMessage(member)) : '';
+}
+
+// Local 0XXXXXXXXX format is what people save in their phone contacts, which
+// is needed for WhatsApp Business broadcast lists.
+function toLocalPhone(phone) {
+  const raw = String(phone == null ? '' : phone).replace(/\D/g, '');
+  return raw ? '0' + raw.replace(/^256/, '').slice(-9) : '';
 }
 
 document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -521,21 +558,11 @@ async function sendMemberWelcome(id) {
       !confirm('This phone number does not look like a valid Uganda mobile number for WhatsApp:\n' + m.phone + '\n\nTry to open WhatsApp anyway?')) {
     return;
   }
-  const intlPhone = rawPhone.startsWith('0')
-    ? '256' + rawPhone.substring(1)
-    : (rawPhone.length === 9 ? '256' + rawPhone : rawPhone);
-
-  const blessing = getWeeklyVerse();
-  let welcome = `Hello ${formatName(m.name) || 'friend'}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
-    `*A Blessing for you:* "${blessing}"\n\n${buildProgramsText()}`;
-  welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
-  welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
-  welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-  welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-  welcome += '\n\n*An encounter with the Holy Spirit*';
+  const url = waMeUrl(m);
+  if (!url) { alert('This member has no phone number.'); return; }
 
   // Open before awaiting so the browser treats it as a user gesture.
-  window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome), '_blank');
+  window.open(url, '_blank');
 
   try {
     await db.collection('registrations').doc(id).update({
@@ -580,53 +607,50 @@ function sendPendingWelcomes(onlyImported) {
 }
 
 // Show the bulk WhatsApp sender modal with ALL members.
-// Each row shows a "Send" button if not yet welcomed, or "Sent" if already done.
+// Pending members are first, so Enter repeatedly works straight down the list.
 function showBulkWaModal(members) {
   const list = document.getElementById('bulkWaList');
   if (!list) return;
-  list.innerHTML = '';
   members = sortMembersForWork(members);
   currentBulkWaMembers = members.slice();
+  bulkWaIndex = 0;
+  renderBulkWaList();
+  document.getElementById('bulkWaModal').classList.add('show');
+}
 
-  if (members.length === 0) {
+function renderBulkWaList() {
+  const list = document.getElementById('bulkWaList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (!currentBulkWaMembers.length) {
     list.innerHTML = '<div style="text-align:center;color:#6c757d;">No members found.</div>';
+    updateBulkWaProgress();
     return;
   }
 
-  const unwelcomed = members.filter(isWhatsAppPending).length;
-  const welcomed = members.filter(m => !isWhatsAppPending(m)).length;
+  const unwelcomed = currentBulkWaMembers.filter(isWhatsAppPending).length;
+  const welcomed = currentBulkWaMembers.length - unwelcomed;
 
-  // Header summary
   const header = document.createElement('div');
   header.style.cssText = 'display:flex; justify-content:space-between; padding:6px 8px; background:var(--gray-100); border-radius:var(--radius-sm); margin-bottom:10px; font-size:13px; font-weight:600;';
   header.innerHTML =
-    '<span>Total: ' + members.length + ' members</span>' +
+    '<span>Total: ' + currentBulkWaMembers.length + ' members</span>' +
     '<span style="color:var(--success);">✅ ' + welcomed + ' got WhatsApp</span>' +
     '<span style="color:var(--danger);">⏳ ' + unwelcomed + ' not sent</span>';
   list.appendChild(header);
 
-  members.forEach(m => {
-    const rawPhone = String(m.phone || '').replace(/\D/g, '');
-    const intlPhone = rawPhone.startsWith('0')
-      ? '256' + rawPhone.substring(1)
-      : (rawPhone.length === 9 ? '256' + rawPhone : rawPhone);
-
-    const blessing = getWeeklyVerse();
-    let welcome = `Hello ${formatName(m.name) || 'friend'}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
-      `*A Blessing for you:* "${blessing}"\n\n${buildProgramsText()}`;
-    welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
-    welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
-    welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-    welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-    welcome += '\n\n*An encounter with the Holy Spirit*';
-
-    const waUrl = 'https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome);
+  currentBulkWaMembers.forEach(function (m, i) {
     const isSent = !isWhatsAppPending(m);
     const validPhone = isValidWhatsAppPhone(m.phone);
     const imported = isImportedMember(m);
+    const sendArgs = '\'' + escapeHtml(escapeJs(m.id)) + '\', \'' +
+      escapeHtml(escapeJs(formatName(m.name) || '-')) + '\', \'' +
+      escapeHtml(escapeJs(m.phone || '-')) + '\'';
 
     const row = document.createElement('div');
-    row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:8px 6px; border-bottom:1px solid #eee; gap:10px;' + (isSent ? ' opacity:0.6;' : '');
+    row.setAttribute('data-bulk-index', String(i));
+    row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:8px 6px; border-bottom:1px solid #eee; gap:10px; border-radius:4px;' + (isSent ? ' opacity:0.6;' : '');
     row.innerHTML =
       '<div style="flex:1; min-width:0;">' +
       '<div style="font-weight:600;' + (isSent ? ' text-decoration:line-through;' : '') + '">' + escapeHtml(formatName(m.name) || '-') +
@@ -634,16 +658,98 @@ function showBulkWaModal(members) {
       '<div style="font-size:12px;color:#6c757d;">' + escapeHtml(m.phone || '-') + ' • ' + escapeHtml(m.location || '-') +
         (validPhone ? '' : ' <span style="color:#c0392b;font-weight:600;">⚠ not a valid WhatsApp mobile</span>') + '</div>' +
       '</div>' +
-      '<div style="display:flex; align-items:center; gap:6px;">' +
+      '<div style="display:flex; align-items:center; gap:6px; white-space:nowrap;">' +
       (isSent
-        ? '<span style="font-size:11px;color:var(--success); font-weight:600;">✓ Got WhatsApp</span>'
-        : '<button onclick="sendBulkWa(\'' + escapeJs(m.id) + '\', \'' + escapeJs(formatName(m.name) || '-') + '\', \'' + escapeJs(m.phone || '-') + '\')" class="btn-icon btn-wa" style="padding:5px 10px;font-size:11px;"><i class="fab fa-whatsapp"></i> Send</button>') +
+        ? '<span style="font-size:11px;color:var(--success); font-weight:600;">✓ Got WhatsApp</span>' +
+          '<button onclick="sendBulkWa(' + sendArgs + ')" class="btn-icon btn-wa" style="padding:4px 8px;font-size:10px;">Send again</button>'
+        : '<button onclick="sendBulkWa(' + sendArgs + ')" class="btn-icon btn-wa" style="padding:5px 10px;font-size:11px;"><i class="fab fa-whatsapp"></i> Send</button>') +
       '</div>';
 
     list.appendChild(row);
   });
 
-  document.getElementById('bulkWaModal').classList.add('show');
+  updateBulkWaProgress();
+  updateBulkWaHighlight(false);
+}
+
+function updateBulkWaProgress() {
+  const el = document.getElementById('bulkWaProgress');
+  if (!el) return;
+  const pending = currentBulkWaMembers.filter(isWhatsAppPending).length;
+  el.innerHTML = '<strong>' + currentBulkWaMembers.length + '</strong> shown • ' +
+    '<strong>' + pending + '</strong> still need a message • opened this session: <strong>' + bulkWaOpened.size + '</strong>';
+}
+
+function updateBulkWaHighlight(scrollIntoView) {
+  const rows = document.querySelectorAll('#bulkWaList [data-bulk-index]');
+  rows.forEach(function (row) {
+    const active = Number(row.getAttribute('data-bulk-index')) === bulkWaIndex;
+    row.style.background = active ? '#e8f8f0' : '';
+    row.style.outline = active ? '2px solid #2ecc71' : '';
+  });
+  if (scrollIntoView) {
+    const active = document.querySelector('#bulkWaList [data-bulk-index="' + bulkWaIndex + '"]');
+    if (active && active.scrollIntoView) active.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function bulkWaMove(delta) {
+  if (!currentBulkWaMembers.length) return;
+  bulkWaIndex = (bulkWaIndex + delta + currentBulkWaMembers.length) % currentBulkWaMembers.length;
+  updateBulkWaHighlight(true);
+}
+
+function bulkWaSendCurrent() {
+  const m = currentBulkWaMembers[bulkWaIndex];
+  if (!m) return;
+  sendBulkWa(m.id, formatName(m.name) || '-', m.phone || '');
+}
+
+// Enter opens WhatsApp for the highlighted member, then the next one moves up
+// automatically, so you can work down the whole list with just the Enter key.
+document.addEventListener('keydown', function (e) {
+  const modal = document.getElementById('bulkWaModal');
+  if (!modal || !modal.classList.contains('show')) return;
+  if (e.key === 'Escape') { hideBulkWaModal(); return; }
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); bulkWaMove(1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); bulkWaMove(-1); }
+  else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); bulkWaSendCurrent(); }
+});
+
+async function copyTextToClipboard(text, successMsg) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    showToast(successMsg);
+  } catch (err) {
+    alert('Could not copy automatically. Select the text and copy it manually.');
+  }
+}
+
+// Copy numbers for WhatsApp Business broadcast lists: save them as contacts,
+// create a broadcast, then send the copied message once to the whole list.
+function copyBulkWaNumbers() {
+  const pending = currentBulkWaMembers.filter(isWhatsAppPending);
+  const source = pending.length ? pending : currentBulkWaMembers;
+  const numbers = source.map(function (m) { return toLocalPhone(m.phone); }).filter(Boolean);
+  if (!numbers.length) { alert('No phone numbers to copy.'); return; }
+  copyTextToClipboard(numbers.join('\n'), 'Copied ' + numbers.length + ' numbers — save as contacts, then broadcast');
+}
+
+function copyWelcomeMessage() {
+  const m = currentBulkWaMembers[bulkWaIndex] || {};
+  copyTextToClipboard(buildWelcomeMessage(m), 'Welcome message copied');
 }
 
 function hideBulkWaModal() {
@@ -658,20 +764,12 @@ async function sendBulkWa(id, name, phone) {
       !confirm('This phone number does not look like a valid Uganda mobile number for WhatsApp:\n' + phone + '\n\nTry to open WhatsApp anyway?')) {
     return;
   }
-  const intlPhone = rawPhone.startsWith('0')
-    ? '256' + rawPhone.substring(1)
-    : (rawPhone.length === 9 ? '256' + rawPhone : rawPhone);
+  const url = waMeUrl({ name: name, phone: phone });
+  if (!url) { alert('This member has no phone number.'); return; }
 
-  const blessing = getWeeklyVerse();
-  let welcome = `Hello ${name || 'friend'}! Thank you for registering at Grace of Jesus Christ Ministries.\n\n` +
-    `*A Blessing for you:* "${blessing}"\n\n${buildProgramsText()}`;
-  welcome += '\n\nJoin our WhatsApp Group: ' + churchPrograms.whatsappLink;
-  welcome += '\n\nChurch Contacts (WhatsApp):\n• 0730 938085\n• 0730 909434';
-  welcome += '\n\nChurch Location:\nKitintale, Kasoli stage, Old Port Bell Road, Luzira, Kampala';
-  welcome += '\n\nSubscribe to our YouTube: https://www.youtube.com/@encounter_GJM';
-  welcome += '\n\n*An encounter with the Holy Spirit*';
-
-  window.open('https://wa.me/' + intlPhone + '?text=' + encodeURIComponent(welcome), '_blank');
+  // Open before awaiting so the browser treats it as a user gesture.
+  window.open(url, '_blank');
+  bulkWaOpened.add(id);
 
   try {
     await db.collection('registrations').doc(id).update({

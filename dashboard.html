@@ -269,12 +269,17 @@
       <div class="modal-title">Bulk WhatsApp Sender</div>
       <button class="modal-close" onclick="hideBulkWaModal()">&times;</button>
     </div>
-    <p style="font-size:13px;color:#6c757d;margin:0 0 12px 0;">
-      Click <strong>Send</strong> next to each member. Each click opens one WhatsApp tab with their personal thank-you message.<br>
-      <strong>Note:</strong> Browsers block automatic multi-tab opening, so you click each one individually.
+    <p style="font-size:13px;color:#6c757d;margin:0 0 10px 0;">
+      Press <strong>Enter</strong> to open WhatsApp for the highlighted member — the next one is highlighted automatically, so you can keep pressing Enter.
+      Use <strong>↑ / ↓</strong> to move and <strong>Esc</strong> to close. Each key press counts as a click, so the browser allows every tab.
     </p>
+    <div id="bulkWaProgress" style="font-size:12px;color:#6c757d;margin-bottom:8px;"></div>
     <div style="overflow-y:auto; max-height:55vh; border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; margin-bottom:12px;" id="bulkWaList">
       <div style="text-align:center;color:#6c757d;">Loading members...</div>
+    </div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+      <button class="btn-secondary" onclick="copyBulkWaNumbers()" style="flex:1;min-width:180px;"><i class="fas fa-copy"></i> Copy numbers (broadcast)</button>
+      <button class="btn-secondary" onclick="copyWelcomeMessage()" style="flex:1;min-width:170px;"><i class="fas fa-copy"></i> Copy message</button>
     </div>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
       <button class="btn-secondary" onclick="markAllWelcomed()" style="flex:1;min-width:180px;"><i class="fas fa-check-double"></i> Mark all as got WhatsApp</button>
@@ -365,6 +370,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-<script src="js/dashboard.js?v=22"></script>
+<script src="js/dashboard.js?v=23"></script>
 </body>
 </html>
